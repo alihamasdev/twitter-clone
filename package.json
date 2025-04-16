@@ -1,28 +1,43 @@
 {
-  "name": "twitter",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "next": "^15.3.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3.3.1",
-    "@tailwindcss/postcss": "^4.1.4",
-    "@types/bun": "^1.2.9",
-    "@types/node": "^22.14.1",
-    "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2",
-    "eslint": "^9.24.0",
-    "eslint-config-next": "15.3.0",
-    "tailwindcss": "^4.1.4",
-    "typescript": "^5.8.3"
-  }
+	"name": "twitter",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev --turbopack",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint",
+		"pretty": "prettier --write .",
+		"prepare": "husky install"
+	},
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx}": [
+			"eslint --fix",
+			"prettier --write"
+		],
+		"*.{json,css,md}": [
+			"prettier --write"
+		]
+	},
+	"dependencies": {
+		"next": "^15.3.0",
+		"react": "^19.1.0",
+		"react-dom": "^19.1.0"
+	},
+	"devDependencies": {
+		"@eslint/eslintrc": "^3.3.1",
+		"@tailwindcss/postcss": "^4.1.4",
+		"@types/bun": "^1.2.9",
+		"@types/node": "^22.14.1",
+		"@types/react": "^19.1.2",
+		"@types/react-dom": "^19.1.2",
+		"eslint": "^9.24.0",
+		"eslint-config-next": "15.3.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^15.5.1",
+		"prettier": "^3.5.3",
+		"prettier-plugin-tailwindcss": "^0.6.11",
+		"tailwindcss": "^4.1.4",
+		"typescript": "^5.8.3"
+	}
 }
