@@ -2,6 +2,7 @@
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 
 import { cn } from "@/lib/utils";
+import { Icon, type IconId } from "@/components/ui/icon";
 
 function DropdownMenu({ ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
 	return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
@@ -55,4 +56,17 @@ function DropdownMenuItem({
 	);
 }
 
-export { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem };
+function DropdownMenuItemIcon({
+	icon,
+	children,
+	...props
+}: React.ComponentProps<typeof DropdownMenuItem> & { icon?: IconId }) {
+	return (
+		<DropdownMenuItem {...props}>
+			{icon && <Icon id={icon} />}
+			{children}
+		</DropdownMenuItem>
+	);
+}
+
+export { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuItemIcon };

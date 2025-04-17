@@ -3,7 +3,7 @@ import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 
 import { cn } from "@/lib/utils";
 import { Button, type ButtonProps } from "@/components/ui/button";
-import { DialogHeader, DialogFooter } from "@/components/ui/dialog";
+import { DialogHeader, DialogFooter, DialogIcon } from "@/components/ui/dialog";
 
 function AlertDialog({ ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Root>) {
 	return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />;
@@ -39,6 +39,10 @@ function AlertDialogHeader({ ...props }: React.ComponentProps<typeof DialogHeade
 
 function AlertDialogFooter({ ...props }: React.ComponentProps<typeof DialogFooter>) {
 	return <DialogFooter data-slot="alert-dialog-footer" {...props} />;
+}
+
+function AlertDialogIcon({ ...props }: React.ComponentProps<typeof DialogIcon>) {
+	return <DialogIcon data-slot="alert-dialog-icon" {...props} />;
 }
 
 function AlertDialogTitle({ className, ...props }: React.ComponentProps<typeof AlertDialogPrimitive.Title>) {
@@ -92,6 +96,7 @@ export {
 	AlertDialogContent,
 	AlertDialogHeader,
 	AlertDialogFooter,
+	AlertDialogIcon,
 	AlertDialogTitle,
 	AlertDialogDescription,
 	AlertDialogAction,

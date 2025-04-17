@@ -8,6 +8,7 @@
 		"start": "next start",
 		"lint": "next lint",
 		"pretty": "prettier --write .",
+		"icons": "bun scripts/generate-icon-types.ts",
 		"prepare": "husky install"
 	},
 	"lint-staged": {
@@ -50,6 +51,7 @@
 		"eslint-config-next": "15.3.0",
 		"husky": "^9.1.7",
 		"lint-staged": "^15.5.1",
+		"node-html-parser": "^7.0.1",
 		"prettier": "^3.5.3",
 		"prettier-plugin-tailwindcss": "^0.6.11",
 		"tailwindcss": "^4.1.4",

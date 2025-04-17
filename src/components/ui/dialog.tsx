@@ -3,6 +3,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 import { cn } from "@/lib/utils";
 import { Button, type ButtonProps } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
 
 function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
 	return <DialogPrimitive.Root data-slot="dialog" {...props} />;
@@ -56,6 +57,10 @@ function DialogTitle({ className, ...props }: React.ComponentProps<typeof Dialog
 	);
 }
 
+function DialogIcon({ id = "twitter", className, ...props }: Partial<React.ComponentProps<typeof Icon>>) {
+	return <Icon data-slot="dialog-icon" id={id} className={cn("mx-auto size-10", className)} {...props} />;
+}
+
 function DialogDescription({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Description>) {
 	return (
 		<DialogPrimitive.Description
@@ -80,6 +85,7 @@ export {
 	DialogContent,
 	DialogHeader,
 	DialogFooter,
+	DialogIcon,
 	DialogTitle,
 	DialogDescription,
 	DialogClose

@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
+import { Icon, type IconId } from "@/components/ui/icon";
 
 const buttonVariants = cva(
 	[
@@ -33,10 +34,17 @@ const buttonVariants = cva(
 	}
 );
 
-type ButtonProps = React.ComponentProps<"button"> & VariantProps<typeof buttonVariants>;
+interface ButtonProps extends React.ComponentProps<"button">, VariantProps<typeof buttonVariants> {
+	icon?: IconId;
+}
 
-function Button({ className, variant, size, ...props }: ButtonProps) {
-	return <button data-slot="button" className={cn(buttonVariants({ variant, size, className }))} {...props} />;
+function Button({ variant, size, icon, className, children, ...props }: ButtonProps) {
+	return (
+		<button data-slot="button" className={cn(buttonVariants({ variant, size, className }))} {...props}>
+			{icon && <Icon id={icon} />}
+			{children}
+		</button>
+	);
 }
 
 export { Button, buttonVariants, type ButtonProps };
