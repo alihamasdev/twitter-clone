@@ -1,4 +1,5 @@
 import { type Metadata } from "next";
+import { Toaster } from "react-hot-toast";
 
 import "@/styles/theme.css";
 import { chirp } from "./fonts/chirp";
@@ -13,6 +14,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 		<html lang="en">
 			<body className="bg-background text-foreground text-base font-medium antialiased" style={chirp.style}>
 				{children}
+				<Toaster
+					position="bottom-center"
+					toastOptions={{
+						duration: 3000,
+						className: "font-medium text-base",
+						style: { ...chirp.style, maxWidth: "90%", color: "white", backgroundColor: "var(--color-accent)" }
+					}}
+				/>
 			</body>
 		</html>
 	);
