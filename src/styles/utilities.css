@@ -2,6 +2,9 @@
 	* {
 		@apply border-border outline-none;
 	}
+	body {
+		@apply bg-background text-foreground text-base font-medium antialiased;
+	}
 	[aria-label] {
 		@apply relative;
 	}

@@ -11,9 +11,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en">
-			<body className="bg-background text-foreground text-base font-medium antialiased" style={chirp.style}>
-				{children}
+		<html lang="en" className={chirp.variable}>
+			<body style={chirp.style}>
+			{children}
 				<Toaster
 					position="bottom-center"
 					toastOptions={{

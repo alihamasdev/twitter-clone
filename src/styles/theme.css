@@ -6,7 +6,6 @@
 	--spacing: 4px;
 	--animate-spin: spin 0.75s linear infinite;
 
-	--font-*: initial;
 	--text-*: initial;
 	--text-xs: 11px;
 	--text-xs--line-height: 14px;
@@ -101,6 +100,9 @@
 }
 
 @theme inline {
+	--font-*: initial;
+	--default-font-family: var(--font-chirp);
+
 	--color-*: initial;
 	--color-white: #ffffff;
 	--color-black: #000000;
