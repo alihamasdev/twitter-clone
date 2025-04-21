@@ -3,6 +3,7 @@ import { Toaster } from "react-hot-toast";
 
 import "@/styles/theme.css";
 import { chirp } from "./fonts/chirp";
+import { QueryProviders } from "@/lib/tanstack/query-provider";
 
 export const metadata: Metadata = {
 	title: "Twitter",
@@ -13,7 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<html lang="en" className={chirp.variable}>
 			<body style={chirp.style}>
-			{children}
+				<QueryProviders>{children}</QueryProviders>
 				<Toaster
 					position="bottom-center"
 					toastOptions={{
