@@ -6,7 +6,10 @@ import { chirp } from "./fonts/chirp";
 import { QueryProviders } from "@/lib/tanstack/query-provider";
 
 export const metadata: Metadata = {
-	title: "Twitter",
+	title: {
+		template: "%s | Twitter",
+		default: "Twitter"
+	},
 	description: "Full stack twitter clone with next.js, supabase, tailwindcss and shadcn"
 };
 
