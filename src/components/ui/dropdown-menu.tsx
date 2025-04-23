@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 
 import { cn } from "@/lib/utils";
@@ -35,15 +36,18 @@ function DropdownMenuContent({
 	);
 }
 
-function DropdownMenuItem({
-	variant = "default",
-	className,
-	...props
-}: React.ComponentProps<typeof DropdownMenuPrimitive.Item> & { variant?: "default" | "destructive" }) {
+interface DropdownMenuItemProps extends React.ComponentProps<typeof DropdownMenuPrimitive.Item> {
+	variant?: "default" | "destructive";
+	pushUrl?: string;
+}
+
+function DropdownMenuItem({ variant = "default", pushUrl, className, ...props }: DropdownMenuItemProps) {
+	const router = useRouter();
 	return (
 		<DropdownMenuPrimitive.Item
 			data-slot="dropdown-menu-item"
 			data-variant={variant}
+			onClick={() => pushUrl && router.push(pushUrl)}
 			className={cn(
 				"hover:bg-muted relative flex cursor-pointer items-center gap-x-2.5 px-4 py-3 text-base font-bold transition-colors select-none",
 				"data-[disabled]:pointer-events-none data-[disabled]:opacity-50",

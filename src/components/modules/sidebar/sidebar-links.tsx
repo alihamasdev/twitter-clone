@@ -2,6 +2,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { type User } from "@/types/user";
+import { profilePage } from "@/utils/contants";
+
 import { cn } from "@/lib/utils";
 import { Icon, type IconId } from "@/components/ui/icon";
 
@@ -13,7 +16,7 @@ type Links = {
 	disabled?: boolean;
 };
 
-export function SidebarLinks() {
+export function SidebarLinks({ user }: { user: User }) {
 	const path = usePathname();
 
 	const links: Links[] = [
@@ -66,7 +69,7 @@ export function SidebarLinks() {
 		},
 		{
 			name: "Profile",
-			link: `/users/user_01`,
+			link: profilePage + user.username,
 			icon: "profile",
 			activeIcon: "profile-solid"
 		}
@@ -81,7 +84,7 @@ export function SidebarLinks() {
 		>
 			<div className="group-hover/nav:bg-muted relative inline-flex items-center rounded-full p-3 transition-all duration-200">
 				<Icon id={path === link ? activeIcon : icon} className="size-6.5" />
-				<p className={cn("hidden px-4 text-xl font-normal xl:block", path === link && "font-bold")}>{name}</p>
+				<p className={cn("hidden px-4 text-xl font-medium xl:block", path === link && "font-extrabold")}>{name}</p>
 			</div>
 		</Link>
 	));
