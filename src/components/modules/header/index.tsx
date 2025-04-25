@@ -22,7 +22,7 @@ function HeaderTitle({ className, ...props }: React.ComponentProps<"h1">) {
 }
 
 function HeaderDescription({ className, ...props }: React.ComponentProps<"p">) {
-	return <h1 className={cn("text-muted-foreground text-sm font-normal", className)} {...props} />;
+	return <p className={cn("text-muted-foreground text-sm font-normal", className)} {...props} />;
 }
 
 export { Header, HeaderTitle, HeaderDescription };
