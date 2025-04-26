@@ -8,7 +8,10 @@ interface HeaderProps extends React.ComponentProps<"header"> {
 function Header({ backButton = true, children, className, ...props }: HeaderProps) {
 	return (
 		<header
-			className={cn("sticky top-0 z-10 flex items-center gap-x-4 border-b px-4 py-3 backdrop-blur-md", className)}
+			className={cn(
+				"bg-background/75 sticky top-0 z-10 flex items-center gap-x-4 border-b px-4 py-3 backdrop-blur-md",
+				className
+			)}
 			{...props}
 		>
 			{backButton && <BackButton />}
