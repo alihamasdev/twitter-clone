@@ -14,11 +14,15 @@ import {
 	DialogDescription,
 	DialogClose
 } from "@/components/ui/dialog";
+import { FollowButton } from "../user";
 
 export async function EditProfile({ data }: { data: Profile }) {
 	const loggedinUser = await getUser();
+	const { id, name, username, verified, avatar } = data;
 
-	if (data.id !== loggedinUser.id) return null;
+	if (data.id !== loggedinUser.id) {
+		return <FollowButton size="default" user={{ id, name, username, verified, avatar }} />;
+	}
 
 	return (
 		<Dialog>

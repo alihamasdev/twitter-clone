@@ -5,7 +5,7 @@ import { ImageDialog, ImageDialogContent, ImageDialogTrigger } from "@/component
 import { Avatar } from "@/components/modules/user";
 
 export function ProfileHeaderImage({ src }: { src: string | null }) {
-	if (!src) return null;
+	if (!src) return <div className="h-50"></div>;
 
 	return (
 		<ImageDialog>
