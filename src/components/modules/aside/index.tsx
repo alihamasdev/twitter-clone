@@ -1,6 +1,9 @@
+import { Suspense } from "react";
+
 import { Search } from "./search";
 import { AsideLinks } from "./aside-links";
 import { buttonVariants } from "@/components/ui/button";
+import { SuggestedUsers, SuggestedUsersLoader } from "./suggested-users";
 
 export function Aside() {
 	const date = new Date();
@@ -20,6 +23,11 @@ export function Aside() {
 					Repository
 				</a>
 			</section>
+
+			<Suspense fallback={<SuggestedUsersLoader />}>
+				<SuggestedUsers />
+			</Suspense>
+
 			<AsideLinks />
 			<p className="text-muted-foreground text-center text-sm">&#169; {year} Twitter, Inc.</p>
 		</aside>

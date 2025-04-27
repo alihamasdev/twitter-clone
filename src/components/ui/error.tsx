@@ -9,7 +9,7 @@ export function Error({ className, ...props }: React.ComponentProps<"div">) {
 			className={cn("flex-center text-muted-foreground mt-25 flex-col gap-y-3", className)}
 			{...props}
 		>
-			<TriangleAlert />
+			<TriangleAlert className="size-12" />
 			<p>Something went wrong, please try again</p>
 		</div>
 	);
