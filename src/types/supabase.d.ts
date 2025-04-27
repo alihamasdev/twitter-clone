@@ -147,7 +147,6 @@ export type Database = {
 					id: string;
 					location: string | null;
 					name: string;
-					pin_tweet: string | null;
 					username: string;
 					verified: boolean;
 					website: string | null;
@@ -162,7 +161,6 @@ export type Database = {
 					id: string;
 					location?: string | null;
 					name: string;
-					pin_tweet?: string | null;
 					username: string;
 					verified?: boolean;
 					website?: string | null;
@@ -177,20 +175,11 @@ export type Database = {
 					id?: string;
 					location?: string | null;
 					name?: string;
-					pin_tweet?: string | null;
 					username?: string;
 					verified?: boolean;
 					website?: string | null;
 				};
-				Relationships: [
-					{
-						foreignKeyName: "profiles_pin_tweet_fkey";
-						columns: ["pin_tweet"];
-						isOneToOne: false;
-						referencedRelation: "tweets";
-						referencedColumns: ["id"];
-					}
-				];
+				Relationships: [];
 			};
 			retweets: {
 				Row: {
