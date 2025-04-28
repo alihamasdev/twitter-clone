@@ -25,12 +25,12 @@ export function UserCard({ user: { bio, ...user }, className, children, ...props
 			}}
 			{...props}
 		>
-			<Avatar user={user} />
+			<Avatar user={user} hasLink />
 			<div className="w-full">
 				<div className="flex w-full items-center justify-between">
 					<div>
-						<Name user={user} />
-						<Username user={user} />
+						<Name user={user} hasLink />
+						<Username user={user} hasLink />
 					</div>
 					{children}
 				</div>
