@@ -1,4 +1,5 @@
 import { Fragment, Suspense } from "react";
+import Link from "next/link";
 
 import { getProfile } from "@/actions/user/get-profile";
 
@@ -49,16 +50,22 @@ export async function Profile({ params }: { params: Promise<{ username: string }
 						<ProfileMetadata location={data.location} created_at={data.created_at} website={data.website} />
 					</div>
 					<div className="flex items-center gap-x-4 text-base">
-						<p className="text-muted-foreground flex cursor-pointer items-center hover:underline">
+						<Link
+							href={username + `/following`}
+							className="text-muted-foreground flex cursor-pointer items-center hover:underline"
+						>
 							<span className="text-foreground">{data.following_count}</span>
 							<span className="w-1 text-transparent">1</span>
 							<span>Following</span>
-						</p>
-						<p className="text-muted-foreground flex cursor-pointer items-center hover:underline">
+						</Link>
+						<Link
+							href={username + `/followers`}
+							className="text-muted-foreground flex cursor-pointer items-center hover:underline"
+						>
 							<span className="text-foreground">{data.followers_count}</span>
 							<span className="w-1 text-transparent">1</span>
 							<span>{data.followers_count === 1 ? "Follower" : "Followers"}</span>
-						</p>
+						</Link>
 					</div>
 				</div>
 			</section>
