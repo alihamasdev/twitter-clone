@@ -6,7 +6,7 @@ import { profilePage } from "@/utils/contants";
 
 import { Avatar, Name, Username, FollowButton } from "@/components/modules/user";
 
-export function UserCard({ user }: { user: User }) {
+export function UserCard({ user, isFollowing }: { user: User; isFollowing?: boolean }) {
 	const router = useRouter();
 
 	return (
@@ -24,7 +24,7 @@ export function UserCard({ user }: { user: User }) {
 				<Name user={user} />
 				<Username user={user} />
 			</div>
-			<FollowButton user={user} className="ml-auto" />
+			<FollowButton isFollowing={isFollowing} className="ml-auto" />
 		</div>
 	);
 }

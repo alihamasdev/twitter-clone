@@ -18,11 +18,7 @@ export function SuggestedUsersLoader() {
 export async function SuggestedUsers() {
 	const supabase = await createClient();
 	const user = await getUser();
-	const { data, error } = await supabase
-		.from("profiles")
-		.select(`name, username, id, avatar, verified`)
-		.neq("id", user.id)
-		.limit(3);
+	const { data, error } = await supabase.rpc("get_unfollowed_profiles", { auth_user_id: user.id });
 
 	if (error) {
 		return (

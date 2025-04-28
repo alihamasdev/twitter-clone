@@ -280,6 +280,16 @@ export type Database = {
 					following: boolean;
 				}[];
 			};
+			get_unfollowed_profiles: {
+				Args: { auth_user_id: string };
+				Returns: {
+					id: string;
+					name: string;
+					username: string;
+					avatar: string;
+					verified: boolean;
+				}[];
+			};
 		};
 		Enums: {
 			[_ in never]: never;
