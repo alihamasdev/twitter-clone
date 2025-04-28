@@ -35,8 +35,8 @@ export default async function FollowingPage({ params }: { params: Promise<{ user
 				<div className="w-full max-w-sm space-y-4 *:text-center">
 					<h1 className="text-foreground text-3xl font-extrabold">Be in the know</h1>
 					<p className="text-muted-foreground text-base/6">
-						Following accounts is an easy way to curate your timeline and know what's happening with the topics and
-						people you're interested in.
+						Following accounts is an easy way to curate your timeline and know what&apos;s happening with the topics and
+						people you&apos;re interested in.
 					</p>
 				</div>
 			</div>

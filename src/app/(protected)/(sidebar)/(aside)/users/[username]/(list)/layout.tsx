@@ -33,7 +33,7 @@ export default async function UsersLayout({ children, params }: UsersLayoutProps
 	);
 }
 
-interface LayoutHeaderProps extends Pick<UsersLayoutProps, "params"> {}
+type LayoutHeaderProps = Pick<UsersLayoutProps, "params">;
 
 async function LayoutHeader({ params }: LayoutHeaderProps) {
 	const { username } = await params;

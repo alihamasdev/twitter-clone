@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import { cn } from "@/lib/utils";
 
-interface LinkTabsProps extends React.ComponentProps<typeof Link> {}
+type LinkTabsProps = React.ComponentProps<typeof Link>;
 
 export function LinkTabs({ href, className, children }: LinkTabsProps) {
 	const path = usePathname();

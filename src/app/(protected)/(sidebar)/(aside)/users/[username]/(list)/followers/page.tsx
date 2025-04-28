@@ -35,8 +35,8 @@ export default async function FollowersPage({ params }: { params: Promise<{ user
 				<div className="w-full max-w-sm space-y-4 *:text-center">
 					<h1 className="text-foreground text-3xl font-extrabold">Looking for followers?</h1>
 					<p className="text-muted-foreground text-base/6">
-						When someone follows this account, they'll show up here. Tweeting and interacting with others helps boost
-						followers.
+						When someone follows this account, they&apos;ll show up here. Tweeting and interacting with others helps
+						boost followers.
 					</p>
 				</div>
 			</div>
