@@ -141,8 +141,6 @@ export type Database = {
 					avatar: string;
 					bio: string | null;
 					created_at: string;
-					followers_count: number;
-					following_count: number;
 					header_image: string | null;
 					id: string;
 					location: string | null;
@@ -152,11 +150,9 @@ export type Database = {
 					website: string | null;
 				};
 				Insert: {
-					avatar: string;
+					avatar?: string;
 					bio?: string | null;
 					created_at?: string;
-					followers_count?: number;
-					following_count?: number;
 					header_image?: string | null;
 					id: string;
 					location?: string | null;
@@ -169,8 +165,6 @@ export type Database = {
 					avatar?: string;
 					bio?: string | null;
 					created_at?: string;
-					followers_count?: number;
-					following_count?: number;
 					header_image?: string | null;
 					id?: string;
 					location?: string | null;
@@ -219,7 +213,6 @@ export type Database = {
 			};
 			tweets: {
 				Row: {
-					comment_count: number;
 					content: string | null;
 					created_at: string;
 					id: string;
@@ -229,7 +222,6 @@ export type Database = {
 					user_id: string;
 				};
 				Insert: {
-					comment_count?: number;
 					content?: string | null;
 					created_at?: string;
 					id?: string;
@@ -239,7 +231,6 @@ export type Database = {
 					user_id?: string;
 				};
 				Update: {
-					comment_count?: number;
 					content?: string | null;
 					created_at?: string;
 					id?: string;
