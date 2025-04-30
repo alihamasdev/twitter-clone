@@ -5,7 +5,7 @@ import { type User } from "@/types/user";
 import { type Tables } from "@/types/supabase";
 
 import { cn } from "@/lib/utils";
-import { Avatar, Name, Username } from "@/components/modules/user";
+import { Avatar, AvatarImage, Name, Username } from "@/components/modules/user";
 
 interface UserCardProps extends React.ComponentProps<"div"> {
 	user: User & { bio?: Tables<"profiles">["bio"] };
@@ -24,12 +24,14 @@ export function UserCard({ user: { bio, ...user }, className, children, ...props
 			}}
 			{...props}
 		>
-			<Avatar user={user} hasLink />
+			<Avatar link={user.username}>
+				<AvatarImage src={user.avatar} />
+			</Avatar>
 			<div className="w-full">
 				<div className="flex w-full items-center justify-between">
 					<div>
-						<Name user={user} hasLink />
-						<Username user={user} hasLink />
+						<Name name={user.name} verified={user.verified} link={user.username} />
+						<Username username={user.username} link />
 					</div>
 					{children}
 				</div>

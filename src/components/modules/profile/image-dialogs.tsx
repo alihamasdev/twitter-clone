@@ -2,7 +2,7 @@ import Image from "next/image";
 import { type User } from "@/types/user";
 
 import { ImageDialog, ImageDialogContent, ImageDialogTrigger } from "@/components/ui/image-dialog";
-import { Avatar } from "@/components/modules/user";
+import { Avatar, AvatarImage } from "@/components/modules/user";
 
 export function ProfileHeaderImage({ src }: { src: string | null }) {
 	if (!src) return <div className="h-50"></div>;
@@ -25,24 +25,18 @@ export function ProfileHeaderImage({ src }: { src: string | null }) {
 	);
 }
 
-export function ProfileAvatar({ user }: { user: User }) {
+export function ProfileAvatar({ avatar }: { avatar: User["avatar"] }) {
 	return (
 		<ImageDialog>
 			<ImageDialogTrigger asChild>
-				<Avatar
-					user={user}
-					className="absolute -bottom-12 left-4 size-25 border-6 lg:-bottom-15 lg:size-33"
-					imageProps={{ className: "hover:opacity-100" }}
-					fallbackProps={{ className: "text-[36px] lg:text-[48px]" }}
-				/>
+				<Avatar className="absolute -bottom-12 left-4 size-25 border-6 lg:-bottom-15 lg:size-33">
+					<AvatarImage src={avatar} className="bg-tooltip hover:opacity-100" width={120} height={120} />
+				</Avatar>
 			</ImageDialogTrigger>
 			<ImageDialogContent className="rounded-full">
-				<Avatar
-					user={user}
-					className="size-50 lg:size-100"
-					imageProps={{ className: "hover:opacity-100" }}
-					fallbackProps={{ className: "text-[80px] lg:text-[160px]" }}
-				/>
+				<Avatar className="size-50 lg:size-100">
+					<AvatarImage src={avatar} className="bg-tooltip hover:opacity-100" width={400} height={400} />
+				</Avatar>
 			</ImageDialogContent>
 		</ImageDialog>
 	);

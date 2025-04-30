@@ -17,7 +17,6 @@ export async function Profile({ params }: { params: Promise<{ username: string }
 	const { profile } = await getProfile(username);
 
 	const { name, id, verified, avatar } = profile;
-	const user = { name, username, id, verified, avatar };
 
 	return (
 		<Fragment>
@@ -34,18 +33,22 @@ export async function Profile({ params }: { params: Promise<{ username: string }
 				<div className="bg-image relative h-auto max-h-50 w-full overflow-hidden border-b">
 					<ProfileHeaderImage src={profile.header_image} />
 				</div>
-				<ProfileAvatar user={user} />
+				<ProfileAvatar avatar={avatar} />
 			</section>
 			<section className="px-4 py-3">
 				<div className="flex h-9 w-full items-center justify-end gap-x-3">
 					<Suspense fallback={<Skeleton className="h-9 w-25 rounded-full" />}>
-						<ProfileButton profileId={id} />
+						<ProfileButton profile={profile} />
 					</Suspense>
 				</div>
 				<div className="mt-6 space-y-3">
 					<div className="space-y-0.5">
-						<Name user={user} className="gap-x-1 [&_p]:text-xl [&_p]:font-extrabold [&_svg]:size-5" />
-						<Username user={user} />
+						<Name
+							name={name}
+							verified={verified}
+							className="gap-x-1 [&_p]:text-xl [&_p]:font-extrabold [&_svg]:size-5"
+						/>
+						<Username username={username} />
 					</div>
 					<p className="text-foreground text-base">{profile.bio}</p>
 					<div className="flex flex-wrap items-center gap-x-4 gap-y-2">

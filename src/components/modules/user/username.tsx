@@ -4,21 +4,18 @@ import { LinkToProfile } from "./link-to-profile";
 import { type User } from "@/types/user";
 
 interface UsernameProps extends React.ComponentProps<"div"> {
-	user: User | null;
-	hasLink?: boolean;
+	username: User["username"];
+	link?: boolean;
 }
 
-function Username({ user, hasLink, className, ...props }: UsernameProps) {
-	if (!user) return;
-
+function Username({ username, link = false, className, ...props }: UsernameProps) {
 	return (
 		<LinkToProfile
-			username={user.username}
-			hasLink={hasLink}
+			link={link ? username : false}
 			className={cn("text-muted-foreground text-base font-medium", className)}
 			{...props}
 		>
-			{`@${user.username}`}
+			{`@${username}`}
 		</LinkToProfile>
 	);
 }
