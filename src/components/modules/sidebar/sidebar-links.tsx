@@ -3,7 +3,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { type User } from "@/types/user";
-import { profilePage } from "@/utils/contants";
 
 import { cn } from "@/lib/utils";
 import { Icon, type IconId } from "@/components/ui/icon";
@@ -22,54 +21,54 @@ export function SidebarLinks({ user }: { user: User }) {
 	const links: Links[] = [
 		{
 			name: "Home",
-			link: "/home",
+			link: "/home/",
 			icon: "home",
 			activeIcon: "home-solid"
 		},
 		{
 			name: "Explore",
-			link: "/explore",
+			link: "/explore/",
 			icon: "search",
 			activeIcon: "search-solid",
 			disabled: true
 		},
 		{
 			name: "Notifications",
-			link: "/notifications",
+			link: "/notifications/",
 			icon: "notifications",
 			activeIcon: "notifications-solid",
 			disabled: true
 		},
 		{
 			name: "Messages",
-			link: "/messages",
+			link: "/messages/",
 			icon: "messages",
 			activeIcon: "messages-solid",
 			disabled: true
 		},
 		{
 			name: "Communities",
-			link: "/communities",
+			link: "/communities/",
 			icon: "communities",
 			activeIcon: "communities-solid",
 			disabled: true
 		},
 		{
 			name: "Premium",
-			link: "/premium",
+			link: "/premium/",
 			icon: "twitter",
 			activeIcon: "twitter",
 			disabled: true
 		},
 		{
 			name: "Bookmarks",
-			link: "/bookmarks",
+			link: "/bookmarks/",
 			icon: "bookmarks",
 			activeIcon: "bookmarks-solid"
 		},
 		{
 			name: "Profile",
-			link: profilePage + user.username,
+			link: `/users/${user.username}/`,
 			icon: "profile",
 			activeIcon: "profile-solid"
 		}
@@ -83,8 +82,10 @@ export function SidebarLinks({ user }: { user: User }) {
 			className={cn("group/nav outline-none md:w-fit xl:w-full", disabled && "cursor-not-allowed opacity-90")}
 		>
 			<div className="group-hover/nav:bg-muted relative inline-flex items-center rounded-full p-3 transition-all duration-200">
-				<Icon id={path === link ? activeIcon : icon} className="size-6.5" />
-				<p className={cn("hidden px-4 text-xl font-medium xl:block", path === link && "font-extrabold")}>{name}</p>
+				<Icon id={path.startsWith(link) ? activeIcon : icon} className="size-6.5" />
+				<p className={cn("hidden px-4 text-xl font-medium xl:block", path.startsWith(link) && "font-extrabold")}>
+					{name}
+				</p>
 			</div>
 		</Link>
 	));

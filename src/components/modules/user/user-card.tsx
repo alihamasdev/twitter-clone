@@ -3,7 +3,6 @@ import { useRouter } from "next/navigation";
 
 import { type User } from "@/types/user";
 import { type Tables } from "@/types/supabase";
-import { profilePage } from "@/utils/contants";
 
 import { cn } from "@/lib/utils";
 import { Avatar, Name, Username } from "@/components/modules/user";
@@ -21,7 +20,7 @@ export function UserCard({ user: { bio, ...user }, className, children, ...props
 			onClick={(e) => {
 				const target = e.target as HTMLElement;
 				if (target.closest("button, a")) return;
-				router.push(profilePage + user.username);
+				router.push(`/users/${user.username}/`);
 			}}
 			{...props}
 		>

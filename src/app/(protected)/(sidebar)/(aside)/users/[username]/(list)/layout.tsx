@@ -59,8 +59,8 @@ async function LayoutHeader({ params }: LayoutHeaderProps) {
 				<HeaderDescription>{`@${username}`}</HeaderDescription>
 			</Header>
 			<div className="grid grid-cols-2 border-b">
-				<LinkTabs href={`followers`}>Followers</LinkTabs>
-				<LinkTabs href={`following`}>Following</LinkTabs>
+				<LinkTabs href={`/users/${username}/followers/`}>Followers</LinkTabs>
+				<LinkTabs href={`/users/${username}/following/`}>Following</LinkTabs>
 			</div>
 		</Fragment>
 	);
