@@ -6,6 +6,8 @@
 	--spacing: 4px;
 	--animate-spin: spin 0.75s linear infinite;
 
+	--aspect-header: 3 / 1;
+
 	--text-*: initial;
 	--text-xs: 11px;
 	--text-xs--line-height: 14px;

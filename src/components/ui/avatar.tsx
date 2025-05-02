@@ -38,7 +38,10 @@ function AvatarImage({ src, className, ...props }: AvatarImageProps) {
 				height={40}
 				alt="avatar"
 				placeholder={placeholder}
-				className={cn("aspect-square size-full transition-[opacity] duration-300 hover:opacity-80", className)}
+				className={cn(
+					"aspect-square size-full object-cover object-center transition-[opacity] duration-300 hover:opacity-80",
+					className
+				)}
 				{...props}
 			/>
 		</Fragment>
