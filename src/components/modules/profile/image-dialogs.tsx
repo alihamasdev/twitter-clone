@@ -1,27 +1,37 @@
 import Image from "next/image";
+
 import { type User } from "@/types/user";
+import { supabaseStorage } from "@/utils/contants";
 
 import { ImageDialog, ImageDialogContent, ImageDialogTrigger } from "@/components/ui/image-dialog";
 import { Avatar, AvatarImage } from "@/components/modules/user";
 
 export function ProfileHeaderImage({ src }: { src: string | null }) {
-	if (!src) return <div className="h-50"></div>;
+	if (!src) return <div className="aspect-header bg-image relative"></div>;
 
 	return (
-		<ImageDialog>
-			<ImageDialogTrigger asChild>
-				<Image
-					src={`headers/${src}`}
-					width={600}
-					height={200}
-					alt="header"
-					className="flex-center cursor-pointer object-cover object-center transition-[opacity] duration-300 hover:opacity-75"
-				/>
-			</ImageDialogTrigger>
-			<ImageDialogContent className="max-w-auto w-full rounded-none">
-				<Image src={`headers/${src}`} width={600} height={200} alt="header" className="bg-image h-auto w-full" />
-			</ImageDialogContent>
-		</ImageDialog>
+		<div className="bg-image aspect-header relative overflow-hidden border-b">
+			<ImageDialog>
+				<ImageDialogTrigger asChild>
+					<Image
+						src={supabaseStorage + src}
+						width={600}
+						height={200}
+						alt="header"
+						className="aspect-header w-full cursor-pointer object-cover transition-[opacity] duration-300 hover:opacity-75"
+					/>
+				</ImageDialogTrigger>
+				<ImageDialogContent className="max-w-auto w-full rounded-none">
+					<Image
+						src={supabaseStorage + src}
+						width={600}
+						height={200}
+						alt="header"
+						className="aspect-header w-full object-cover object-center"
+					/>
+				</ImageDialogContent>
+			</ImageDialog>
+		</div>
 	);
 }
 
@@ -29,13 +39,13 @@ export function ProfileAvatar({ avatar }: { avatar: User["avatar"] }) {
 	return (
 		<ImageDialog>
 			<ImageDialogTrigger asChild>
-				<Avatar className="absolute -bottom-12 left-4 size-25 border-6 lg:-bottom-15 lg:size-33">
-					<AvatarImage src={avatar} className="bg-tooltip hover:opacity-100" width={120} height={120} />
+				<Avatar className="bg-tooltip absolute -bottom-12 left-4 size-25 border-6 lg:-bottom-15 lg:size-33">
+					<AvatarImage src={avatar} width={120} height={120} />
 				</Avatar>
 			</ImageDialogTrigger>
 			<ImageDialogContent className="rounded-full">
-				<Avatar className="size-50 lg:size-100">
-					<AvatarImage src={avatar} className="bg-tooltip hover:opacity-100" width={400} height={400} />
+				<Avatar className="bg-tooltip size-50 lg:size-100">
+					<AvatarImage src={avatar} className="hover:opacity-100" width={400} height={400} />
 				</Avatar>
 			</ImageDialogContent>
 		</ImageDialog>

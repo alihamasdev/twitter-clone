@@ -30,9 +30,7 @@ export async function Profile({ params }: { params: Promise<{ username: string }
 				</Suspense>
 			</Header>
 			<section className="relative w-full">
-				<div className="bg-image relative h-auto max-h-50 w-full overflow-hidden border-b">
-					<ProfileHeaderImage src={profile.header_image} />
-				</div>
+				<ProfileHeaderImage src={profile.header_image} />
 				<ProfileAvatar avatar={avatar} />
 			</section>
 			<section className="px-4 py-3">
@@ -41,7 +39,7 @@ export async function Profile({ params }: { params: Promise<{ username: string }
 						<ProfileButton profile={profile} />
 					</Suspense>
 				</div>
-				<div className="mt-6 space-y-3">
+				<div className="mt-3 space-y-3 lg:mt-6">
 					<div className="space-y-0.5">
 						<Name
 							name={name}

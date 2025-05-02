@@ -7,24 +7,14 @@ import { getAuthUser } from "@/actions/auth/get-auth-user";
 import { EditProfileForm } from "./form/edit-profile-form";
 import { FollowButton } from "@/components/modules/user";
 
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-
-export async function ProfileButton({ profileId }: { profileId: Profile["id"] }) {
+export async function ProfileButton({ profile }: { profile: Profile }) {
 	const loggedinUser = await getAuthUser();
 
-	if (profileId === loggedinUser.id) {
-		return (
-			<Dialog>
-				<DialogTrigger asChild>
-					<Button variant="outline">Edit Profile</Button>
-				</DialogTrigger>
-				<EditProfileForm />
-			</Dialog>
-		);
+	if (profile.id === loggedinUser.id) {
+		return <EditProfileForm profile={profile} />;
 	}
 
-	return <ProfileFollow profileId={profileId} userId={loggedinUser.id} />;
+	return <ProfileFollow profileId={profile.id} userId={loggedinUser.id} />;
 }
 
 async function ProfileFollow({ profileId, userId }: { profileId: Profile["id"]; userId: Profile["id"] }) {
