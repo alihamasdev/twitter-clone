@@ -163,7 +163,7 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
 											render={({ field: { name, onChange, value } }) => (
 												<FormItem>
 													<FormControl>
-														<Avatar className="relative size-25 border-6 opacity-100 lg:size-33">
+														<Avatar className="relative size-25 justify-between border-6 opacity-100 lg:size-33">
 															<FileUpload
 																name={name}
 																maxSize={MAX_SIZE}
@@ -197,7 +197,7 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
 																	<FileUploadItemPreview className="aspect-square size-full *:aspect-square" />
 																</FileUploadItem>
 															</FileUpload>
-															<AvatarImage src={profile.avatar} className="z-0 hover:opacity-100" unoptimized />
+															<AvatarImage src={profile.avatar} className="z-0 hover:opacity-100" />
 														</Avatar>
 													</FormControl>
 													<FormMessage />
