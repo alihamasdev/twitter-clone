@@ -1,7 +1,6 @@
 import Image from "next/image";
 
 import { type User } from "@/types/user";
-import { supabaseStorage } from "@/utils/contants";
 
 import { ImageDialog, ImageDialogContent, ImageDialogTrigger } from "@/components/ui/image-dialog";
 import { Avatar, AvatarImage } from "@/components/modules/user";
@@ -14,7 +13,7 @@ export function ProfileHeaderImage({ src }: { src: string | null }) {
 			<ImageDialog>
 				<ImageDialogTrigger asChild>
 					<Image
-						src={supabaseStorage + src}
+						src={src}
 						width={600}
 						height={200}
 						alt="header"
@@ -23,7 +22,7 @@ export function ProfileHeaderImage({ src }: { src: string | null }) {
 				</ImageDialogTrigger>
 				<ImageDialogContent className="max-w-auto w-full rounded-none">
 					<Image
-						src={supabaseStorage + src}
+						src={src}
 						width={600}
 						height={200}
 						alt="header"

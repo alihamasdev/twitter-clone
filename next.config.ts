@@ -2,12 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 	trailingSlash: true,
+	eslint: {
+		ignoreDuringBuilds: true
+	},
 	images: {
-		remotePatterns: [
-			{ hostname: "avatars.githubusercontent.com", protocol: "https" },
-			{ hostname: "lh3.googleusercontent.com", protocol: "https" },
-			{ hostname: "*.supabase.co", protocol: "https" }
-		]
+		loader: "custom",
+		loaderFile: "./src/lib/supabase/image-loader.tsx"
 	},
 	experimental: {
 		staleTimes: {

@@ -8,7 +8,6 @@ import { toast } from "react-hot-toast";
 
 import { type Profile } from "@/types/user";
 import { profileFormSchema } from "@/lib/schemas";
-import { supabaseStorage } from "@/utils/contants";
 import { updateProfile } from "@/actions/user/update-profile";
 
 import { Button } from "@/components/ui/button";
@@ -142,7 +141,7 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
 														</FileUpload>
 														{profile.header_image && (
 															<Image
-																src={supabaseStorage + profile.header_image}
+																src={profile.header_image}
 																width={600}
 																height={200}
 																alt={`${profile.name} header`}
