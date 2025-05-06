@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 
+import { TweetForm } from "@/components/modules/tweet/form/tweet-form";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import {
@@ -34,6 +35,7 @@ export default function PostDialog() {
 							Drafts
 						</Button>
 					</AlertDialogHeader>
+					<TweetForm dialog={setOpen} />
 				</div>
 			</AlertDialogContent>
 		</AlertDialog>

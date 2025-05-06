@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
 		staleTimes: {
 			dynamic: 30,
 			static: 180
+		},
+		serverActions: {
+			bodySizeLimit: "2mb"
 		}
 	}
 };

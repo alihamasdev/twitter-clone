@@ -213,30 +213,30 @@ export type Database = {
 			};
 			tweets: {
 				Row: {
-					content: string | null;
 					created_at: string;
 					id: string;
-					image: string | null;
 					likes_count: number;
 					retweets_count: number;
+					tweet_images: string[] | null;
+					tweet_text: string | null;
 					user_id: string;
 				};
 				Insert: {
-					content?: string | null;
 					created_at?: string;
 					id?: string;
-					image?: string | null;
 					likes_count?: number;
 					retweets_count?: number;
+					tweet_images?: string[] | null;
+					tweet_text?: string | null;
 					user_id?: string;
 				};
 				Update: {
-					content?: string | null;
 					created_at?: string;
 					id?: string;
-					image?: string | null;
 					likes_count?: number;
 					retweets_count?: number;
+					tweet_images?: string[] | null;
+					tweet_text?: string | null;
 					user_id?: string;
 				};
 				Relationships: [

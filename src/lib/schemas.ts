@@ -12,3 +12,13 @@ export const profileFormSchema = z.object({
 		.max(100, { message: "Website can only contain 100 characters" })
 		.nullable()
 });
+
+export const tweetFormSchema = z
+	.object({
+		tweet_text: z.string().optional(),
+		tweet_images: z.array(z.custom<File>()).optional()
+	})
+	.refine((data) => data.tweet_text || (data.tweet_images && data.tweet_images.length > 0), {
+		message: "Tweet cannot be empty",
+		path: []
+	});
