@@ -27,8 +27,8 @@ async function ProfileFollow({ profileId, userId }: { profileId: Profile["id"]; 
 		.single();
 
 	if (error) {
-		return <FollowButton userId={userId} isFollowing={false} />;
+		return <FollowButton userId={profileId} isFollowing={false} />;
 	}
 
-	return <FollowButton userId={userId} isFollowing />;
+	return <FollowButton userId={profileId} isFollowing />;
 }
