@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import "@/styles/theme.css";
 import { chirp } from "./fonts/chirp";
 import { QueryProviders } from "@/lib/tanstack/query-provider";
+import { ThemeProvider } from "@/lib/theme-provider";
 
 export const metadata: Metadata = {
 	title: {
@@ -15,17 +16,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" className={chirp.variable}>
+		<html lang="en" suppressHydrationWarning>
 			<body style={chirp.style}>
-				<QueryProviders>{children}</QueryProviders>
-				<Toaster
-					position="bottom-center"
-					toastOptions={{
-						duration: 3000,
-						className: "font-medium text-base",
-						style: { ...chirp.style, maxWidth: "90%", color: "white", backgroundColor: "var(--color-accent)" }
-					}}
-				/>
+				<ThemeProvider attribute="data-theme" defaultTheme="dark">
+					<QueryProviders>{children}</QueryProviders>
+					<Toaster
+						position="bottom-center"
+						toastOptions={{
+							duration: 3000,
+							className: "font-medium text-base",
+							style: { ...chirp.style, maxWidth: "90%", color: "white", backgroundColor: "var(--color-accent)" }
+						}}
+					/>
+				</ThemeProvider>
 			</body>
 		</html>
 	);
