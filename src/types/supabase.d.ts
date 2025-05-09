@@ -28,114 +28,6 @@ export type Database = {
 	};
 	public: {
 		Tables: {
-			bookmarks: {
-				Row: {
-					created_at: string;
-					id: number;
-					tweet_id: string;
-					user_id: string;
-				};
-				Insert: {
-					created_at?: string;
-					id?: number;
-					tweet_id: string;
-					user_id?: string;
-				};
-				Update: {
-					created_at?: string;
-					id?: number;
-					tweet_id?: string;
-					user_id?: string;
-				};
-				Relationships: [
-					{
-						foreignKeyName: "bookmarks_tweet_id_fkey";
-						columns: ["tweet_id"];
-						isOneToOne: false;
-						referencedRelation: "tweets";
-						referencedColumns: ["id"];
-					},
-					{
-						foreignKeyName: "bookmarks_user_id_fkey";
-						columns: ["user_id"];
-						isOneToOne: false;
-						referencedRelation: "profiles";
-						referencedColumns: ["id"];
-					}
-				];
-			};
-			followers: {
-				Row: {
-					created_at: string;
-					id: number;
-					user_id: string;
-					user_to_follow: string;
-				};
-				Insert: {
-					created_at?: string;
-					id?: number;
-					user_id?: string;
-					user_to_follow: string;
-				};
-				Update: {
-					created_at?: string;
-					id?: number;
-					user_id?: string;
-					user_to_follow?: string;
-				};
-				Relationships: [
-					{
-						foreignKeyName: "followers_user_id_fkey";
-						columns: ["user_id"];
-						isOneToOne: false;
-						referencedRelation: "profiles";
-						referencedColumns: ["id"];
-					},
-					{
-						foreignKeyName: "followers_user_to_follow_fkey";
-						columns: ["user_to_follow"];
-						isOneToOne: false;
-						referencedRelation: "profiles";
-						referencedColumns: ["id"];
-					}
-				];
-			};
-			likes: {
-				Row: {
-					created_at: string;
-					id: number;
-					tweet_id: string;
-					user_id: string;
-				};
-				Insert: {
-					created_at?: string;
-					id?: number;
-					tweet_id: string;
-					user_id?: string;
-				};
-				Update: {
-					created_at?: string;
-					id?: number;
-					tweet_id?: string;
-					user_id?: string;
-				};
-				Relationships: [
-					{
-						foreignKeyName: "likes_tweet_id_fkey";
-						columns: ["tweet_id"];
-						isOneToOne: false;
-						referencedRelation: "tweets";
-						referencedColumns: ["id"];
-					},
-					{
-						foreignKeyName: "likes_user_id_fkey";
-						columns: ["user_id"];
-						isOneToOne: false;
-						referencedRelation: "profiles";
-						referencedColumns: ["id"];
-					}
-				];
-			};
 			profiles: {
 				Row: {
 					avatar: string;
@@ -150,7 +42,7 @@ export type Database = {
 					website: string | null;
 				};
 				Insert: {
-					avatar?: string;
+					avatar: string;
 					bio?: string | null;
 					created_at?: string;
 					header_image?: string | null;
@@ -175,112 +67,12 @@ export type Database = {
 				};
 				Relationships: [];
 			};
-			retweets: {
-				Row: {
-					created_at: string;
-					id: number;
-					tweet_id: string;
-					user_id: string;
-				};
-				Insert: {
-					created_at?: string;
-					id?: number;
-					tweet_id: string;
-					user_id?: string;
-				};
-				Update: {
-					created_at?: string;
-					id?: number;
-					tweet_id?: string;
-					user_id?: string;
-				};
-				Relationships: [
-					{
-						foreignKeyName: "retweets_tweet_id_fkey";
-						columns: ["tweet_id"];
-						isOneToOne: false;
-						referencedRelation: "tweets";
-						referencedColumns: ["id"];
-					},
-					{
-						foreignKeyName: "retweets_user_id_fkey";
-						columns: ["user_id"];
-						isOneToOne: false;
-						referencedRelation: "profiles";
-						referencedColumns: ["id"];
-					}
-				];
-			};
-			tweets: {
-				Row: {
-					created_at: string;
-					id: string;
-					likes_count: number;
-					retweets_count: number;
-					tweet_images: string[] | null;
-					tweet_text: string | null;
-					user_id: string;
-				};
-				Insert: {
-					created_at?: string;
-					id?: string;
-					likes_count?: number;
-					retweets_count?: number;
-					tweet_images?: string[] | null;
-					tweet_text?: string | null;
-					user_id?: string;
-				};
-				Update: {
-					created_at?: string;
-					id?: string;
-					likes_count?: number;
-					retweets_count?: number;
-					tweet_images?: string[] | null;
-					tweet_text?: string | null;
-					user_id?: string;
-				};
-				Relationships: [
-					{
-						foreignKeyName: "tweets_user_id_fkey";
-						columns: ["user_id"];
-						isOneToOne: false;
-						referencedRelation: "profiles";
-						referencedColumns: ["id"];
-					},
-					{
-						foreignKeyName: "tweets_user_id_fkey1";
-						columns: ["user_id"];
-						isOneToOne: false;
-						referencedRelation: "profiles";
-						referencedColumns: ["id"];
-					}
-				];
-			};
 		};
 		Views: {
 			[_ in never]: never;
 		};
 		Functions: {
-			get_tweet_metadata: {
-				Args: { uid: string; tweet_ids: string[] };
-				Returns: {
-					tweet_id: string;
-					liked: boolean;
-					retweeted: boolean;
-					bookmarked: boolean;
-					following: boolean;
-				}[];
-			};
-			get_unfollowed_profiles: {
-				Args: { auth_user_id: string };
-				Returns: {
-					id: string;
-					name: string;
-					username: string;
-					avatar: string;
-					verified: boolean;
-				}[];
-			};
+			[_ in never]: never;
 		};
 		Enums: {
 			[_ in never]: never;

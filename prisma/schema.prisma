@@ -1,0 +1,25 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Profile {
+  id           String   @id @db.Uuid
+  created_at   DateTime @default(dbgenerated("now()")) @db.Timestamptz()
+  name         String
+  username     String   @unique
+  avatar       String
+  verified     Boolean  @default(false)
+  header_image String?
+  bio          String?
+  website      String?
+  location     String?
+
+  @@index([created_at, id, username])
+  @@map("profiles")
+}
