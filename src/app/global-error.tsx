@@ -1,4 +1,5 @@
 "use client";
+import { useEffect } from "react";
 
 import { chirp } from "./fonts/chirp";
 import { createClient } from "@/lib/supabase/client";
@@ -17,12 +18,16 @@ export default function GlobalError({ error }: GlobalErrorProps) {
 			? error.message
 			: "Something went wrong, but don't fret - let's give it another shot.";
 
-	const resetFn = async () => {
-		if (error.message === "User not authenticated" || error.message === "User not found") {
-			const supabase = createClient();
-			await supabase.auth.signOut();
+	useEffect(() => {
+		if (error.message === "User not authenticated") {
+			(async () => {
+				const supabase = createClient();
+				await supabase.auth.signOut();
+			})();
 		}
+	}, [error]);
 
+	const resetFn = async () => {
 		window.location.reload();
 	};
 
@@ -31,7 +36,7 @@ export default function GlobalError({ error }: GlobalErrorProps) {
 			<body style={chirp.style}>
 				<main className="flex-center h-dvh w-full flex-col gap-y-6">
 					<Icon id="twitter" className="size-15" />
-					<h2 className="text-foreground text-base font-normal">{errorMessage}</h2>
+					<h2 className="text-foreground text-lg font-medium">{errorMessage}</h2>
 					<Button onClick={resetFn}>Try again</Button>
 				</main>
 			</body>

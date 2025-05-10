@@ -1,4 +1,4 @@
-import { type Tables } from "./supabase";
+import { type Profile } from "@prisma/client";
 
-export type User = Pick<Tables<"profiles">, "id" | "name" | "username" | "verified" | "avatar">;
-export type Profile = Tables<"profiles">;
+export type User = Pick<Profile, "id" | "name" | "username" | "avatar" | "verified">;
+export type Profile = Profile;

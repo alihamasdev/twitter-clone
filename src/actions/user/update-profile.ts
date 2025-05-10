@@ -5,15 +5,15 @@ import { revalidatePath } from "next/cache";
 import { supabaseStorage } from "@/utils/contants";
 import { profileFormSchema } from "@/lib/schemas";
 import { createClient } from "@/lib/supabase/server";
-import { getUser } from "@/actions/auth/get-user";
-import { Profile } from "@/types/user";
+import { getLoginUser } from "@/actions/auth/get-login-user";
+import { type Tables } from "@/types/supabase";
 
 export async function updateProfile(formData: z.infer<typeof profileFormSchema>) {
 	const validation = profileFormSchema.safeParse(formData);
 	if (!validation.success) return { errors: validation.error.flatten().fieldErrors };
 
 	const supabase = await createClient();
-	const { username } = await getUser();
+	const { username } = await getLoginUser();
 	const { avatar, header_image, ...staticData } = formData;
 	const formAvatar = avatar[avatar.length - 1];
 	const formHeaderImage = header_image[header_image.length - 1];
@@ -47,8 +47,8 @@ export async function updateProfile(formData: z.infer<typeof profileFormSchema>)
 
 const updateUserData = async (
 	supabase: Awaited<ReturnType<typeof createClient>>,
-	updatedData: Partial<Profile>,
-	username: Profile["username"]
+	updatedData: Partial<Tables<"profiles">>,
+	username: Tables<"profiles">["username"]
 ) => {
 	const { error } = await supabase.from("profiles").update(updatedData).eq("username", username);
 	if (error) return error.message;
