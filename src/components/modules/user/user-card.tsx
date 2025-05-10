@@ -1,17 +1,16 @@
 "use client";
 import { useRouter } from "next/navigation";
 
-import { type User } from "@/types/user";
-import { type Tables } from "@/types/supabase";
+import { User } from "@/types/user";
 
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, Name, Username } from "@/components/modules/user";
 
 interface UserCardProps extends React.ComponentProps<"div"> {
-	user: User & { bio?: Tables<"profiles">["bio"] };
+	user: User;
 }
 
-export function UserCard({ user: { bio, ...user }, className, children, ...props }: UserCardProps) {
+export function UserCard({ user, className, children, ...props }: UserCardProps) {
 	const router = useRouter();
 
 	return (
@@ -35,7 +34,6 @@ export function UserCard({ user: { bio, ...user }, className, children, ...props
 					</div>
 					{children}
 				</div>
-				{bio && <p className="mt-1 text-base">{bio}</p>}
 			</div>
 		</div>
 	);
