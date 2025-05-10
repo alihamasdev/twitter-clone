@@ -13,13 +13,28 @@ model Profile {
   created_at   DateTime @default(dbgenerated("now()")) @db.Timestamptz()
   name         String
   username     String   @unique
-  avatar       String
+  avatar       String   @default("https://jsjanvtxqjlqjmlyxvlp.supabase.co/storage/v1/object/public/avatars//default_avatar.png")
   verified     Boolean  @default(false)
   header_image String?
   bio          String?
   website      String?
   location     String?
 
+  following Followers[] @relation("Following")
+  follower  Followers[] @relation("Follower")
+
   @@index([created_at, id, username])
   @@map("profiles")
+}
+
+model Followers {
+  id             Int    @id @default(autoincrement())
+  user_following String @db.Uuid
+  user_to_follow String @db.Uuid
+
+  following Profile @relation("Following", fields: [user_following], references: [id])
+  follower  Profile @relation("Follower", fields: [user_to_follow], references: [id])
+
+  @@index([id, user_following, user_to_follow])
+  @@map("followers")
 }
