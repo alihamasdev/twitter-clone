@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { type User } from "@/types/user";
+import { useAuth } from "@/context/auth-context";
 
 import { cn } from "@/lib/utils";
 import { Icon, type IconId } from "@/components/ui/icon";
@@ -15,8 +15,9 @@ type Links = {
 	disabled?: boolean;
 };
 
-export function SidebarLinks({ user }: { user: User }) {
+export function SidebarLinks() {
 	const path = usePathname();
+	const { user } = useAuth();
 
 	const links: Links[] = [
 		{

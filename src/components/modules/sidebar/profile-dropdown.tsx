@@ -1,10 +1,10 @@
 "use client";
 
-import { type User } from "@/types/user";
+import { useAuth } from "@/context/auth-context";
 
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
-import { Avatar, AvatarImage, Name, Username } from "@/components/modules/user";
+import { Avatar, AvatarImage, Name, UserCard, Username } from "@/components/modules/user";
 import {
 	DropdownMenu,
 	DropdownMenuTrigger,
@@ -12,7 +12,8 @@ import {
 	DropdownMenuItem
 } from "@/components/ui/dropdown-menu";
 
-export default function ProfileDropdown({ user }: { user: User }) {
+export default function ProfileDropdown() {
+	const { user } = useAuth();
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -32,15 +33,9 @@ export default function ProfileDropdown({ user }: { user: User }) {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="start" className="min-w-70">
-				<div className="hover:bg-muted flex cursor-pointer items-center gap-x-3 border-b px-4 py-3 transition-colors">
-					<Avatar link={user.username}>
-						<AvatarImage src={user.avatar} />
-					</Avatar>
-					<div>
-						<Name name={user.name} verified={user.verified} />
-						<Username username={user.username} />
-					</div>
-				</div>
+				<DropdownMenuItem asChild>
+					<UserCard user={user} className="border-b" onClick={undefined} />
+				</DropdownMenuItem>
 				<DropdownMenuItem disabled>Add an existing account</DropdownMenuItem>
 				<DropdownMenuItem variant="destructive" pushUrl="/logout">
 					Log out of {`@${user.username}`}

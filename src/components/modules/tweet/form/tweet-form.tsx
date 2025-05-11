@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import { useAuth } from "@/context/auth-context";
 import { tweetButtons } from "./tweet-buttons";
 import { tweetFormSchema } from "@/lib/schemas";
 import { createTweet } from "@/actions/tweet/create-tweet";
@@ -32,6 +33,7 @@ interface TweetFormProps extends React.ComponentProps<"div"> {
 }
 
 export function TweetForm({ dialog, className, ...props }: TweetFormProps) {
+	const { user } = useAuth();
 	const [isPending, startTransition] = useTransition();
 	const form = useForm<z.infer<typeof tweetFormSchema>>({
 		resolver: zodResolver(tweetFormSchema),
@@ -65,7 +67,9 @@ export function TweetForm({ dialog, className, ...props }: TweetFormProps) {
 			<div className={cn("relative w-full", isPending && "opacity-50")}>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full items-start gap-x-3">
-						<Avatar></Avatar>
+						<Avatar link={user.username}>
+							<AvatarImage src={user.avatar} />
+						</Avatar>
 						<div className="flex w-full flex-col">
 							<FormField
 								control={form.control}
