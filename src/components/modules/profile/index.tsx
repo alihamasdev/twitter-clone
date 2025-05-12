@@ -1,49 +1,66 @@
-import { Fragment, Suspense } from "react";
+"use client";
+import Link from "next/link";
+import { Fragment } from "react";
+import { notFound } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 
 import { getProfile } from "@/actions/user/get-profile";
 
-import { Header, HeaderTitle } from "@/components/modules/header";
-import { Name, Username } from "@/components/modules/user";
-import { ProfileAvatar, ProfileHeaderImage } from "./image-dialogs";
-import { ProfileButton } from "./profile-button";
-import { ProfileMetadata } from "./profile-metadata";
 import { Icon } from "@/components/ui/icon";
-import { FollowersCount, FollowingCount, TweetsCount } from "./profile-counts";
-import { Skeleton } from "@/components/ui/skeleton";
 import { LinkTabs } from "@/components/ui/link-tabs";
+import { Name, Username, FollowButton } from "@/components/modules/user";
+import { Header, HeaderTitle, HeaderDescription } from "@/components/modules/header";
 
-export async function Profile({ params }: { params: Promise<{ username: string }> }) {
-	const { username } = await params;
-	const { profile } = await getProfile(username);
+import { ProfileMetadata } from "./profile-metadata";
+import { EditProfileForm } from "./form/edit-profile-form";
+import { ProfileLoading, ProfileError } from "./profile-states";
+import { ProfileAvatar, ProfileHeaderImage } from "./image-dialogs";
 
-	const { name, id, verified, avatar } = profile;
+export function Profile({ username }: { username: string }) {
+	const profileLink = `/users/${username}/`;
+
+	const { data, status } = useQuery({
+		queryKey: ["profile", username],
+		queryFn: () => getProfile(username),
+		staleTime: 5 * 60 * 1000,
+		refetchOnWindowFocus: false
+	});
+
+	if (status === "pending") {
+		return <ProfileLoading />;
+	}
+
+	if (status === "error") {
+		return <ProfileError username={username} />;
+	}
+
+	if (!data) return notFound();
+
+	const { tweets_count, followers_count, following_count, isCurrentUser, isFollowing, ...profile } = data;
+	const tweetsNumber = tweets_count === 1 ? `${tweets_count} tweet` : `${tweets_count} tweets`;
 
 	return (
 		<Fragment>
 			<Header>
 				<HeaderTitle className="flex items-center gap-x-1">
-					<span>{name}</span>
+					<span>{profile.name}</span>
 					<Icon id="verified" className="fill-blue size-5" />
 				</HeaderTitle>
-				<Suspense fallback={<Skeleton className="h-4 w-30" />}>
-					<TweetsCount id={id} />
-				</Suspense>
+				<HeaderDescription>{tweetsNumber}</HeaderDescription>
 			</Header>
 			<section className="relative w-full">
 				<ProfileHeaderImage src={profile.header_image} />
-				<ProfileAvatar avatar={avatar} />
+				<ProfileAvatar avatar={profile.avatar} />
 			</section>
 			<section className="px-4 py-3">
-				<div className="flex h-9 w-full items-center justify-end gap-x-3">
-					<Suspense fallback={<Skeleton className="h-9 w-25 rounded-full" />}>
-						<ProfileButton profile={profile} />
-					</Suspense>
+				<div className="flex min-h-9 w-full items-center justify-end gap-x-3">
+					{isCurrentUser ? <EditProfileForm profile={profile} /> : <FollowButton isFollowing={isFollowing} />}
 				</div>
 				<div className="mt-3 space-y-3 lg:mt-6">
 					<div className="space-y-0.5">
 						<Name
-							name={name}
-							verified={verified}
+							name={profile.name}
+							verified={profile.verified}
 							className="gap-x-1 [&_p]:text-xl [&_p]:font-extrabold [&_svg]:size-5"
 						/>
 						<Username username={username} />
@@ -53,20 +70,30 @@ export async function Profile({ params }: { params: Promise<{ username: string }
 						<ProfileMetadata location={profile.location} created_at={profile.created_at} website={profile.website} />
 					</div>
 					<div className="flex items-center gap-x-4 text-base">
-						<Suspense fallback={<Skeleton className="h-5 w-20" />}>
-							<FollowingCount id={id} />
-						</Suspense>
-						<Suspense fallback={<Skeleton className="h-5 w-20" />}>
-							<FollowersCount id={id} />
-						</Suspense>
+						<Link
+							href={profileLink + `following`}
+							className="text-muted-foreground flex cursor-pointer items-center hover:underline"
+						>
+							<span className="text-foreground">{following_count}</span>
+							<span className="w-1 text-transparent">1</span>
+							<span>Following</span>
+						</Link>
+						<Link
+							href={profileLink + `followers`}
+							className="text-muted-foreground flex cursor-pointer items-center hover:underline"
+						>
+							<span className="text-foreground">{followers_count}</span>
+							<span className="w-1 text-transparent">1</span>
+							<span>{followers_count === 1 ? "Follower" : "Followers"}</span>
+						</Link>
 					</div>
 				</div>
 			</section>
 			<div className="flex items-center border-b *:flex-1">
-				<LinkTabs href={`/users/${username}/`}>Tweets</LinkTabs>
-				<LinkTabs href={`/users/${username}/likes/`}>Likes</LinkTabs>
-				<LinkTabs href={`/users/${username}/retweets/`}>Retweets</LinkTabs>
-				<LinkTabs href={`/users/${username}/media/`}>Media</LinkTabs>
+				<LinkTabs href={profileLink}>Tweets</LinkTabs>
+				<LinkTabs href={profileLink + `likes/`}>Likes</LinkTabs>
+				<LinkTabs href={profileLink + `retweets/`}>Retweets</LinkTabs>
+				<LinkTabs href={profileLink + `media/`}>Media</LinkTabs>
 			</div>
 		</Fragment>
 	);

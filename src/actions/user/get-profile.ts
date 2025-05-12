@@ -1,0 +1,31 @@
+"use server";
+import { cache } from "react";
+
+import { prisma } from "@/lib/db";
+import { type User } from "@/types/user";
+import { getAuthUser } from "@/actions/auth/get-auth-user";
+
+export const getProfile = cache(async (username: User["username"]) => {
+	const { id: currentUserId } = await getAuthUser();
+
+	const user = await prisma.profile.findUnique({
+		where: { username },
+		include: {
+			_count: { select: { follower: true, following: true } },
+			follower: { select: { id: true }, where: { user_following: currentUserId } }
+		}
+	});
+
+	if (!user) return null;
+
+	const { _count, follower, ...profile } = user;
+
+	return {
+		tweets_count: 0, // hard coaded value as tweets table not added
+		followers_count: _count.follower,
+		following_count: _count.following,
+		isFollowing: follower.length > 0,
+		isCurrentUser: profile.id === currentUserId,
+		...profile
+	};
+});
