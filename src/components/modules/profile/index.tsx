@@ -54,7 +54,7 @@ export function Profile({ username }: { username: string }) {
 			</section>
 			<section className="px-4 py-3">
 				<div className="flex min-h-9 w-full items-center justify-end gap-x-3">
-					{isCurrentUser ? <EditProfileForm profile={profile} /> : <FollowButton isFollowing={isFollowing} />}
+					{isCurrentUser ? <EditProfileForm /> : <FollowButton isFollowing={isFollowing} />}
 				</div>
 				<div className="mt-3 space-y-3 lg:mt-6">
 					<div className="space-y-0.5">

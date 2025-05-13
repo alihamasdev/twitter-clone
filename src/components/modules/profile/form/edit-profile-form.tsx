@@ -1,14 +1,16 @@
 "use client";
-import Image from "next/image";
 import { z } from "zod";
+import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useTransition, useState } from "react";
 import { toast } from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { type Profile } from "@/types/user";
 import { profileFormSchema } from "@/lib/schemas";
 import { updateProfile } from "@/actions/user/update-profile";
+import { useAuth } from "@/context/auth-context";
 
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -34,7 +36,11 @@ import {
 
 const MAX_SIZE = 1 * 1024 * 1024; // 1MB
 
-export function EditProfileForm({ profile }: { profile: Profile }) {
+export function EditProfileForm() {
+	const { user, updateUser } = useAuth();
+	const username = user.username;
+	const queryClient = useQueryClient();
+	const profile = queryClient.getQueryData<Profile>(["profile", username]);
 	const [open, setOpen] = useState(false);
 	const [isPending, startTransition] = useTransition();
 	const form = useForm<z.infer<typeof profileFormSchema>>({
@@ -43,22 +49,22 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
 		defaultValues: {
 			avatar: [],
 			header_image: [],
-			name: profile.name,
-			bio: profile.bio,
-			location: profile.location,
-			website: profile.website
+			name: profile?.name,
+			bio: profile?.bio,
+			location: profile?.location,
+			website: profile?.website
 		}
 	});
 
 	function onSubmit(values: z.infer<typeof profileFormSchema>) {
 		startTransition(async () => {
-			const response = await updateProfile(values);
-			if (response?.errors) {
-				console.log(response.errors);
-				toast.error("Something went wrong");
+			const { error, data } = await updateProfile(values);
+			if (error || !data) {
+				toast.error(error);
 				return;
 			}
-
+			queryClient.invalidateQueries({ queryKey: [`profile`, username] });
+			updateUser({ name: data.name, avatar: data.avatar });
 			setOpen(false);
 		});
 	}
@@ -69,12 +75,16 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
 		return null;
 	};
 
+	if (!profile) {
+		return;
+	}
+
 	return (
 		<AlertDialog open={open} onOpenChange={setOpen}>
 			<AlertDialogTrigger asChild>
 				<Button variant="outline">Edit Profile</Button>
 			</AlertDialogTrigger>
-			<AlertDialogContent className="h-full">
+			<AlertDialogContent className="max-h-full pb-8">
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="size-full">
 						<AlertDialogHeader className="bg-background/80 sticky top-0 z-10 mb-0 flex-row justify-between border-b px-4 py-3 backdrop-blur-md">
@@ -98,7 +108,7 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
 							{isPending && (
 								<Spinner className="fixed top-1/2 left-1/2 z-50 m-0 size-7 -translate-x-1/2 -translate-y-1/2" />
 							)}
-							<div hidden={isPending}>
+							<div>
 								<div className="relative w-full">
 									<FormField
 										control={form.control}
@@ -116,6 +126,7 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
 															onFileValidate={onFileValidate}
 															accept="image/*"
 															className="z-1 w-full"
+															disabled={isPending}
 														>
 															<div className="absolute-center flex gap-x-4">
 																<FileUploadTrigger asChild>
@@ -162,7 +173,7 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
 											render={({ field: { name, onChange, value } }) => (
 												<FormItem>
 													<FormControl>
-														<Avatar className="relative size-25 justify-between border-6 opacity-100 lg:size-33">
+														<Avatar className="[&_svg]:absolute-center relative size-25 justify-between border-6 opacity-100 lg:size-33">
 															<FileUpload
 																name={name}
 																maxSize={MAX_SIZE}
@@ -172,6 +183,7 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
 																onFileValidate={onFileValidate}
 																accept="image/*"
 																className="z-1 size-full"
+																disabled={isPending}
 															>
 																<div className="absolute-center flex gap-x-2">
 																	<FileUploadTrigger asChild>
@@ -213,7 +225,7 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
 											<div className="grid gap-y-2">
 												<FormItem>
 													<FormControl>
-														<Input {...field} />
+														<Input disabled={isPending} {...field} />
 													</FormControl>
 													<FormLabel className="capitalize">{field.name}</FormLabel>
 												</FormItem>
@@ -228,7 +240,7 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
 											<div className="grid gap-y-2">
 												<FormItem>
 													<FormControl>
-														<Input value={value || ""} {...field} />
+														<Input disabled={isPending} value={value || ""} {...field} />
 													</FormControl>
 													<FormLabel className="capitalize">{field.name}</FormLabel>
 												</FormItem>
@@ -243,7 +255,7 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
 											<div className="grid gap-y-2">
 												<FormItem>
 													<FormControl>
-														<Input value={value || ""} {...field} />
+														<Input disabled={isPending} value={value || ""} {...field} />
 													</FormControl>
 													<FormLabel className="capitalize">{field.name}</FormLabel>
 												</FormItem>
@@ -258,7 +270,7 @@ export function EditProfileForm({ profile }: { profile: Profile }) {
 											<div className="grid gap-y-2">
 												<FormItem>
 													<FormControl>
-														<Input value={value || ""} {...field} />
+														<Input disabled={isPending} value={value || ""} {...field} />
 													</FormControl>
 													<FormLabel className="capitalize">{field.name}</FormLabel>
 												</FormItem>
