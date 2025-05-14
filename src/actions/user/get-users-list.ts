@@ -7,7 +7,6 @@ import { type Prisma } from "@prisma/client";
 
 export async function getUsersList(
 	limit: number = 15,
-	where?: Prisma.ProfileWhereInput,
 	orderBy: Prisma.ProfileOrderByWithRelationInput = { created_at: "desc" }
 ) {
 	const { id: currentUserId } = await getAuthUser();

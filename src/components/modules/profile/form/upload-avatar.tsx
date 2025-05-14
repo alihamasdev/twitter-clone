@@ -53,7 +53,7 @@ export function UploadAvatar({ onChange }: { onChange: (...event: any[]) => void
 		}
 
 		try {
-			const croppedBlob = await getCroppedImg(previewUrl, croppedAreaPixels, 300, 300);
+			const croppedBlob = await getCroppedImg(previewUrl, croppedAreaPixels, 400, 400);
 			if (!croppedBlob) throw new Error("Failed to generate cropped image blob.");
 
 			const newFinalUrl = URL.createObjectURL(croppedBlob);

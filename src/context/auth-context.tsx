@@ -16,7 +16,8 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-function AuthProvider({ user: initialUser, ...props }: { children: ReactNode; user: User }) {
+function AuthProvider({ userPromise, ...props }: { children: ReactNode; userPromise: Promise<User> }) {
+	const initialUser = use(userPromise);
 	const [user, setUser] = useState<User>(initialUser);
 
 	const updateUser = (data: UpdateUser) => {

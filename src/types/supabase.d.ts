@@ -28,6 +28,39 @@ export type Database = {
 	};
 	public: {
 		Tables: {
+			followers: {
+				Row: {
+					id: number;
+					user_following: string;
+					user_to_follow: string;
+				};
+				Insert: {
+					id?: number;
+					user_following: string;
+					user_to_follow: string;
+				};
+				Update: {
+					id?: number;
+					user_following?: string;
+					user_to_follow?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: "followers_user_following_fkey";
+						columns: ["user_following"];
+						isOneToOne: false;
+						referencedRelation: "profiles";
+						referencedColumns: ["id"];
+					},
+					{
+						foreignKeyName: "followers_user_to_follow_fkey";
+						columns: ["user_to_follow"];
+						isOneToOne: false;
+						referencedRelation: "profiles";
+						referencedColumns: ["id"];
+					}
+				];
+			};
 			profiles: {
 				Row: {
 					avatar: string;
@@ -42,7 +75,7 @@ export type Database = {
 					website: string | null;
 				};
 				Insert: {
-					avatar: string;
+					avatar?: string;
 					bio?: string | null;
 					created_at?: string;
 					header_image?: string | null;

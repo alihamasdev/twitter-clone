@@ -10,13 +10,13 @@ datasource db {
 
 model Profile {
   id           String   @id @db.Uuid
-  created_at   DateTime @default(dbgenerated("now()")) @db.Timestamptz()
+  created_at   DateTime @default(dbgenerated("now()")) @db.Timestamptz(6)
   name         String
   username     String   @unique
   avatar       String   @default("https://jsjanvtxqjlqjmlyxvlp.supabase.co/storage/v1/object/public/avatars//default_avatar.png")
   verified     Boolean  @default(false)
-  header_image String?
   bio          String?
+  header_image String?
   website      String?
   location     String?
 
