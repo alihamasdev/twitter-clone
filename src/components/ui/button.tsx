@@ -38,9 +38,9 @@ interface ButtonProps extends React.ComponentProps<"button">, VariantProps<typeo
 	icon?: IconId;
 }
 
-function Button({ variant, size, icon, className, children, ...props }: ButtonProps) {
+function Button({ variant, size, icon, className, type = "button", children, ...props }: ButtonProps) {
 	return (
-		<button data-slot="button" className={cn(buttonVariants({ variant, size, className }))} {...props}>
+		<button data-slot="button" type={type} className={cn(buttonVariants({ variant, size, className }))} {...props}>
 			{icon && <Icon id={icon} />}
 			{children}
 		</button>

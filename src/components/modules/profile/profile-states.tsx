@@ -48,7 +48,7 @@ function ProfileError({ username }: { username: string }) {
 				<div className="min-h-9" />
 				<p className="mt-3 text-xl font-extrabold lg:mt-6">{`@${username}`}</p>
 				<div className="flex-center mt-30 flex-col gap-y-3">
-					<h2 className="text-3xl font-extrabold">This account doesn't exist</h2>
+					<h2 className="text-3xl font-extrabold">This account doesn&apos;t exist</h2>
 					<p className="text-muted-foreground">Try searching for another.</p>
 				</div>
 			</section>

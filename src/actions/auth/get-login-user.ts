@@ -5,10 +5,8 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { createClient } from "@/lib/supabase/server";
 import { getAuthUser } from "@/actions/auth/get-auth-user";
-import { type Prisma } from "@prisma/client";
-import { type DefaultArgs } from "@prisma/client/runtime/library";
 
-export const getLoginUser = cache(async (client?: Awaited<ReturnType<typeof createClient>>, header_image?: true) => {
+export const getLoginUser = cache(async (client?: Awaited<ReturnType<typeof createClient>>) => {
 	const supabase = client || (await createClient());
 	const { id: currentUserId } = await getAuthUser(supabase);
 
@@ -19,8 +17,7 @@ export const getLoginUser = cache(async (client?: Awaited<ReturnType<typeof crea
 			name: true,
 			username: true,
 			avatar: true,
-			verified: true,
-			header_image: header_image || false
+			verified: true
 		}
 	});
 	if (!user) {

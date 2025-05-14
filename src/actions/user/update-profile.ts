@@ -5,47 +5,38 @@ import { prisma } from "@/lib/db";
 import { supabaseStorage } from "@/utils/contants";
 import { profileFormSchema } from "@/lib/schemas";
 import { createClient } from "@/lib/supabase/server";
-import { getLoginUser } from "@/actions/auth/get-login-user";
-
-const MAX_SIZE = 1 * 1024 * 1024; // 1MB
+import { getAuthUser } from "@/actions/auth/get-auth-user";
 
 export async function updateProfile(formData: z.infer<typeof profileFormSchema>) {
 	const validation = profileFormSchema.safeParse(formData);
 	if (!validation.success) return { error: validation.error.message, data: null };
 
 	const supabase = await createClient();
-	const { id: userId, avatar: userAvatar, header_image: userHeader } = await getLoginUser(supabase);
+	const { id: userId } = await getAuthUser(supabase);
 	const { avatar, header_image, ...staticData } = formData;
 
-	const formAvatar = avatar[avatar.length - 1];
-	const formHeaderImage = header_image[header_image.length - 1];
+	let updatedAvatar: string | undefined = undefined;
+	let updatedHeaderImage: string | undefined = undefined;
 
-	let updatedAvatar = userAvatar;
-	let updatedHeaderImage = userHeader;
-
-	if (formAvatar?.size > MAX_SIZE || formHeaderImage?.size > MAX_SIZE) {
-		return { error: `File size must be less than ${MAX_SIZE / (1024 * 1024)} MB`, data: null };
-	}
-
-	if (formAvatar) {
+	if (avatar) {
 		const { data, error } = await supabase.storage
 			.from("avatars")
-			.upload(`${userId}_avatar.png`, formAvatar, { upsert: true });
+			.upload(`${userId}_avatar.png`, avatar, { upsert: true, metadata: { time: Date.now() } });
 		if (error) return { error: error.message, data: null };
 		updatedAvatar = `${supabaseStorage}${data.fullPath}`;
 	}
 
-	if (formHeaderImage) {
+	if (header_image) {
 		const { data, error } = await supabase.storage
 			.from("headers")
-			.upload(`${userId}_header.png`, formHeaderImage, { upsert: true });
+			.upload(`${userId}_header.png`, header_image, { upsert: true, metadata: { time: Date.now() } });
 		if (error) return { error: error.message, data: null };
 		updatedHeaderImage = data.fullPath;
 	}
 
 	const updatedProfile = await prisma.profile.update({
 		where: { id: userId },
-		data: { avatar: updatedAvatar, header_image: updatedHeaderImage, ...staticData }
+		data: { header_image: updatedHeaderImage, avatar: updatedAvatar, ...staticData }
 	});
 
 	return { error: null, data: updatedProfile };
