@@ -7,23 +7,21 @@ import { getProfile } from "@/actions/user/get-profile";
 import { Profile } from "@/components/modules/profile";
 import { ProfileLoading } from "@/components/modules/profile/profile-states";
 
-interface ProfileLayoutProps {
+interface ProfileLayoutProps extends React.PropsWithChildren {
 	params: Promise<{ username: string }>;
-	children: React.ReactNode;
 }
 
 export default async function ProfileLayout({ params, children }: ProfileLayoutProps) {
-	const { username } = await params;
-
 	return (
 		<Suspense fallback={<ProfileLoading />}>
-			<FetchhProfile username={username} />
+			<FetchProfile params={params} />
 			{children}
 		</Suspense>
 	);
 }
 
-async function FetchhProfile({ username }: { username: string }) {
+async function FetchProfile({ params }: { params: Promise<{ username: string }> }) {
+	const { username } = await params;
 	const queryClient = new QueryClient();
 
 	await queryClient.prefetchQuery({
@@ -34,7 +32,7 @@ async function FetchhProfile({ username }: { username: string }) {
 
 	return (
 		<HydrationBoundary state={dehydrate(queryClient)}>
-			<Profile username={username} />
+			<Profile />
 		</HydrationBoundary>
 	);
 }

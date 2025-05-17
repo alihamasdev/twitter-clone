@@ -1,7 +1,6 @@
 "use client";
-import Link from "next/link";
 import { Fragment } from "react";
-import { notFound } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 
 import { getProfile } from "@/actions/user/get-profile";
@@ -13,28 +12,32 @@ import { Header, HeaderTitle, HeaderDescription } from "@/components/modules/hea
 
 import { ProfileMetadata } from "./profile-metadata";
 import { EditProfileForm } from "./form/edit-profile-form";
-import { ProfileLoading, ProfileError } from "./profile-states";
+import { ProfileLoading, ProfileError, ProfileNotFound } from "./profile-states";
 import { ProfileAvatar, ProfileHeaderImage } from "./image-dialogs";
 
-export function Profile({ username }: { username: string }) {
+export function Profile() {
+	const { username } = useParams<{ username: string }>();
 	const profileLink = `/users/${username}/`;
 
-	const { data, status } = useQuery({
+	const { data, isPending, isError } = useQuery({
 		queryKey: ["profile", username],
 		queryFn: () => getProfile(username),
 		staleTime: 5 * 60 * 1000,
-		refetchOnWindowFocus: false
+		refetchOnWindowFocus: false,
+		throwOnError: true
 	});
 
-	if (status === "pending") {
+	if (isPending) {
 		return <ProfileLoading />;
 	}
 
-	if (status === "error") {
+	if (isError) {
 		return <ProfileError username={username} />;
 	}
 
-	if (!data) return notFound();
+	if (!data) {
+		return <ProfileNotFound username={username} />;
+	}
 
 	const { tweets_count, followers_count, following_count, isCurrentUser, isFollowing, ...profile } = data;
 	const tweetsNumber = tweets_count === 1 ? `${tweets_count} tweet` : `${tweets_count} tweets`;
@@ -54,7 +57,7 @@ export function Profile({ username }: { username: string }) {
 			</section>
 			<section className="px-4 py-3">
 				<div className="flex min-h-9 w-full items-center justify-end gap-x-3">
-					{isCurrentUser ? <EditProfileForm /> : <FollowButton isFollowing={isFollowing} />}
+					{isCurrentUser ? <EditProfileForm /> : <FollowButton size="default" isFollowing={isFollowing} />}
 				</div>
 				<div className="mt-3 space-y-3 lg:mt-6">
 					<div className="space-y-0.5">
@@ -70,22 +73,16 @@ export function Profile({ username }: { username: string }) {
 						<ProfileMetadata location={profile.location} created_at={profile.created_at} website={profile.website} />
 					</div>
 					<div className="flex items-center gap-x-4 text-base">
-						<Link
-							href={profileLink + `following`}
-							className="text-muted-foreground flex cursor-pointer items-center hover:underline"
-						>
+						<div className="text-muted-foreground flex cursor-pointer items-center hover:underline">
 							<span className="text-foreground">{following_count}</span>
 							<span className="w-1 text-transparent">1</span>
 							<span>Following</span>
-						</Link>
-						<Link
-							href={profileLink + `followers`}
-							className="text-muted-foreground flex cursor-pointer items-center hover:underline"
-						>
+						</div>
+						<div className="text-muted-foreground flex cursor-pointer items-center hover:underline">
 							<span className="text-foreground">{followers_count}</span>
 							<span className="w-1 text-transparent">1</span>
 							<span>{followers_count === 1 ? "Follower" : "Followers"}</span>
-						</Link>
+						</div>
 					</div>
 				</div>
 			</section>

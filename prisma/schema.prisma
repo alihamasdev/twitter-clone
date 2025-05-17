@@ -32,8 +32,8 @@ model Followers {
   user_following String @db.Uuid
   user_to_follow String @db.Uuid
 
-  following Profile @relation("Following", fields: [user_following], references: [id])
-  follower  Profile @relation("Follower", fields: [user_to_follow], references: [id])
+  following_user Profile @relation("Following", fields: [user_following], references: [id])
+  follower_user  Profile @relation("Follower", fields: [user_to_follow], references: [id])
 
   @@index([id, user_following, user_to_follow])
   @@map("followers")
