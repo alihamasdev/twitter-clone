@@ -1,11 +1,12 @@
 "use server";
+
 import { z } from "zod";
 
+import { getAuthUser } from "@/actions/auth/get-auth-user";
 import { prisma } from "@/lib/db";
-import { supabaseStorage } from "@/utils/contants";
 import { profileFormSchema } from "@/lib/schemas";
 import { createClient } from "@/lib/supabase/server";
-import { getAuthUser } from "@/actions/auth/get-auth-user";
+import { supabaseStorage } from "@/utils/contants";
 
 export async function updateProfile(formData: z.infer<typeof profileFormSchema>) {
 	const validation = profileFormSchema.safeParse(formData);

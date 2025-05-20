@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import {
 	FileArchiveIcon,
@@ -11,7 +11,8 @@ import {
 	FileTextIcon,
 	FileVideoIcon
 } from "lucide-react";
-import * as React from "react";
+
+import { cn } from "@/lib/utils";
 
 const ROOT_NAME = "FileUpload";
 const DROPZONE_NAME = "FileUploadDropzone";

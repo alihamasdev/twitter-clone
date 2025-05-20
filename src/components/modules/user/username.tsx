@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils";
-import { LinkToProfile } from "./link-to-profile";
-
 import { type User } from "@/types/user";
+import { cn } from "@/lib/utils";
+
+import { LinkToProfile } from "./link-to-profile";
 
 interface UsernameProps extends React.ComponentProps<"div"> {
 	username: User["username"];

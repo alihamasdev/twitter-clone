@@ -1,4 +1,5 @@
 "use client";
+
 import { Fragment } from "react";
 import { useParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -7,13 +8,13 @@ import { getProfile } from "@/actions/user/get-profile";
 
 import { Icon } from "@/components/ui/icon";
 import { LinkTabs } from "@/components/ui/link-tabs";
-import { Name, Username, FollowButton } from "@/components/modules/user";
-import { Header, HeaderTitle, HeaderDescription } from "@/components/modules/header";
+import { Header, HeaderDescription, HeaderTitle } from "@/components/modules/header";
+import { FollowButton, Name, Username } from "@/components/modules/user";
 
-import { ProfileMetadata } from "./profile-metadata";
 import { EditProfileForm } from "./form/edit-profile-form";
-import { ProfileLoading, ProfileError, ProfileNotFound } from "./profile-states";
 import { ProfileAvatar, ProfileHeaderImage } from "./image-dialogs";
+import { ProfileMetadata } from "./profile-metadata";
+import { ProfileError, ProfileLoading, ProfileNotFound } from "./profile-states";
 
 export function Profile() {
 	const { username } = useParams<{ username: string }>();

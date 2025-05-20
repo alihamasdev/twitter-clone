@@ -1,8 +1,9 @@
 import { Suspense } from "react";
 
-import { Search } from "./search";
-import { AsideLinks } from "./aside-links";
 import { buttonVariants } from "@/components/ui/button";
+
+import { AsideLinks } from "./aside-links";
+import { Search } from "./search";
 import { SuggestedUsers, SuggestedUsersLoader } from "./suggested-users";
 
 export function Aside() {

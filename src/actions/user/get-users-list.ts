@@ -1,9 +1,9 @@
 "use server";
 
-import { prisma } from "@/lib/db";
-import { getAuthUser } from "@/actions/auth/get-auth-user";
-
 import { type Prisma } from "@prisma/client";
+
+import { getAuthUser } from "@/actions/auth/get-auth-user";
+import { prisma } from "@/lib/db";
 
 export async function getUsersList(
 	limit: number = 15,

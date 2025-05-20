@@ -1,11 +1,13 @@
 "use client";
+
 import { useEffect } from "react";
 
-import { chirp } from "./fonts/chirp";
 import { createClient } from "@/lib/supabase/client";
 
-import { Icon } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
+
+import { chirp } from "./fonts/chirp";
 
 interface GlobalErrorProps {
 	error: Error & { digest?: string };

@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import { type IconId } from "@/types/icons";
+import { cn } from "@/lib/utils";
 
 interface IconProps extends React.SVGAttributes<HTMLOrSVGElement> {
 	id: IconId;

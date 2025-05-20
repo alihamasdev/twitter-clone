@@ -1,8 +1,8 @@
 import { useId } from "react";
-
-import { Input } from "@/components/ui/input";
 import { Label } from "@radix-ui/react-label";
+
 import { Icon } from "@/components/ui/icon";
+import { Input } from "@/components/ui/input";
 
 export function Search() {
 	const id = useId();

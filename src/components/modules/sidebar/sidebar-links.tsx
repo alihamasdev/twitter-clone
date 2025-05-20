@@ -1,10 +1,11 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
 import { useAuth } from "@/context/auth-context";
 
 import { cn } from "@/lib/utils";
+
 import { Icon, type IconId } from "@/components/ui/icon";
 
 type Links = {

@@ -1,24 +1,24 @@
 "use client";
 
 import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import { useAuth } from "@/context/auth-context";
 import { ZoomInIcon, ZoomOutIcon } from "lucide-react";
 
-import { useAuth } from "@/context/auth-context";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { getCroppedImg, type Area } from "@/utils/image.helpers";
 
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { Avatar, AvatarImage } from "@/components/modules/user";
-import { Cropper, CropperCropArea, CropperDescription, CropperImage } from "@/components/ui/cropper";
 import {
 	AlertDialog,
 	AlertDialogContent,
-	AlertDialogHeader,
-	AlertDialogTitle,
 	AlertDialogDescription,
-	AlertDialogFooter
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Cropper, CropperCropArea, CropperDescription, CropperImage } from "@/components/ui/cropper";
+import { Slider } from "@/components/ui/slider";
+import { Avatar, AvatarImage } from "@/components/modules/user";
 
 export function UploadAvatar({ onChange }: { onChange: (...event: any[]) => void }) {
 	const { user } = useAuth();

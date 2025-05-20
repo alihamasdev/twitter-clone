@@ -1,9 +1,10 @@
 "use server";
+
 import { cache } from "react";
 
-import { prisma } from "@/lib/db";
 import { type User } from "@/types/user";
 import { getAuthUser } from "@/actions/auth/get-auth-user";
+import { prisma } from "@/lib/db";
 
 export const getProfile = cache(async (username: User["username"]) => {
 	const { id: currentUserId } = await getAuthUser();

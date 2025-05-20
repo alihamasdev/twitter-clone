@@ -2,9 +2,11 @@ import { type Metadata } from "next";
 import { Toaster } from "react-hot-toast";
 
 import "@/styles/theme.css";
-import { chirp } from "./fonts/chirp";
+
 import { QueryProviders } from "@/lib/tanstack/query-provider";
 import { ThemeProvider } from "@/lib/theme-provider";
+
+import { chirp } from "./fonts/chirp";
 
 export const metadata: Metadata = {
 	title: {

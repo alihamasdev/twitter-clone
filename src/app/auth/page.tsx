@@ -1,8 +1,9 @@
-import { googleLogin, githubLogin } from "@/actions/auth/login";
+import { githubLogin, googleLogin } from "@/actions/auth/login";
 
-import { Icon } from "@/components/ui/icon";
 import { Button } from "@/components/ui/button";
-import { GoogleIcon, GithubIcon } from "./icons";
+import { Icon } from "@/components/ui/icon";
+
+import { GithubIcon, GoogleIcon } from "./icons";
 
 export default function AuthPage() {
 	return (

@@ -1,29 +1,31 @@
 "use client";
-import { z } from "zod";
+
+import { useState, useTransition } from "react";
+import { useAuth } from "@/context/auth-context";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useTransition, useState } from "react";
-import { toast } from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { z } from "zod";
 
 import { type Profile } from "@/types/user";
-import { profileFormSchema } from "@/lib/schemas";
 import { updateProfile } from "@/actions/user/update-profile";
-import { useAuth } from "@/context/auth-context";
+import { profileFormSchema } from "@/lib/schemas";
 
+import {
+	AlertDialog,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
-import {
-	AlertDialog,
-	AlertDialogTrigger,
-	AlertDialogContent,
-	AlertDialogHeader,
-	AlertDialogTitle,
-	AlertDialogDescription,
-	AlertDialogCancel
-} from "@/components/ui/alert-dialog";
+
 import { UploadAvatar } from "./upload-avatar";
 import { UploadHeader } from "./upload-header";
 

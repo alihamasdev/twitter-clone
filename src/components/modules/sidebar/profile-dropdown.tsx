@@ -3,14 +3,14 @@
 import { useAuth } from "@/context/auth-context";
 
 import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/ui/icon";
-import { Avatar, AvatarImage, Name, UserCard, Username } from "@/components/modules/user";
 import {
 	DropdownMenu,
-	DropdownMenuTrigger,
 	DropdownMenuContent,
-	DropdownMenuItem
+	DropdownMenuItem,
+	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { Icon } from "@/components/ui/icon";
+import { Avatar, AvatarImage, Name, UserCard, Username } from "@/components/modules/user";
 
 export default function ProfileDropdown() {
 	const { user } = useAuth();

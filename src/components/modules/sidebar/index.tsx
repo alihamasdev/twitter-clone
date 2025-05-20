@@ -1,9 +1,10 @@
-import Link from "next/link";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
 import { Icon } from "@/components/ui/icon";
-import { SidebarLinks } from "./sidebar-links";
+
 import { MoreLinksDropdown } from "./more-links-dropdown";
+import { SidebarLinks } from "./sidebar-links";
 
 const PostDialog = dynamic(() => import("./post-dialog"));
 const ProfileDropdown = dynamic(() => import("./profile-dropdown"));

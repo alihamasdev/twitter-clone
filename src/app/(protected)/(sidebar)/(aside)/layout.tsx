@@ -1,5 +1,6 @@
-import { Aside } from "@/components/modules/aside";
 import { Fragment } from "react";
+
+import { Aside } from "@/components/modules/aside";
 
 export default function AsideLayout({ children }: { children: React.ReactNode }) {
 	return (

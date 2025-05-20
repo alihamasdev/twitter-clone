@@ -1,10 +1,11 @@
 "use server";
+
 import { cache } from "react";
 import { redirect } from "next/navigation";
 
+import { getAuthUser } from "@/actions/auth/get-auth-user";
 import { prisma } from "@/lib/db";
 import { createClient } from "@/lib/supabase/server";
-import { getAuthUser } from "@/actions/auth/get-auth-user";
 
 export const getLoginUser = cache(async (client?: Awaited<ReturnType<typeof createClient>>) => {
 	const supabase = client || (await createClient());

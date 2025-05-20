@@ -1,7 +1,8 @@
 import { type User } from "@/types/user";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 import { LinkToProfile } from "./link-to-profile";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface UserAvatarProps extends Omit<React.ComponentProps<typeof Avatar>, "asChild"> {
 	link?: User["username"] | false;

@@ -1,8 +1,9 @@
-import { cn } from "@/lib/utils";
-import { Icon } from "@/components/ui/icon";
-import { LinkToProfile } from "./link-to-profile";
-
 import { type User } from "@/types/user";
+import { cn } from "@/lib/utils";
+
+import { Icon } from "@/components/ui/icon";
+
+import { LinkToProfile } from "./link-to-profile";
 
 interface NameProps extends React.ComponentProps<"div"> {
 	name: User["name"];

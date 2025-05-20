@@ -1,8 +1,9 @@
 "use client";
+
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
+import { UserRound } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { UserRound } from "lucide-react";
 
 function Avatar({ className, ...props }: React.ComponentProps<typeof AvatarPrimitive.Root>) {
 	return (

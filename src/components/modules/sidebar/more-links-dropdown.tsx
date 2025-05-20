@@ -1,12 +1,12 @@
 import Link from "next/link";
 
-import { Icon } from "@/components/ui/icon";
 import {
 	DropdownMenu,
-	DropdownMenuTrigger,
 	DropdownMenuContent,
-	DropdownMenuItem
+	DropdownMenuItem,
+	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import { Icon } from "@/components/ui/icon";
 
 export function MoreLinksDropdown() {
 	return (

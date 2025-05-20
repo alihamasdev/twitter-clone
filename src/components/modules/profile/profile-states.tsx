@@ -1,9 +1,9 @@
 import { Fragment } from "react";
 
-import { Skeleton } from "@/components/ui/skeleton";
-import { Spinner } from "@/components/ui/spinner";
 import { Avatar } from "@/components/ui/avatar";
 import { Error } from "@/components/ui/error";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import { Header, HeaderTitle } from "@/components/modules/header";
 
 function ProfileLoading() {

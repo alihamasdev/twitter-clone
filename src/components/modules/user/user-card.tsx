@@ -1,9 +1,10 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 
 import { User } from "@/types/user";
-
 import { cn } from "@/lib/utils";
+
 import { Avatar, AvatarImage, Name, Username } from "@/components/modules/user";
 
 interface UserCardProps extends React.ComponentProps<"div"> {

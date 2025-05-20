@@ -1,9 +1,10 @@
 "use server";
+
 import { redirect } from "next/navigation";
 import { type Provider } from "@supabase/auth-js";
 
-import { baseUrl } from "@/utils/contants";
 import { createClient } from "@/lib/supabase/server";
+import { baseUrl } from "@/utils/contants";
 
 async function oAuthLogin(provider: Provider) {
 	const { auth } = await createClient();

@@ -1,24 +1,24 @@
 "use client";
 
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ZoomInIcon, ZoomOutIcon } from "lucide-react";
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 
+import { Profile } from "@/types/user";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { getCroppedImg, type Area } from "@/utils/image.helpers";
 
-import { Button } from "@/components/ui/button";
-import { Slider } from "@/components/ui/slider";
-import { Cropper, CropperCropArea, CropperDescription, CropperImage } from "@/components/ui/cropper";
 import {
 	AlertDialog,
 	AlertDialogContent,
-	AlertDialogHeader,
-	AlertDialogTitle,
 	AlertDialogDescription,
-	AlertDialogFooter
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle
 } from "@/components/ui/alert-dialog";
-import { Profile } from "@/types/user";
+import { Button } from "@/components/ui/button";
+import { Cropper, CropperCropArea, CropperDescription, CropperImage } from "@/components/ui/cropper";
+import { Slider } from "@/components/ui/slider";
 
 interface UploadHeaderProps {
 	prevHeader: Profile["header_image"];
