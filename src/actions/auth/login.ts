@@ -2,15 +2,16 @@
 import { redirect } from "next/navigation";
 import { type Provider } from "@supabase/auth-js";
 
+import { baseUrl } from "@/utils/contants";
 import { createClient } from "@/lib/supabase/server";
 
 async function oAuthLogin(provider: Provider) {
 	const { auth } = await createClient();
-	const { data, error } = await auth.signInWithOAuth({
+	const { data } = await auth.signInWithOAuth({
 		provider,
-		options: { redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth`, queryParams: { next: "/home" } }
+		options: { redirectTo: `${baseUrl}/auth/callback`, queryParams: { next: "/home" } }
 	});
-	console.log({ error, data });
+
 	if (data.url) redirect(data.url);
 }
 
