@@ -1,10 +1,8 @@
-import { Suspense } from "react";
-
 import { buttonVariants } from "@/components/ui/button";
 
 import { AsideLinks } from "./aside-links";
 import { Search } from "./search";
-import { SuggestedUsers, SuggestedUsersLoader } from "./suggested-users";
+import { SuggestedUsers } from "./suggested-users";
 
 export function Aside() {
 	const date = new Date();
@@ -19,15 +17,13 @@ export function Aside() {
 					href="https://github.com/alihamasdev/twitter"
 					target="_blank"
 					rel="noopener noreferrer"
-					className={buttonVariants({ variant: "accent" })}
+					className={buttonVariants({ variant: "accent", size: "sm" })}
 				>
 					Repository
 				</a>
 			</section>
 
-			<Suspense fallback={<SuggestedUsersLoader />}>
-				<SuggestedUsers />
-			</Suspense>
+			<SuggestedUsers />
 
 			<AsideLinks />
 			<p className="text-muted-foreground text-center text-sm">&#169; {year} Twitter, Inc.</p>

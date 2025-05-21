@@ -5,13 +5,14 @@ import { useRouter } from "next/navigation";
 import { User } from "@/types/user";
 import { cn } from "@/lib/utils";
 
-import { Avatar, AvatarImage, Name, Username } from "@/components/modules/user";
+import { Avatar, AvatarImage, FollowButton, Name, Username } from "@/components/modules/user";
 
 interface UserCardProps extends React.ComponentProps<"div"> {
 	user: User;
+	isFollowing: boolean | null;
 }
 
-export function UserCard({ user, className, children, ...props }: UserCardProps) {
+export function UserCard({ user, isFollowing, className, ...props }: UserCardProps) {
 	const router = useRouter();
 
 	return (
@@ -33,7 +34,7 @@ export function UserCard({ user, className, children, ...props }: UserCardProps)
 						<Name name={user.name} verified={user.verified} link={user.username} />
 						<Username username={user.username} link />
 					</div>
-					{children}
+					{isFollowing !== null && <FollowButton isFollowing={isFollowing} size="sm" />}
 				</div>
 			</div>
 		</div>
