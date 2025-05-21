@@ -22,6 +22,7 @@ model Profile {
 
   following Followers[] @relation("Following")
   follower  Followers[] @relation("Follower")
+  tweets    Tweets[]
 
   @@index([created_at, id, username])
   @@map("profiles")
@@ -37,4 +38,17 @@ model Followers {
 
   @@index([id, user_following, user_to_follow])
   @@map("followers")
+}
+
+model Tweets {
+  id           String   @id @default(cuid()) @db.Uuid
+  created_at   DateTime @default(now()) @db.Timestamptz(6)
+  user_id      String   @db.Uuid
+  tweet_text   String?
+  tweet_images String[]
+
+  user Profile @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([id, user_id, created_at])
+  @@map("tweets")
 }

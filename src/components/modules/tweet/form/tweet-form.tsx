@@ -1,30 +1,33 @@
 "use client";
-import { z } from "zod";
+
 import { useTransition } from "react";
-import { toast } from "react-hot-toast";
+import Link from "next/link";
+import { useAuth } from "@/context/auth-context";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { z } from "zod";
 
-import { useAuth } from "@/context/auth-context";
-import { tweetButtons } from "./tweet-buttons";
-import { tweetFormSchema } from "@/lib/schemas";
 import { createTweet } from "@/actions/tweet/create-tweet";
-
+import { tweetFormSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
-import { Textarea } from "@/components/ui/textarea";
+
 import { Button } from "@/components/ui/button";
-import { Icon } from "@/components/ui/icon";
-import { Avatar, AvatarImage } from "@/components/modules/user";
-import { Form, FormField, FormControl } from "@/components/ui/form";
-import { ImageDialog, ImageDialogTrigger, ImageDialogContent } from "@/components/ui/image-dialog";
 import {
 	FileUpload,
-	FileUploadTrigger,
 	FileUploadItem,
 	FileUploadItemDelete,
 	FileUploadItemPreview,
-	FileUploadList
+	FileUploadList,
+	FileUploadTrigger
 } from "@/components/ui/file-upload";
+import { Form, FormControl, FormField } from "@/components/ui/form";
+import { Icon } from "@/components/ui/icon";
+import { ImageDialog, ImageDialogContent, ImageDialogTrigger } from "@/components/ui/image-dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarImage } from "@/components/modules/user";
+
+import { tweetButtons } from "./tweet-buttons";
 
 const MAX_SIZE = 2 * 1024 * 1024; // 2MB
 
@@ -47,16 +50,22 @@ export function TweetForm({ dialog, className, ...props }: TweetFormProps) {
 	};
 
 	const onSubmit = (values: z.infer<typeof tweetFormSchema>) => {
-		console.log(values);
 		startTransition(async () => {
-			const { error } = await createTweet(values);
+			const { error, newTweet } = await createTweet(values);
 			if (error) {
 				toast.error(error);
 				return;
 			}
 
-			form.reset({ tweet_images: [], tweet_text: "" });
-			toast.success("Your tweet has been sent");
+			form.reset({ tweet_images: undefined, tweet_text: "" });
+			toast.success(() => (
+				<div className="flex items-center gap-x-3">
+					<span>Your tweet has been sent</span>
+					<Link href={`/tweets/${newTweet?.id}`} className="hover:underline font-bold">
+						View
+					</Link>
+				</div>
+			));
 			dialog && dialog(false);
 		});
 	};
