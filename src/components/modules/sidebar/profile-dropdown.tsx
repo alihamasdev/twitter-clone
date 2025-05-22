@@ -34,7 +34,7 @@ export default function ProfileDropdown() {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="start" className="min-w-70">
 				<DropdownMenuItem asChild>
-					<UserCard user={user} className="border-b" onClick={undefined} />
+					<UserCard user={user} className="border-b" isFollowing={null} onClick={undefined} />
 				</DropdownMenuItem>
 				<DropdownMenuItem disabled>Add an existing account</DropdownMenuItem>
 				<DropdownMenuItem variant="destructive" pushUrl="/logout">
