@@ -23,6 +23,9 @@ model Profile {
   following Followers[] @relation("Following")
   follower  Followers[] @relation("Follower")
   tweets    Tweets[]
+  likes     Likes[]
+  retweets  Retweets[]
+  bookmarks Bookmarks[]
 
   @@index([created_at, id, username])
   @@map("profiles")
@@ -47,8 +50,47 @@ model Tweets {
   tweet_text   String?
   tweet_images String[]
 
-  user Profile @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user      Profile     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  likes     Likes[]
+  retweets  Retweets[]
+  bookmarks Bookmarks[]
 
   @@index([id, user_id, created_at])
   @@map("tweets")
+}
+
+model Likes {
+  id       Int    @id @default(autoincrement())
+  tweet_id String @db.Uuid
+  user_id  String @db.Uuid
+
+  tweet Tweets  @relation(fields: [tweet_id], references: [id], onDelete: Cascade)
+  user  Profile @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([tweet_id, user_id])
+  @@map("likes")
+}
+
+model Retweets {
+  id       Int    @id @default(autoincrement())
+  tweet_id String @db.Uuid
+  user_id  String @db.Uuid
+
+  tweet Tweets  @relation(fields: [tweet_id], references: [id], onDelete: Cascade)
+  user  Profile @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([tweet_id, user_id])
+  @@map("retweets")
+}
+
+model Bookmarks {
+  id       Int    @id @default(autoincrement())
+  tweet_id String @db.Uuid
+  user_id  String @db.Uuid
+
+  tweet Tweets  @relation(fields: [tweet_id], references: [id], onDelete: Cascade)
+  user  Profile @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([tweet_id, user_id])
+  @@map("bookmarks")
 }
