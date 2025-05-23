@@ -4,10 +4,12 @@ import { useTransition } from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/auth-context";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
 
+import { ProfileData } from "@/types/user";
 import { createTweet } from "@/actions/tweet/create-tweet";
 import { tweetFormSchema } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
@@ -37,6 +39,7 @@ interface TweetFormProps extends React.ComponentProps<"div"> {
 
 export function TweetForm({ dialog, className, ...props }: TweetFormProps) {
 	const { user } = useAuth();
+	const queryClient = useQueryClient();
 	const [isPending, startTransition] = useTransition();
 	const form = useForm<z.infer<typeof tweetFormSchema>>({
 		resolver: zodResolver(tweetFormSchema),
@@ -67,6 +70,10 @@ export function TweetForm({ dialog, className, ...props }: TweetFormProps) {
 				</div>
 			));
 			dialog && dialog(false);
+			queryClient.setQueryData([`profile`, user.username], (oldData: ProfileData) => ({
+				...oldData,
+				tweets_count: oldData.tweets_count + 1
+			}));
 		});
 	};
 

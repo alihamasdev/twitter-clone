@@ -12,7 +12,7 @@ export const getProfile = cache(async (username: User["username"]) => {
 	const user = await prisma.profile.findUnique({
 		where: { username },
 		include: {
-			_count: { select: { follower: true, following: true } },
+			_count: { select: { follower: true, following: true, tweets: true } },
 			follower: { select: { id: true }, where: { user_following: currentUserId } }
 		}
 	});
@@ -22,7 +22,7 @@ export const getProfile = cache(async (username: User["username"]) => {
 	const { _count, follower, ...profile } = user;
 
 	return {
-		tweets_count: 0, // hard coaded value as tweets table not added
+		tweets_count: _count.tweets,
 		followers_count: _count.follower,
 		following_count: _count.following,
 		isFollowing: follower.length > 0,
