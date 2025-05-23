@@ -20,8 +20,9 @@ export async function createTweet(formData: z.infer<typeof tweetFormSchema>) {
 		const tweetId = randomUUID();
 		let imageUrls: string[] | undefined = undefined;
 		if (tweet_images && tweet_images.length > 0) {
-			const uploadPromises = tweet_images.map(async (file) => {
-				const filePath = `${currentUserId}/${tweetId}/${Date.now()}`;
+			const uploadPromises = tweet_images.map(async (file, index) => {
+				const fileName = file.name.split(".").join(`_${index}.`);
+				const filePath = `${currentUserId}/${tweetId}/${fileName}`;
 
 				const { data, error } = await supabase.storage.from("tweets").upload(filePath, file, {
 					contentType: file.type
