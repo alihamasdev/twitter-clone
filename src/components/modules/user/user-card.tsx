@@ -34,7 +34,7 @@ export function UserCard({ user, isFollowing, className, ...props }: UserCardPro
 						<Name name={user.name} verified={user.verified} link={user.username} />
 						<Username username={user.username} link />
 					</div>
-					{isFollowing !== null && <FollowButton isFollowing={isFollowing} size="sm" />}
+					{isFollowing !== null && <FollowButton userId={user.id} isFollowing={isFollowing} />}
 				</div>
 			</div>
 		</div>
