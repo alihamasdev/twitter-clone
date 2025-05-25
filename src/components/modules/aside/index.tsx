@@ -7,6 +7,7 @@ import { SuggestedUsers } from "./suggested-users";
 export function Aside() {
 	const date = new Date();
 	const year = date.getFullYear();
+
 	return (
 		<aside className="sticky top-0 hidden h-dvh w-full max-w-88 min-w-75 space-y-4 overflow-y-auto px-1 py-4 lg:block">
 			<Search />
@@ -17,7 +18,7 @@ export function Aside() {
 					href="https://github.com/alihamasdev/twitter"
 					target="_blank"
 					rel="noopener noreferrer"
-					className={buttonVariants({ variant: "accent", size: "sm" })}
+					className={buttonVariants({ variant: "accent" })}
 				>
 					Repository
 				</a>

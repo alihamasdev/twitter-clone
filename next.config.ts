@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-	trailingSlash: true,
 	eslint: {
 		ignoreDuringBuilds: true
 	},
@@ -10,6 +9,7 @@ const nextConfig: NextConfig = {
 		loaderFile: "./src/lib/supabase/image-loader.tsx"
 	},
 	experimental: {
+		authInterrupts: true,
 		staleTimes: {
 			dynamic: 30,
 			static: 180

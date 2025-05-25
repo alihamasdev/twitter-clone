@@ -1,46 +1,42 @@
 "use client";
 
-import { createContext, use, useMemo, useState, type ReactNode } from "react";
+import { createContext, use } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-import { type User } from "@/types/user";
-
-interface UpdateUser {
-	name?: User["name"];
-	avatar?: User["avatar"];
-}
+import { getLoginUserData } from "@/lib/dal";
+import { type UserData } from "@/types/user";
 
 interface AuthContextType {
-	user: User;
-	updateUser: (data: UpdateUser) => void;
-	updateUsername: (username: User["username"]) => void;
+	user: UserData | null;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-function AuthProvider({ userPromise, ...props }: { children: ReactNode; userPromise: Promise<User> }) {
+export function AuthProvider({
+	children,
+	userPromise
+}: React.PropsWithChildren<{ userPromise: Promise<UserData | null> }>) {
 	const initialUser = use(userPromise);
-	const [user, setUser] = useState<User>(initialUser);
 
-	const updateUser = (data: UpdateUser) => {
-		setUser((prevUser) => {
-			const { name, avatar, ...staticUser } = prevUser;
-			return { ...staticUser, name: data.name || name, avatar: data.avatar || avatar };
-		});
-	};
+	const { data: user } = useQuery({
+		queryKey: [`auth`],
+		staleTime: Infinity,
+		initialData: initialUser,
+		queryFn: () => getLoginUserData()
+	});
 
-	const updateUsername = (username: User["username"]) => {
-		setUser((prevUser) => ({ ...prevUser, username }));
-	};
-
-	const contextValue = useMemo(() => ({ user, updateUser, updateUsername }), [user, updateUser, updateUsername]);
-
-	return <AuthContext value={contextValue} {...props} />;
+	return <AuthContext value={{ user }}>{children}</AuthContext>;
 }
 
-function useAuth() {
+export function useAuth() {
 	const authContext = use(AuthContext);
-	if (!authContext) throw new Error("useAuth should be used within <AuthProvider>");
-	return authContext;
-}
 
-export { AuthProvider, useAuth };
+	if (!authContext) {
+		throw new Error("useAuth should be used within <AuthProvider>");
+	}
+
+	const { user } = authContext;
+	if (!user) throw new Error("User not found in database");
+
+	return { user };
+}

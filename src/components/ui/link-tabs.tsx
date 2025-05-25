@@ -9,7 +9,8 @@ type LinkTabsProps = React.ComponentProps<typeof Link>;
 
 export function LinkTabs({ href, className, children }: LinkTabsProps) {
 	const path = usePathname();
-	const isActive = path.endsWith(href.toString());
+	const url = href.toString() + "/";
+	const isActive = path.endsWith(url);
 
 	return (
 		<Link

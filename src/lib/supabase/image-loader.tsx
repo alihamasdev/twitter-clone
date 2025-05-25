@@ -1,7 +1,7 @@
-import { type ImageProps } from "next/image";
+import { type ImageLoaderProps } from "next/image";
 
-const projectId = process.env.NEXT_PUBLIC_SUPABASE_PROJECT_ID!;
+import { supabaseProjectId } from "@/utils/contants";
 
-export default function ImageLoader({ src, width, quality }: ImageProps) {
-	return `https://${projectId}.supabase.co/storage/v1/object/public/${src}?width=${width}&quality=${quality || 75}`;
+export default function ImageLoader({ src, width, quality }: ImageLoaderProps) {
+	return `https://${supabaseProjectId}.supabase.co/storage/v1/object/public/${src}?width=${width}&quality=${quality || 75}`;
 }

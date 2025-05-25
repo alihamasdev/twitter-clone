@@ -4,23 +4,22 @@ import { Toaster } from "react-hot-toast";
 import "@/styles/theme.css";
 
 import { QueryProviders } from "@/lib/tanstack/query-provider";
-import { ThemeProvider } from "@/lib/theme-provider";
+import { ThemeProvider } from "@/lib/theme";
+import { baseUrl } from "@/utils/contants";
 
 import { chirp } from "./fonts/chirp";
 
 export const metadata: Metadata = {
-	title: {
-		template: "%s | Twitter",
-		default: "Twitter"
-	},
-	description: "Full stack twitter clone with next.js, supabase, tailwindcss and shadcn"
+	metadataBase: new URL(baseUrl),
+	title: { template: "%s | Twitter", default: "Twitter" },
+	description: "Full stack twitter clone with next.js, prisma, supabase and tailwindcss"
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body style={chirp.style}>
-				<ThemeProvider attribute="data-theme" defaultTheme="dark">
+				<ThemeProvider attribute="class" themes={["dark", "light", "dim"]} defaultTheme="dark">
 					<QueryProviders>{children}</QueryProviders>
 					<Toaster
 						position="bottom-center"

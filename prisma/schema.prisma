@@ -8,89 +8,88 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Profile {
-  id           String   @id @db.Uuid
-  created_at   DateTime @default(dbgenerated("now()")) @db.Timestamptz(6)
-  name         String
-  username     String   @unique
-  avatar       String   @default("https://jsjanvtxqjlqjmlyxvlp.supabase.co/storage/v1/object/public/avatars//default_avatar.png")
-  verified     Boolean  @default(false)
-  bio          String?
-  header_image String?
-  website      String?
-  location     String?
+model User {
+  id        String   @id @db.Uuid
+  name      String
+  username  String   @unique
+  avatarUrl String   @map("avatar_url")
+  bannerUrl String?  @map("banner_url")
+  bio       String?
+  website   String?
+  location  String?
+  createdAt DateTime @default(dbgenerated("now()")) @map("created_at") @db.Timestamptz(6)
 
-  following Followers[] @relation("Following")
-  follower  Followers[] @relation("Follower")
-  tweets    Tweets[]
-  likes     Likes[]
-  retweets  Retweets[]
-  bookmarks Bookmarks[]
+  followers Follow[]   @relation("Follower")
+  following Follow[]   @relation("Following")
+  tweets    Tweet[]
+  likes     Like[]
+  bookmarks Bookmark[]
+  retweets  Retweet[]
 
-  @@index([created_at, id, username])
-  @@map("profiles")
+  @@index([id, username, createdAt])
+  @@map("users")
 }
 
-model Followers {
-  id             Int    @id @default(autoincrement())
-  user_following String @db.Uuid
-  user_to_follow String @db.Uuid
+model Follow {
+  id          Int    @id @default(autoincrement())
+  followerId  String @map("user_following") @db.Uuid
+  follower    User   @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String @map("user_follower") @db.Uuid
+  following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
 
-  following_user Profile @relation("Following", fields: [user_following], references: [id])
-  follower_user  Profile @relation("Follower", fields: [user_to_follow], references: [id])
-
-  @@index([id, user_following, user_to_follow])
-  @@map("followers")
+  @@unique([followerId, followingId])
+  @@index([followerId, followingId])
+  @@map("follow")
 }
 
-model Tweets {
-  id           String   @id @default(cuid()) @db.Uuid
-  created_at   DateTime @default(now()) @db.Timestamptz(6)
-  user_id      String   @db.Uuid
-  tweet_text   String?
-  tweet_images String[]
+model Tweet {
+  id        String   @id @db.Uuid
+  createdAt DateTime @default(dbgenerated("now()")) @map("created_at") @db.Timestamptz(6)
+  content   String?
+  media     String[]
+  userId    String   @map("user_id") @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  user      Profile     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  likes     Likes[]
-  retweets  Retweets[]
-  bookmarks Bookmarks[]
+  likes     Like[]
+  bookmarks Bookmark[]
+  retweets  Retweet[]
 
-  @@index([id, user_id, created_at])
+  @@index([id, createdAt, userId])
   @@map("tweets")
 }
 
-model Likes {
-  id       Int    @id @default(autoincrement())
-  tweet_id String @db.Uuid
-  user_id  String @db.Uuid
+model Like {
+  id      Int    @id @default(autoincrement())
+  tweetId String @map("tweet_id") @db.Uuid
+  tweet   Tweet  @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+  userId  String @map("user_id") @db.Uuid
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  tweet Tweets  @relation(fields: [tweet_id], references: [id], onDelete: Cascade)
-  user  Profile @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
-  @@index([tweet_id, user_id])
+  @@unique([tweetId, userId])
+  @@index([id, tweetId, userId])
   @@map("likes")
 }
 
-model Retweets {
-  id       Int    @id @default(autoincrement())
-  tweet_id String @db.Uuid
-  user_id  String @db.Uuid
+model Bookmark {
+  id      Int    @id @default(autoincrement())
+  tweetId String @map("tweet_id") @db.Uuid
+  tweet   Tweet  @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+  userId  String @map("user_id") @db.Uuid
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  tweet Tweets  @relation(fields: [tweet_id], references: [id], onDelete: Cascade)
-  user  Profile @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
-  @@index([tweet_id, user_id])
-  @@map("retweets")
+  @@unique([tweetId, userId])
+  @@index([id, tweetId, userId])
+  @@map("bookmarks")
 }
 
-model Bookmarks {
-  id       Int    @id @default(autoincrement())
-  tweet_id String @db.Uuid
-  user_id  String @db.Uuid
+model Retweet {
+  id      Int    @id @default(autoincrement())
+  tweetId String @map("tweet_id") @db.Uuid
+  tweet   Tweet  @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+  userId  String @map("user_id") @db.Uuid
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  tweet Tweets  @relation(fields: [tweet_id], references: [id], onDelete: Cascade)
-  user  Profile @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
-  @@index([tweet_id, user_id])
-  @@map("bookmarks")
+  @@unique([tweetId, userId])
+  @@index([id, tweetId, userId])
+  @@map("retweets")
 }

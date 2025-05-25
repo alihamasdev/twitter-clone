@@ -3,7 +3,6 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 import { cn } from "@/lib/utils";
-
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 
@@ -25,7 +24,7 @@ function DialogContent({ className, ...props }: React.ComponentProps<typeof Dial
 			<DialogPrimitive.Content
 				data-slot="dialog-content"
 				className={cn(
-					"bg-background @container/dialog fixed top-1/2 left-1/2 z-50 grid max-h-[90dvh] w-full max-w-150 -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl outline-none",
+					"bg-background fixed top-1/2 left-1/2 z-50 grid max-h-[90dvh] w-full max-w-150 -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl outline-none",
 					"data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-300",
 					className
 				)}
@@ -51,11 +50,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
 
 function DialogTitle({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Title>) {
 	return (
-		<DialogPrimitive.Title
-			data-slot="dialog-title"
-			className={cn("text-lg font-extrabold @xs/dialog:text-xl @md/dialog:text-2xl @lg/dialog:text-3xl", className)}
-			{...props}
-		/>
+		<DialogPrimitive.Title data-slot="dialog-title" className={cn("text-xl font-extrabold ", className)} {...props} />
 	);
 }
 

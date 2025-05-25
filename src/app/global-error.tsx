@@ -1,9 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
-
-import { createClient } from "@/lib/supabase/client";
-
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 
@@ -15,31 +11,16 @@ interface GlobalErrorProps {
 }
 
 export default function GlobalError({ error }: GlobalErrorProps) {
-	const errorMessage =
-		process.env.NODE_ENV === "development"
-			? error.message
-			: "Something went wrong, but don't fret - let's give it another shot.";
-
-	useEffect(() => {
-		if (error.message === "User not authenticated") {
-			(async () => {
-				const supabase = createClient();
-				await supabase.auth.signOut();
-			})();
-		}
-	}, [error]);
-
-	const resetFn = async () => {
-		window.location.reload();
-	};
+	const isDevEnv = process.env.NODE_ENV === "development";
+	const errorMessage = isDevEnv ? error.message : "Something went wrong, but don't fret - let's give it another shot.";
 
 	return (
 		<html lang="en">
 			<body style={chirp.style}>
 				<main className="flex-center h-dvh w-full flex-col gap-y-6">
 					<Icon id="twitter" className="size-15" />
-					<h2 className="text-foreground text-lg font-medium">{errorMessage}</h2>
-					<Button onClick={resetFn}>Try again</Button>
+					<h2 className="text-foreground text-lg font-medium w-4/5 text-center text-pretty">{errorMessage}</h2>
+					<Button onClick={() => window.location.reload()}>Try Again</Button>
 				</main>
 			</body>
 		</html>

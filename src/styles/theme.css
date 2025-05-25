@@ -60,7 +60,7 @@
 	--shadow: rgba(255, 255, 255, 0.2) 0px 0px 15px, rgba(255, 255, 255, 0.15) 0px 0px 3px 1px;
 }
 
-[data-theme="light"] {
+.light {
 	--background: #ffffff;
 	--foreground: #0f1419;
 	--primary: #0f1419;
@@ -72,7 +72,7 @@
 	--shadow: rgba(101, 119, 134, 0.2) 0px 0px 15px, rgba(101, 119, 134, 0.15) 0px 0px 3px 1px;
 }
 
-[data-theme="dim"] {
+.dim {
 	--background: #15202b;
 	--foreground: #f7f9f9;
 	--muted-foreground: #8b98a5;
