@@ -1,7 +1,9 @@
+import Form from "next/form";
+
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 
-import { AuthButton } from "./auth-button";
+import { GithubIcon, GoogleIcon } from "./auth-icons";
 
 export function Login() {
 	return (
@@ -13,8 +15,20 @@ export function Login() {
 				<h1 className="mb-10 text-4xl font-black sm:text-5xl">Happening now</h1>
 				<h2 className="mb-8 text-2xl font-black sm:text-3xl">Join today.</h2>
 				<div className="w-75 space-y-3 *:w-full">
-					<AuthButton provider="google" />
-					<AuthButton provider="github" />
+					<Form action={`/api/auth/login/google`}>
+						<Button type="submit" name="provider" value="google" size="lg" className="w-full">
+							<GoogleIcon />
+							Continue with Google
+						</Button>
+					</Form>
+					<Form action={`/api/auth/login/github`}>
+						<Button type="submit" size="lg" className="w-full">
+							<GithubIcon />
+							Continue with Github
+						</Button>
+					</Form>
+					{/* <AuthButton provider="google" />
+					<AuthButton provider="github" /> */}
 					<div className="flex items-center gap-x-3">
 						<span className="w-full border" />
 						<span>or</span>
