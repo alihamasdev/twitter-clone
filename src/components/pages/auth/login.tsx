@@ -16,7 +16,7 @@ export function Login() {
 				<h2 className="mb-8 text-2xl font-black sm:text-3xl">Join today.</h2>
 				<div className="w-75 space-y-3 *:w-full">
 					<Form action={`/api/auth/login/google`}>
-						<Button type="submit" name="provider" value="google" size="lg" className="w-full">
+						<Button type="submit" size="lg" className="w-full">
 							<GoogleIcon />
 							Continue with Google
 						</Button>
@@ -27,8 +27,6 @@ export function Login() {
 							Continue with Github
 						</Button>
 					</Form>
-					{/* <AuthButton provider="google" />
-					<AuthButton provider="github" /> */}
 					<div className="flex items-center gap-x-3">
 						<span className="w-full border" />
 						<span>or</span>

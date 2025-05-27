@@ -18,7 +18,7 @@ export function AuthProvider({
 }: React.PropsWithChildren<{ userPromise: Promise<UserData | null> }>) {
 	const initialUser = use(userPromise);
 
-	const { data: user } = useQuery({
+	const { data: user, ...query } = useQuery({
 		queryKey: [`auth`],
 		staleTime: Infinity,
 		initialData: initialUser,
@@ -28,7 +28,12 @@ export function AuthProvider({
 	return <AuthContext value={{ user }}>{children}</AuthContext>;
 }
 
-export function useAuth() {
+/**
+ * @returns	currently logged in `user` data
+ * @throws `Error` if user is null
+ */
+
+export function useAuth(): { user: UserData } {
 	const authContext = use(AuthContext);
 
 	if (!authContext) {

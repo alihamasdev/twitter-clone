@@ -14,13 +14,23 @@ function DialogTrigger({ ...props }: React.ComponentProps<typeof DialogPrimitive
 	return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
 }
 
+function DialogOverlay({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
+	return (
+		<DialogPrimitive.Overlay
+			data-slot="dialog-overlay"
+			className={cn(
+				"data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 bg-overlay fixed inset-0 z-50",
+				className
+			)}
+			{...props}
+		/>
+	);
+}
+
 function DialogContent({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Content>) {
 	return (
 		<DialogPrimitive.Portal data-slot="dialog-portal">
-			<DialogPrimitive.Overlay
-				data-slot="dialog-overlay"
-				className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 bg-overlay fixed inset-0 z-50"
-			/>
+			<DialogOverlay />
 			<DialogPrimitive.Content
 				data-slot="dialog-content"
 				className={cn(
@@ -79,6 +89,7 @@ function DialogClose({ children, ...props }: React.ComponentProps<typeof DialogP
 export {
 	Dialog,
 	DialogTrigger,
+	DialogOverlay,
 	DialogContent,
 	DialogHeader,
 	DialogFooter,
