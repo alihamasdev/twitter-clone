@@ -32,9 +32,9 @@ model User {
 
 model Follow {
   id          Int    @id @default(autoincrement())
-  followerId  String @map("user_following") @db.Uuid
+  followerId  String @map("follower_id") @db.Uuid
   follower    User   @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
-  followingId String @map("user_follower") @db.Uuid
+  followingId String @map("following_id") @db.Uuid
   following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId])

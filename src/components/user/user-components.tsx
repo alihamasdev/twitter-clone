@@ -9,7 +9,7 @@ interface ComponentProps extends React.ComponentProps<typeof Slot> {
 }
 
 function LinkToProfile({ url, children, ...props }: ComponentProps) {
-	return <Slot {...props}>{url ? <Link href={`/users/${url}`}>{children}</Link> : <div>{children}</div>}</Slot>;
+	return <Slot {...props}>{url ? <Link href={`/${url}`}>{children}</Link> : <div>{children}</div>}</Slot>;
 }
 
 function Name({ url, className, ...props }: ComponentProps) {

@@ -1,3 +1,5 @@
+import { FollowButton } from "./follow-button";
+import { UserCard } from "./user-card";
 import { Avatar, Name, Username } from "./user-components";
 
-export { Avatar, Name, Username };
+export { Avatar, Name, Username, UserCard, FollowButton };
