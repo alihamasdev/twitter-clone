@@ -21,10 +21,10 @@ model User {
 
   followers Follow[]   @relation("Follower")
   following Follow[]   @relation("Following")
-  tweets    Tweet[]
+  posts     Post[]
   likes     Like[]
   bookmarks Bookmark[]
-  retweets  Retweet[]
+  reposts   Repost[]
 
   @@index([id, username, createdAt])
   @@map("users")
@@ -42,54 +42,53 @@ model Follow {
   @@map("follow")
 }
 
-model Tweet {
-  id        String   @id @db.Uuid
+model Post {
+  id        String   @id @default(uuid()) @db.Uuid
   createdAt DateTime @default(dbgenerated("now()")) @map("created_at") @db.Timestamptz(6)
-  content   String?
-  media     String[]
+  content   String
   userId    String   @map("user_id") @db.Uuid
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   likes     Like[]
   bookmarks Bookmark[]
-  retweets  Retweet[]
+  reposts   Repost[]
 
   @@index([id, createdAt, userId])
-  @@map("tweets")
+  @@map("posts")
 }
 
 model Like {
-  id      Int    @id @default(autoincrement())
-  tweetId String @map("tweet_id") @db.Uuid
-  tweet   Tweet  @relation(fields: [tweetId], references: [id], onDelete: Cascade)
-  userId  String @map("user_id") @db.Uuid
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     Int    @id @default(autoincrement())
+  postId String @map("post_id") @db.Uuid
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([tweetId, userId])
-  @@index([id, tweetId, userId])
+  @@unique([postId, userId])
+  @@index([id, postId, userId])
   @@map("likes")
 }
 
 model Bookmark {
-  id      Int    @id @default(autoincrement())
-  tweetId String @map("tweet_id") @db.Uuid
-  tweet   Tweet  @relation(fields: [tweetId], references: [id], onDelete: Cascade)
-  userId  String @map("user_id") @db.Uuid
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     Int    @id @default(autoincrement())
+  postId String @map("post_id") @db.Uuid
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([tweetId, userId])
-  @@index([id, tweetId, userId])
+  @@unique([postId, userId])
+  @@index([id, postId, userId])
   @@map("bookmarks")
 }
 
-model Retweet {
-  id      Int    @id @default(autoincrement())
-  tweetId String @map("tweet_id") @db.Uuid
-  tweet   Tweet  @relation(fields: [tweetId], references: [id], onDelete: Cascade)
-  userId  String @map("user_id") @db.Uuid
-  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Repost {
+  id     Int    @id @default(autoincrement())
+  postId String @map("post_id") @db.Uuid
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  userId String @map("user_id") @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([tweetId, userId])
-  @@index([id, tweetId, userId])
-  @@map("retweets")
+  @@unique([postId, userId])
+  @@index([id, postId, userId])
+  @@map("reposts")
 }

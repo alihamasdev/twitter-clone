@@ -16,7 +16,8 @@ const buttonVariants = cva(
 				accent: "bg-accent text-accent-foreground hover:bg-accent/90",
 				destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 ",
 				outline: "border border-input bg-transparent hover:bg-muted",
-				ghost: "text-foreground hover:bg-muted"
+				ghost: "text-foreground hover:bg-muted",
+				"accent-ghost": "text-foreground hover:bg-accent/20 [&_svg]:fill-accent [&_svg]:size-5"
 			},
 			size: {
 				sm: "h-8 px-4 text-sm",

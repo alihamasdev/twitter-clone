@@ -1,0 +1,113 @@
+"use client";
+
+import { useTransition } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AnimatePresence, motion } from "motion/react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+
+import { cn } from "@/lib/utils";
+import { postSchema, type PostSchema } from "@/lib/validation";
+import { useAuth } from "@/context/auth-context";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField } from "@/components/ui/form";
+import { type IconId } from "@/components/ui/icon";
+import { Textarea } from "@/components/ui/textarea";
+import { Avatar } from "@/components/user";
+
+import { createPost } from "./action";
+
+const formButtons = ["image", "emoji", "gif", "poll", "schedule"] satisfies IconId[];
+
+export function PostForm({ isDialog, className, ...props }: React.ComponentProps<"div"> & { isDialog?: boolean }) {
+	const {
+		user: { avatarUrl, username }
+	} = useAuth();
+	const [isPending, startTransition] = useTransition();
+	const router = useRouter();
+
+	const form = useForm<PostSchema>({
+		mode: "onSubmit",
+		resolver: zodResolver(postSchema)
+	});
+
+	const handleCloseDialog = () => {
+		if (isDialog) {
+			history.length > 1 ? router.back() : router.push("/home");
+		}
+	};
+
+	const onSubmit = (values: PostSchema) => {
+		startTransition(async () => {
+			const { data, error } = await createPost(values);
+
+			if (error || !data) {
+				toast.error(error);
+				return;
+			}
+
+			toast.success(<SuccessToast href={`/${username}/status/${data.id}`} />);
+			form.reset({ content: "" });
+			handleCloseDialog();
+		});
+	};
+
+	return (
+		<div className={cn("flex w-full items-start gap-x-3", className)} {...props}>
+			<AnimatePresence>
+				{isPending && (
+					<motion.div
+						initial={{ width: 0, height: 4 }}
+						animate={{ width: "100%", transition: { duration: 1, ease: "easeIn" } }}
+						exit={{ width: "100%", transition: { duration: 0.2, ease: "linear" } }}
+						className="bg-accent absolute top-0 left-0"
+					/>
+				)}
+			</AnimatePresence>
+			<div className={cn("relative w-full", { "opacity-50 pointer-events-none": isPending })} aria-disabled={isPending}>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full items-start gap-x-3">
+						<Avatar src={avatarUrl} url={username} />
+						<div className="flex w-full flex-col">
+							<FormField
+								name="content"
+								control={form.control}
+								render={({ field }) => (
+									<FormControl>
+										<Textarea
+											disabled={isPending}
+											placeholder="What's happening?"
+											className="max-h-100 border-none p-0 pb-3 text-xl focus:ring-0 font-medium w-full"
+											{...field}
+										/>
+									</FormControl>
+								)}
+							/>
+							<div className="w-full flex items-center border-t pt-3">
+								{formButtons.map((id) => (
+									<Button key={id} variant="accent-ghost" size="icon" icon={id} disabled />
+								))}
+								<Button type="submit" className="ml-auto" disabled={isPending || !form.formState.isValid}>
+									Post
+								</Button>
+							</div>
+						</div>
+					</form>
+				</Form>
+			</div>
+		</div>
+	);
+}
+
+function SuccessToast({ href }: { href: string }) {
+	return (
+		<div className="flex items-center gap-x-3">
+			<span>Your tweet has been sent</span>
+			<Link href={href} className="hover:underline font-bold">
+				View
+			</Link>
+		</div>
+	);
+}

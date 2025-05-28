@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const profileSchema = z.object({
 	avatar: z.instanceof(File).optional().optional(),
-	header_image: z.instanceof(File).optional().nullable().optional(),
+	banner: z.instanceof(File).optional().nullable().optional(),
 	name: z
 		.string()
 		.min(1, { message: "Name is required" })
@@ -20,14 +20,11 @@ export const profileSchema = z.object({
 
 export type ProfileSchema = z.infer<typeof profileSchema>;
 
-export const tweetSchema = z
-	.object({
-		tweet_text: z.string().optional(),
-		tweet_images: z.array(z.instanceof(File)).optional()
-	})
-	.refine((data) => data.tweet_text || (data.tweet_images && data.tweet_images.length > 0), {
-		message: "Tweet cannot be empty",
-		path: []
-	});
+export const postSchema = z.object({
+	content: z
+		.string()
+		.max(300, "Post can only contain 300 characters")
+		.refine((data) => data.length > 0)
+});
 
-export type TweetSchema = z.infer<typeof tweetSchema>;
+export type PostSchema = z.infer<typeof postSchema>;
