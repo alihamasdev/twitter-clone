@@ -18,6 +18,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar } from "@/components/user";
 
 import { createPost } from "./action";
+import { ProgressTracker } from "./progress-tracker";
 
 const formButtons = ["image", "emoji", "gif", "poll", "schedule"] satisfies IconId[];
 
@@ -30,8 +31,11 @@ export function PostForm({ isDialog, className, ...props }: React.ComponentProps
 
 	const form = useForm<PostSchema>({
 		mode: "onSubmit",
-		resolver: zodResolver(postSchema)
+		resolver: zodResolver(postSchema),
+		defaultValues: { content: "" }
 	});
+
+	const tweetLength = form.watch("content").length;
 
 	const handleCloseDialog = () => {
 		if (isDialog) {
@@ -70,7 +74,7 @@ export function PostForm({ isDialog, className, ...props }: React.ComponentProps
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full items-start gap-x-3">
 						<Avatar src={avatarUrl} url={username} />
-						<div className="flex w-full flex-col">
+						<div className="flex w-full flex-col overflow-x-hidden">
 							<FormField
 								name="content"
 								control={form.control}
@@ -85,13 +89,22 @@ export function PostForm({ isDialog, className, ...props }: React.ComponentProps
 									</FormControl>
 								)}
 							/>
-							<div className="w-full flex items-center border-t pt-3">
-								{formButtons.map((id) => (
-									<Button key={id} variant="accent-ghost" size="icon" icon={id} disabled />
-								))}
-								<Button type="submit" className="ml-auto" disabled={isPending || !form.formState.isValid}>
-									Post
-								</Button>
+							<div className="w-full flex items-center border-t justify-between pt-3">
+								<div className="flex">
+									{formButtons.map((id) => (
+										<Button key={id} variant="accent-ghost" size="icon" icon={id} disabled />
+									))}
+								</div>
+								<div className="flex items-center gap-x-3">
+									<AnimatePresence>{tweetLength && <ProgressTracker inputLength={tweetLength} />}</AnimatePresence>
+									<Button
+										type="submit"
+										className="duration-200 transition-all"
+										disabled={isPending || !form.formState.isValid}
+									>
+										Post
+									</Button>
+								</div>
 							</div>
 						</div>
 					</form>

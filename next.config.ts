@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
 		loaderFile: "./src/lib/supabase/image-loader.tsx"
 	},
 	experimental: {
+		reactCompiler: true,
 		authInterrupts: true,
 		staleTimes: {
 			dynamic: 30,
