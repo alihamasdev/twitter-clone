@@ -4,12 +4,11 @@ import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { getFollowersInfo, type FollowerInfo } from "@/types/user";
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
+export async function GET(_: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
 	try {
 		const { userId } = await params;
-		const authorization = request.headers.get("Authorization") || undefined;
 
-		const loggedInUser = await validateUser(authorization);
+		const loggedInUser = await validateUser();
 		if (!loggedInUser) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
@@ -35,12 +34,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 	}
 }
 
-export async function POST(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
+export async function POST(_: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
 	try {
 		const { userId } = await params;
-		const authorization = request.headers.get("Authorization") || undefined;
 
-		const loggedInUser = await validateUser(authorization);
+		const loggedInUser = await validateUser();
 		if (!loggedInUser) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
@@ -58,12 +56,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 	}
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
+export async function DELETE(_: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
 	try {
 		const { userId } = await params;
-		const authorization = request.headers.get("Authorization") || undefined;
 
-		const loggedInUser = await validateUser(authorization);
+		const loggedInUser = await validateUser();
 		if (!loggedInUser) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
