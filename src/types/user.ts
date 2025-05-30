@@ -1,4 +1,4 @@
-import { type Prisma } from "@prisma/client";
+import type { Prisma, User } from "@prisma/client";
 
 /** Prisma `UserSelect` Query extension for getting user data */
 export const userDataSelect = {
@@ -23,4 +23,12 @@ export interface FollowerInfo {
 	isFollowedByUser: boolean;
 }
 
+export interface FollowingInfo {
+	following: number;
+}
+
 export type UserDataWithFollowInfo = UserData & FollowerInfo;
+
+export interface ProfilePageUser extends User, FollowerInfo, FollowingInfo {
+	posts: number;
+}

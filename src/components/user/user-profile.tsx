@@ -1,0 +1,154 @@
+"use client";
+
+import { Fragment } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+
+import { axios } from "@/lib/axios";
+import { type ProfilePageUser } from "@/types/user";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Error } from "@/components/ui/error";
+import { Icon, type IconId } from "@/components/ui/icon";
+import { LinkTabs } from "@/components/ui/link-tabs";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
+import { Header, HeaderDescription, HeaderTitle } from "@/components/layout/header";
+import { FollowButton, Name, Username } from "@/components/user";
+
+import { NumberAnimation } from "../number-animation";
+import { FollowersCount, FollowingCount } from "./counts";
+
+type ProfileMeta = {
+	icon: IconId;
+	data: string | null;
+	link?: boolean;
+};
+
+export function UserProfile() {
+	const { username } = useParams<{ username: string }>();
+
+	const { data, isPending, error } = useQuery({
+		queryKey: [`profile`, username],
+		queryFn: () =>
+			axios
+				.get<ProfilePageUser>(`/api/users/username/${username}`)
+				.then((res) => res.data)
+				.catch((err) => Promise.reject(err)),
+		throwOnError: true,
+		staleTime: 15 * 60 * 1000 // 15 minutes
+	});
+
+	if (isPending) {
+		return (
+			<Fragment>
+				<Header className="">
+					<Skeleton className="w-40 h-6" />
+					<Skeleton className="w-20 mt-1" />
+				</Header>
+				<section className="relative w-full">
+					<Skeleton className="aspect-header border-b rounded-none h-auto" />
+					<Avatar className="bg-tooltip absolute animate-pulse -bottom-12 left-4 size-25 border-6 border-background lg:-bottom-15 lg:size-33 cursor-default" />
+				</section>
+				<section className="px-4 py-3">
+					<Skeleton className="mt-12 lg:mt-15 w-40 h-6" />
+					<Skeleton className="mt-1 w-25 h-5" />
+					<Spinner />
+				</section>
+			</Fragment>
+		);
+	}
+
+	if (error) {
+		console.error(error);
+		return <Error />;
+	}
+
+	const createDate = format(data.createdAt, `LLLL yyyy`);
+	const { posts, bannerUrl, avatarUrl, followers, following, isFollowedByUser, location, website } = data;
+
+	const profileMeta: ProfileMeta[] = [
+		{ data: location, icon: "location" },
+		{ data: website, icon: "copy", link: true },
+		{ data: `Joined ${createDate}`, icon: "calender" }
+	];
+
+	return (
+		<Fragment>
+			<Header>
+				<HeaderTitle>{data.name}</HeaderTitle>
+				<HeaderDescription>
+					<NumberAnimation value={posts} />
+					<span className="pl-1">{posts === 1 ? `post` : `posts`}</span>
+				</HeaderDescription>
+			</Header>
+			<section className="relative w-full">
+				<div className="bg-image aspect-header relative overflow-hidden border-b">
+					{bannerUrl && (
+						<Link href={`/${username}/banner`}>
+							<Image
+								src={bannerUrl}
+								width={600}
+								height={200}
+								alt="header"
+								className="aspect-header w-full cursor-pointer object-cover"
+							/>
+						</Link>
+					)}
+				</div>
+				<Link href={`/${username}/avatar`}>
+					<Avatar className="bg-tooltip absolute -bottom-12 left-4 size-25 border-6 border-background lg:-bottom-15 lg:size-33">
+						<AvatarImage src={avatarUrl} width={120} height={120} />
+						<AvatarFallback />
+					</Avatar>
+				</Link>
+			</section>
+			<section className="px-4 py-3">
+				<div className="flex min-h-9 w-full items-center justify-end gap-x-3">
+					<FollowButton size="default" userId={data.id} initialState={{ followers, isFollowedByUser }} />
+				</div>
+				<div className="mt-3 lg:mt-6">
+					<Name className="text-xl font-extrabold" url={null}>
+						{data.name}
+					</Name>
+					<Username url={null}>{data.username}</Username>
+					<div className="space-y-3 mt-3">
+						<p className="text-foreground text-base">{data.bio}</p>
+						<div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+							{profileMeta.map(
+								({ icon, data, link }) =>
+									data && (
+										<div key={icon} className="flex items-center gap-x-1.5 text-base">
+											<Icon id={icon} className="fill-muted-foreground size-4" />
+											{!link ? (
+												<span className="text-muted-foreground">{data}</span>
+											) : (
+												<a href={data} target="_blank" className="text-accent hover:underline">
+													{data.replace(/^https?:\/\//, "")}
+												</a>
+											)}
+										</div>
+									)
+							)}
+						</div>
+						<div className="flex items-center gap-x-4">
+							<Link href={`${username}/following`} className="border-b border-transparent hover:border-foreground">
+								<FollowingCount userId={data.id} initialState={{ following }} />
+							</Link>
+							<Link href={`${username}/followers`} className="border-b border-transparent hover:border-foreground">
+								<FollowersCount userId={data.id} initialState={{ followers, isFollowedByUser }} />
+							</Link>
+						</div>
+					</div>
+				</div>
+			</section>
+			<div className="grid grid-cols-3 border-b">
+				<LinkTabs href={`/${username}`}>Tweets</LinkTabs>
+				<LinkTabs href={`/${username}/retweets`}>Retweets</LinkTabs>
+				<LinkTabs href={`/${username}/likes`}>Likes</LinkTabs>
+			</div>
+		</Fragment>
+	);
+}

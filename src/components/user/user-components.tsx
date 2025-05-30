@@ -26,8 +26,12 @@ function Name({ url, className, ...props }: ComponentProps) {
 	);
 }
 
-function Username({ url, className, ...props }: ComponentProps) {
-	return <LinkToProfile url={url} className={cn("text-muted-foreground block line-clamp-1", className)} {...props} />;
+function Username({ url, className, children, ...props }: ComponentProps) {
+	return (
+		<LinkToProfile url={url} className={cn("text-muted-foreground block line-clamp-1", className)} {...props}>
+			{`@${children}`}
+		</LinkToProfile>
+	);
 }
 
 interface UserAvatarProps extends React.ComponentProps<typeof Avatar> {

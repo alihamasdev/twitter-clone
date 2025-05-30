@@ -4,15 +4,13 @@ import { useMutation, useQuery, useQueryClient, type QueryKey } from "@tanstack/
 import { toast } from "react-hot-toast";
 
 import { axios } from "@/lib/axios";
-import { FollowerInfo } from "@/types/user";
+import { useAuth } from "@/context/auth-context";
+import type { FollowerInfo, FollowingInfo } from "@/types/user";
 
 export function useFollowerInfo(userId: string, initialState: FollowerInfo) {
 	const query = useQuery({
 		queryKey: [`follower-info`, userId],
-		queryFn: async () => {
-			const { data } = await axios.get<FollowerInfo>(`/api/users/${userId}/followers`);
-			return data;
-		},
+		queryFn: () => axios.get<FollowerInfo>(`/api/users/${userId}/followers`).then((res) => res.data),
 		initialData: initialState,
 		staleTime: Infinity
 	});
@@ -21,31 +19,54 @@ export function useFollowerInfo(userId: string, initialState: FollowerInfo) {
 }
 
 export function useFollowerMutation(userId: string, isFollowing: boolean) {
+	const { user } = useAuth();
 	const queryClient = useQueryClient();
-	const queryKey: QueryKey = [`follower-info`, userId];
+	const followQueryKey: QueryKey = [`follower-info`, userId];
+	const followingQueryKey: QueryKey = [`following-count`, user.id];
 
 	const { mutate } = useMutation({
 		mutationFn: () =>
 			isFollowing ? axios.delete(`/api/users/${userId}/followers`) : axios.post(`/api/users/${userId}/followers`),
 		onMutate: async () => {
-			await queryClient.cancelQueries({ queryKey });
+			await queryClient.cancelQueries({ queryKey: followQueryKey });
 
-			const previousState = queryClient.getQueryData<FollowerInfo>(queryKey);
-
-			queryClient.setQueryData<FollowerInfo>(queryKey, () => ({
+			const previousState = queryClient.getQueryData<FollowerInfo>(followQueryKey);
+			queryClient.setQueryData<FollowerInfo>(followQueryKey, () => ({
 				followers: (previousState?.followers || 0) + (previousState?.isFollowedByUser ? -1 : 1),
 				isFollowedByUser: !previousState?.isFollowedByUser
 			}));
 
-			return previousState;
+			const previousFollowing = queryClient.getQueryData<FollowingInfo>(followingQueryKey);
+			if (previousFollowing) {
+				queryClient.setQueryData<FollowingInfo>(followingQueryKey, () => ({
+					following: (previousFollowing.following || 0) + (previousState?.isFollowedByUser ? -1 : 1)
+				}));
+			}
+
+			return { previousState, previousFollowing };
 		},
 		onError: (error, _, context) => {
 			console.error(error);
-			queryClient.setQueryData(queryKey, context);
+			queryClient.setQueryData(followQueryKey, context?.previousState);
+			queryClient.setQueryData(followingQueryKey, context?.previousFollowing);
 			toast.error("Something went wrong, please try again.");
 		},
-		onSettled: () => queryClient.invalidateQueries({ queryKey })
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: followQueryKey });
+			queryClient.invalidateQueries({ queryKey: followingQueryKey });
+		}
 	});
 
 	return mutate;
+}
+
+export function useFollowingInfo(userId: string, initialState: FollowingInfo) {
+	const query = useQuery({
+		queryKey: [`following-count`, userId],
+		queryFn: () => axios.get<{ following: number }>(`/api/users/${userId}/following`).then((res) => res.data),
+		initialData: initialState,
+		staleTime: Infinity
+	});
+
+	return query;
 }
