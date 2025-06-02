@@ -3,12 +3,12 @@
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 
-import { axios } from "@/lib/axios";
 import { profileSchema, type ProfileSchema } from "@/lib/validation";
+import { useProfile } from "@/hooks/use-profile";
 import { useAuth } from "@/context/auth-context";
 import type { ProfilePageUser, UserData } from "@/types/user";
 import { Button } from "@/components/ui/button";
@@ -28,13 +28,7 @@ export default function EditProfilePage() {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 	const [isLoading, startTransition] = useTransition();
-
-	const { data, error, isPending } = useQuery({
-		queryKey: [`profile`, user.username],
-		queryFn: () => axios.get<ProfilePageUser>(`/api/users/username/${user.username}`).then((res) => res.data),
-		throwOnError: true,
-		staleTime: 15 * 60 * 1000 // 15 minutes
-	});
+	const { data, error, isPending } = useProfile(user.username);
 
 	const form = useForm({
 		mode: "onChange",
@@ -52,6 +46,7 @@ export default function EditProfilePage() {
 	function onSubmit(values: ProfileSchema) {
 		startTransition(async () => {
 			const { data, error } = await updateProfile(values);
+
 			if (error || !data) {
 				toast.error(error);
 				return;
@@ -60,9 +55,11 @@ export default function EditProfilePage() {
 			queryClient.setQueryData<ProfilePageUser>([`profile`, user.username], (oldData) =>
 				oldData ? { ...oldData, ...data } : undefined
 			);
-			queryClient.setQueryData<UserData>([`auth`], (oldData) =>
-				oldData ? { ...oldData, name: data.name, avatarUrl: data.avatarUrl } : undefined
-			);
+			queryClient.setQueryData([`auth`], (oldData: UserData) => ({
+				...oldData,
+				name: data.name,
+				avatarUrl: data.avatarUrl
+			}));
 
 			router.back();
 		});

@@ -18,7 +18,7 @@ export function AuthProvider({
 }: React.PropsWithChildren<{ userPromise: Promise<UserData | null> }>) {
 	const initialUser = use(userPromise);
 
-	const { data: user, ...query } = useQuery({
+	const { data: user } = useQuery({
 		queryKey: [`auth`],
 		staleTime: Infinity,
 		initialData: initialUser,

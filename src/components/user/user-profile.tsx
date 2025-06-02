@@ -4,11 +4,10 @@ import { Fragment } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 
-import { axios } from "@/lib/axios";
-import { type ProfilePageUser } from "@/types/user";
+import { useProfile } from "@/hooks/use-profile";
+import { useAuth } from "@/context/auth-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Error } from "@/components/ui/error";
 import { Icon, type IconId } from "@/components/ui/icon";
@@ -16,9 +15,9 @@ import { LinkTabs } from "@/components/ui/link-tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
 import { Header, HeaderDescription, HeaderTitle } from "@/components/layout/header";
+import { NumberAnimation } from "@/components/number-animation";
 import { FollowButton, Name, Username } from "@/components/user";
 
-import { NumberAnimation } from "../number-animation";
 import { FollowersCount, FollowingCount } from "./counts";
 
 type ProfileMeta = {
@@ -28,18 +27,9 @@ type ProfileMeta = {
 };
 
 export function UserProfile() {
+	const { user } = useAuth();
 	const { username } = useParams<{ username: string }>();
-
-	const { data, isPending, error } = useQuery({
-		queryKey: [`profile`, username],
-		queryFn: () =>
-			axios
-				.get<ProfilePageUser>(`/api/users/username/${username}`)
-				.then((res) => res.data)
-				.catch((err) => Promise.reject(err)),
-		throwOnError: true,
-		staleTime: 15 * 60 * 1000 // 15 minutes
-	});
+	const { data, isPending, error } = useProfile(username);
 
 	if (isPending) {
 		return (
@@ -63,7 +53,22 @@ export function UserProfile() {
 
 	if (error) {
 		console.error(error);
-		return <Error />;
+
+		return (
+			<Fragment>
+				<Header>
+					<HeaderTitle>{username}</HeaderTitle>
+				</Header>
+				<section className="relative w-full">
+					<div className="aspect-header border-b rounded-none h-auto bg-image" />
+					<Avatar className="bg-tooltip absolute -bottom-12 left-4 size-25 border-6 border-background lg:-bottom-15 lg:size-33 cursor-default" />
+				</section>
+				<section className="px-4 py-3">
+					<Name url={null} className="mt-12 lg:mt-15 text-xl font-extrabold">{`@${username}`}</Name>
+					<Error />
+				</section>
+			</Fragment>
+		);
 	}
 
 	const createDate = format(data.createdAt, `LLLL yyyy`);
@@ -135,7 +140,7 @@ export function UserProfile() {
 						</div>
 						<div className="flex items-center gap-x-4">
 							<Link href={`${username}/following`} className="border-b border-transparent hover:border-foreground">
-								<FollowingCount userId={data.id} initialState={{ following }} />
+								<FollowingCount initialState={{ following }} isCurrentUser={data.id === user.id} />
 							</Link>
 							<Link href={`${username}/followers`} className="border-b border-transparent hover:border-foreground">
 								<FollowersCount userId={data.id} initialState={{ followers, isFollowedByUser }} />

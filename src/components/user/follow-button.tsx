@@ -15,16 +15,11 @@ interface FollowButtonProps extends ButtonProps {
 
 export function FollowButton({ initialState, userId, size = "sm", className, ...props }: FollowButtonProps) {
 	const { user } = useAuth();
-	const router = useRouter();
 	const { data } = useFollowerInfo(userId, initialState);
 	const mutate = useFollowerMutation(userId, data.isFollowedByUser);
 
 	if (userId === user.id) {
-		return (
-			<Button variant="outline" onClick={() => router.push(`/settings/profile`)}>
-				Edit Profile
-			</Button>
-		);
+		return <EditProfileButton />;
 	}
 
 	return (
@@ -45,6 +40,16 @@ export function FollowButton({ initialState, userId, size = "sm", className, ...
 			) : (
 				"Follow"
 			)}
+		</Button>
+	);
+}
+
+export function EditProfileButton() {
+	const router = useRouter();
+
+	return (
+		<Button variant="outline" onClick={() => router.push(`/settings/profile`)}>
+			Edit Profile
 		</Button>
 	);
 }

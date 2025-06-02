@@ -8,14 +8,12 @@ import { useAuth } from "@/context/auth-context";
 import type { FollowerInfo, FollowingInfo } from "@/types/user";
 
 export function useFollowerInfo(userId: string, initialState: FollowerInfo) {
-	const query = useQuery({
+	return useQuery({
 		queryKey: [`follower-info`, userId],
 		queryFn: () => axios.get<FollowerInfo>(`/api/users/${userId}/followers`).then((res) => res.data),
 		initialData: initialState,
 		staleTime: Infinity
 	});
-
-	return query;
 }
 
 export function useFollowerMutation(userId: string, isFollowing: boolean) {
@@ -37,11 +35,9 @@ export function useFollowerMutation(userId: string, isFollowing: boolean) {
 			}));
 
 			const previousFollowing = queryClient.getQueryData<FollowingInfo>(followingQueryKey);
-			if (previousFollowing) {
-				queryClient.setQueryData<FollowingInfo>(followingQueryKey, () => ({
-					following: (previousFollowing.following || 0) + (previousState?.isFollowedByUser ? -1 : 1)
-				}));
-			}
+			queryClient.setQueryData<FollowingInfo>(followingQueryKey, () => ({
+				following: (previousFollowing?.following || 0) + (previousState?.isFollowedByUser ? -1 : 1)
+			}));
 
 			return { previousState, previousFollowing };
 		},
@@ -61,12 +57,10 @@ export function useFollowerMutation(userId: string, isFollowing: boolean) {
 }
 
 export function useFollowingInfo(userId: string, initialState: FollowingInfo) {
-	const query = useQuery({
+	return useQuery({
 		queryKey: [`following-count`, userId],
 		queryFn: () => axios.get<{ following: number }>(`/api/users/${userId}/following`).then((res) => res.data),
 		initialData: initialState,
 		staleTime: Infinity
 	});
-
-	return query;
 }
