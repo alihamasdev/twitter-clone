@@ -1,0 +1,193 @@
+"use client";
+
+import { useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+
+import { axios } from "@/lib/axios";
+import { profileSchema, type ProfileSchema } from "@/lib/validation";
+import { useAuth } from "@/context/auth-context";
+import type { ProfilePageUser, UserData } from "@/types/user";
+import { Button } from "@/components/ui/button";
+import { DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Error } from "@/components/ui/error";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
+import { Textarea } from "@/components/ui/textarea";
+
+import { updateProfile } from "./action";
+import { UploadAvatar } from "./upload-avatar";
+import { UploadBanner } from "./upload-banner";
+
+export default function EditProfilePage() {
+	const { user } = useAuth();
+	const router = useRouter();
+	const queryClient = useQueryClient();
+	const [isLoading, startTransition] = useTransition();
+
+	const { data, error, isPending } = useQuery({
+		queryKey: [`profile`, user.username],
+		queryFn: () => axios.get<ProfilePageUser>(`/api/users/username/${user.username}`).then((res) => res.data),
+		throwOnError: true,
+		staleTime: 15 * 60 * 1000 // 15 minutes
+	});
+
+	const form = useForm({
+		mode: "onChange",
+		resolver: zodResolver(profileSchema),
+		defaultValues: {
+			avatar: undefined,
+			banner: undefined,
+			name: data?.name,
+			bio: data?.bio,
+			location: data?.location,
+			website: data?.website
+		}
+	});
+
+	function onSubmit(values: ProfileSchema) {
+		startTransition(async () => {
+			const { data, error } = await updateProfile(values);
+			if (error || !data) {
+				toast.error(error);
+				return;
+			}
+
+			queryClient.setQueryData<ProfilePageUser>([`profile`, user.username], (oldData) =>
+				oldData ? { ...oldData, ...data } : undefined
+			);
+			queryClient.setQueryData<UserData>([`auth`], (oldData) =>
+				oldData ? { ...oldData, name: data.name, avatarUrl: data.avatarUrl } : undefined
+			);
+
+			router.back();
+		});
+	}
+
+	if (isPending) {
+		return (
+			<div className="size-full flex-center">
+				<Spinner className="mt-0" />
+			</div>
+		);
+	}
+
+	if (error) {
+		console.error(error);
+		return (
+			<div className="size-full flex-center">
+				<Error className="mt-0" />
+			</div>
+		);
+	}
+
+	return (
+		<DialogContent className="h-175">
+			{isLoading && (
+				<div className="size-full flex-center">
+					<Spinner className="mt-0" />
+				</div>
+			)}
+			<Form {...form}>
+				<form onSubmit={form.handleSubmit(onSubmit)} hidden={isLoading}>
+					<DialogHeader className="bg-background/80 sticky top-0 z-10 mb-0 flex-row justify-between border-b px-4 py-3 backdrop-blur-md">
+						<div className="flex items-center gap-x-3">
+							<DialogClose variant="ghost" size="icon" icon="cross" />
+							<DialogTitle>Edit Profile</DialogTitle>
+							<DialogDescription />
+						</div>
+						<Button type="submit" size="sm" disabled={isLoading || !form.formState.isValid}>
+							Save
+						</Button>
+					</DialogHeader>
+					<div className="relative w-full">
+						<FormField
+							name="banner"
+							control={form.control}
+							render={({ field }) => (
+								<FormControl>
+									<UploadBanner field={field} previousValue={data.bannerUrl} />
+								</FormControl>
+							)}
+						/>
+						<FormField
+							name="avatar"
+							control={form.control}
+							render={({ field }) => (
+								<FormControl>
+									<UploadAvatar field={field} previousValue={data.avatarUrl} />
+								</FormControl>
+							)}
+						/>
+					</div>
+					<div className="mt-18 space-y-6 px-4 pt-3 pb-6">
+						<FormField
+							control={form.control}
+							name="name"
+							render={({ field }) => (
+								<div className="grid gap-y-2">
+									<FormItem>
+										<FormControl>
+											<Input {...field} />
+										</FormControl>
+										<FormLabel className="capitalize">{field.name}</FormLabel>
+									</FormItem>
+									<FormMessage />
+								</div>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="bio"
+							render={({ field: { value, ...field } }) => (
+								<div className="grid gap-y-2">
+									<FormItem>
+										<FormControl>
+											<Textarea className="pt-8" value={value || ""} {...field} />
+										</FormControl>
+										<FormLabel className="capitalize top-8">{field.name}</FormLabel>
+									</FormItem>
+									<FormMessage />
+								</div>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="location"
+							render={({ field: { value, ...field } }) => (
+								<div className="grid gap-y-2">
+									<FormItem>
+										<FormControl>
+											<Input value={value || ""} {...field} />
+										</FormControl>
+										<FormLabel className="capitalize">{field.name}</FormLabel>
+									</FormItem>
+									<FormMessage />
+								</div>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="website"
+							render={({ field: { value, ...field } }) => (
+								<div className="grid gap-y-2">
+									<FormItem>
+										<FormControl>
+											<Input value={value || ""} {...field} />
+										</FormControl>
+										<FormLabel className="capitalize">{field.name}</FormLabel>
+									</FormItem>
+									<FormMessage />
+								</div>
+							)}
+						/>
+					</div>
+				</form>
+			</Form>
+		</DialogContent>
+	);
+}
