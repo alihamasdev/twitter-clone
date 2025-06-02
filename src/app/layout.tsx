@@ -4,8 +4,8 @@ import { Toaster } from "react-hot-toast";
 import "@/styles/theme.css";
 
 import { QueryProviders } from "@/lib/tanstack/query-provider";
-import { ThemeProvider } from "@/lib/theme";
 import { baseUrl } from "@/utils/contants";
+import { ThemeProvider } from "@/context/theme-context";
 
 import { chirp } from "./fonts/chirp";
 
@@ -17,9 +17,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang="en">
 			<body style={chirp.style}>
-				<ThemeProvider attribute="class" themes={["dark", "light", "dim"]} defaultTheme="dark">
+				<ThemeProvider>
 					<QueryProviders>{children}</QueryProviders>
 					<Toaster
 						position="bottom-center"

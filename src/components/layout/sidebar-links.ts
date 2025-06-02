@@ -1,12 +1,12 @@
 import { IconId } from "@/components/ui/icon";
 
-export type SidebarLinks = {
+export interface SidebarLinks {
 	name: string;
 	url: string;
 	icon: IconId;
 	activeIcon: IconId;
 	disabled?: boolean;
-};
+}
 
 export function getSidebarLinks(username: string) {
 	const links: SidebarLinks[] = [
@@ -67,3 +67,27 @@ export function getSidebarLinks(username: string) {
 
 	return links;
 }
+
+export interface MoreSidebarLinks {
+	icon: IconId;
+	name: string;
+	url: string;
+}
+
+export const moreSidebarLinks: MoreSidebarLinks[] = [
+	{
+		icon: "arrow-top-right",
+		name: "Developer Portfolio",
+		url: "https://alihamas.vercel.app"
+	},
+	{
+		icon: "display",
+		name: "Display",
+		url: "/settings/display"
+	},
+	{
+		icon: "settings",
+		name: "Settings and Privacy",
+		url: "/settings"
+	}
+];

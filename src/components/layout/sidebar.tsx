@@ -19,7 +19,7 @@ import {
 import { Icon } from "@/components/ui/icon";
 import { Avatar, Name, Username } from "@/components/user";
 
-import { getSidebarLinks } from "./sidebar-links";
+import { getSidebarLinks, moreSidebarLinks } from "./sidebar-links";
 
 export function Sidebar() {
 	const path = usePathname();
@@ -57,23 +57,15 @@ export function Sidebar() {
 							<p className="hidden px-4 text-xl font-medium xl:block">More</p>
 						</div>
 					</DropdownMenuTrigger>
-					<DropdownMenuContent side="top" align="start" className="min-w-70 *:text-lg">
-						<DropdownMenuItem asChild>
-							<Link href="https://alihamas.vercel.app" target="_blank" passHref>
-								<Icon id="arrow-top-right" className="size-6" />
-								Developer Portfolio
-							</Link>
-						</DropdownMenuItem>
-						<DropdownMenuItem pushUrl="/settings/display">
-							<Icon id="display" className="size-6" />
-							Display
-						</DropdownMenuItem>
-						<DropdownMenuItem asChild>
-							<Link href="/settings">
-								<Icon id="settings" className="size-6" />
-								Settings and Privacy
-							</Link>
-						</DropdownMenuItem>
+					<DropdownMenuContent side="top" align="start" className="min-w-70">
+						{moreSidebarLinks.map(({ icon, name, url }) => (
+							<DropdownMenuItem key={name} asChild>
+								<Link href={url} target={url.startsWith("https://") ? "_blank" : "_self"}>
+									<Icon id={icon} className="size-6" />
+									<span className="text-lg">{name}</span>
+								</Link>
+							</DropdownMenuItem>
+						))}
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</nav>
