@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { prohibitedUsernames } from "@/utils/contants";
+
 export const profileSchema = z.object({
 	avatar: z.instanceof(File).optional().optional(),
 	banner: z.instanceof(File).optional().nullable().optional(),
@@ -28,3 +30,14 @@ export const postSchema = z.object({
 });
 
 export type PostSchema = z.infer<typeof postSchema>;
+
+export const usernameSchema = z.object({
+	username: z
+		.string()
+		.min(4, "Your username must be longer than 4 characters.")
+		.max(15, "Your username must be shorter than 15 characters.")
+		.regex(/^[a-zA-Z0-9_]+$/, "Your username can only contain letters, numbers and '_'")
+		.refine((username) => !prohibitedUsernames.includes(username), {
+			message: "This username is unavailable. Please try another."
+		})
+});
