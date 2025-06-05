@@ -4,11 +4,10 @@ import { Fragment } from "react";
 import Form from "next/form";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { isEqual } from "lodash";
-import { CheckCircle2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/auth-context";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -17,7 +16,6 @@ import {
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Icon } from "@/components/ui/icon";
-import { Avatar, Name, Username } from "@/components/user";
 
 import { getSidebarLinks, moreSidebarLinks } from "./sidebar-links";
 
@@ -35,7 +33,7 @@ export function Sidebar() {
 					<Icon id="twitter" className="size-6.5 xl:size-8" />
 				</Link>
 				{sidebarLinks.map(({ url, name, icon, activeIcon, disabled }) => {
-					const isActive = isEqual(path, url);
+					const isActive = path === url;
 					return (
 						<Link
 							key={name}
@@ -82,27 +80,20 @@ export function Sidebar() {
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<Button size={null} variant="ghost" className="mt-auto p-3 xl:w-full xl:justify-start">
-						<Avatar src={user.avatarUrl} url={null} />
+						<Avatar>
+							<AvatarImage src={user.avatarUrl} />
+							<AvatarFallback />
+						</Avatar>
 						<div className="hidden xl:contents">
 							<div className="flex flex-col items-start">
-								<Name url={null}>{user.name}</Name>
-								<Username url={null}>{user.username}</Username>
+								<p className="block line-clamp-1 text-base text-foreground">{user.name}</p>
+								<p className="block line-clamp-1 text-base text-muted-foreground">{`@${user.username}`}</p>
 							</div>
 							<Icon id="ellipsis" className="fill-muted-foreground size-4.5 ml-auto" />
 						</div>
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="start" className="min-w-70">
-					<DropdownMenuItem className="border-b" pushUrl={user.username}>
-						<div className="flex gap-x-3 items-center w-full">
-							<Avatar src={user.avatarUrl} url={null} />
-							<div className="flex flex-col items-start">
-								<Name url={null}>{user.name}</Name>
-								<Username url={null}>{user.username}</Username>
-							</div>
-							<CheckCircle2 width={18} height={18} className="fill-green ml-auto" />
-						</div>
-					</DropdownMenuItem>
 					<DropdownMenuItem disabled>Add an existing account</DropdownMenuItem>
 					<Form action={`/api/auth/logout`}>
 						<DropdownMenuItem variant="destructive" className="w-full" asChild>

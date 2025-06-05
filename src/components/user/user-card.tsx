@@ -24,11 +24,11 @@ export function UserCard({ user, follow, className, ...props }: UserCardProps) {
 			}}
 			{...props}
 		>
-			<Avatar src={user.avatarUrl} url={user.username} />
+			<Avatar src={user.avatarUrl} href={user.username} />
 			<div className="flex w-full items-center justify-between">
 				<div>
-					<Name url={user.username}>{user.name}</Name>
-					<Username url={user.username}>{user.username}</Username>
+					<Name href={user.username}>{user.name}</Name>
+					<Username href={user.username}>{user.username}</Username>
 				</div>
 				<FollowButton userId={user.id} initialState={follow} />
 			</div>

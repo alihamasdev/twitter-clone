@@ -73,7 +73,7 @@ export function PostForm({ isDialog, className, ...props }: React.ComponentProps
 			<div className={cn("relative w-full", { "opacity-50 pointer-events-none": isPending })} aria-disabled={isPending}>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full items-start gap-x-3">
-						<Avatar src={avatarUrl} url={username} />
+						<Avatar src={avatarUrl} href={username} />
 						<div className="flex w-full flex-col overflow-x-hidden">
 							<FormField
 								name="content"

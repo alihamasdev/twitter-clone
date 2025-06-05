@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { format } from "date-fns";
 
+import { LinkFormating } from "@/lib/link-format";
 import { useProfile } from "@/hooks/use-profile";
 import { useAuth } from "@/context/auth-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -16,7 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
 import { Header, HeaderDescription, HeaderTitle } from "@/components/layout/header";
 import { NumberAnimation } from "@/components/number-animation";
-import { FollowButton, Name, Username } from "@/components/user";
+import { FollowButton } from "@/components/user";
 
 import { FollowersCount, FollowingCount } from "./counts";
 
@@ -64,7 +65,7 @@ export function UserProfile() {
 					<Avatar className="bg-tooltip absolute -bottom-12 left-4 size-25 border-6 border-background lg:-bottom-15 lg:size-33 cursor-default" />
 				</section>
 				<section className="px-4 py-3">
-					<Name url={null} className="mt-12 lg:mt-15 text-xl font-extrabold">{`@${username}`}</Name>
+					<p className="mt-12 lg:mt-15 text-xl font-extrabold text-foreground">{`@${username}`}</p>
 					<Error />
 				</section>
 			</Fragment>
@@ -115,12 +116,12 @@ export function UserProfile() {
 					<FollowButton size="default" userId={data.id} initialState={{ followers, isFollowedByUser }} />
 				</div>
 				<div className="mt-3 lg:mt-6">
-					<Name className="text-xl font-extrabold" url={null}>
-						{data.name}
-					</Name>
-					<Username url={null}>{data.username}</Username>
+					<p className="text-xl font-extrabold text-foreground">{data.name}</p>
+					<p className="text-muted-foreground text-base">{`@${data.username}`}</p>
 					<div className="space-y-3 mt-3">
-						<p className="text-foreground text-base">{data.bio}</p>
+						<p className="text-foreground text-base">
+							<LinkFormating>{data.bio}</LinkFormating>
+						</p>
 						<div className="flex flex-wrap items-center gap-x-4 gap-y-2">
 							{profileMeta.map(
 								({ icon, data, link }) =>

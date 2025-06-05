@@ -68,7 +68,7 @@ function DropdownMenuItemIcon({
 }: React.ComponentProps<typeof DropdownMenuItem> & { icon?: IconId }) {
 	return (
 		<DropdownMenuItem {...props}>
-			{icon && <Icon id={icon} />}
+			{icon && <Icon id={icon} className="size-4.5" />}
 			{children}
 		</DropdownMenuItem>
 	);

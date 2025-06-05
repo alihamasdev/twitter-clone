@@ -1,51 +1,42 @@
-import Link from "next/link";
-import { Slot } from "@radix-ui/react-slot";
+import Link, { LinkProps } from "next/link";
 
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-interface ComponentProps extends React.ComponentProps<typeof Slot> {
-	url: string | null;
-}
-
-function LinkToProfile({ url, children, ...props }: ComponentProps) {
-	return <Slot {...props}>{url ? <Link href={`/${url}`}>{children}</Link> : <div>{children}</div>}</Slot>;
-}
-
-function Name({ url, className, ...props }: ComponentProps) {
+function Name({ href, className, ...props }: React.ComponentProps<typeof Link>) {
 	return (
-		<LinkToProfile
-			url={url}
-			className={cn(
-				"text-foreground block font-bold line-clamp-1",
-				url && "hover:underline hover:underline-offset-2",
-				className
-			)}
+		<Link
+			href={`/${href}`}
+			className={cn("text-foreground block font-bold line-clamp-1 hover:underline hover:underline-offset-2", className)}
 			{...props}
 		/>
 	);
 }
 
-function Username({ url, className, children, ...props }: ComponentProps) {
+interface UsernameProps extends React.ComponentProps<typeof Link> {
+	children: string;
+}
+
+function Username({ href, className, children, ...props }: UsernameProps) {
 	return (
-		<LinkToProfile url={url} className={cn("text-muted-foreground block line-clamp-1", className)} {...props}>
+		<Link href={`/${href}`} className={cn("text-muted-foreground block line-clamp-1", className)} {...props}>
 			{`@${children}`}
-		</LinkToProfile>
+		</Link>
 	);
 }
 
-interface UserAvatarProps extends React.ComponentProps<typeof Avatar> {
+interface UserAvatarProps extends React.ComponentProps<typeof AvatarImage> {
 	src: string | Blob;
-	url: ComponentProps["url"];
+	href: LinkProps["href"];
 }
 
-function UserAvatar({ src, url, ...props }: UserAvatarProps) {
+function UserAvatar({ src, href, className, ...props }: UserAvatarProps) {
 	return (
-		<Avatar asChild {...props}>
-			<LinkToProfile url={url}>
-				<AvatarImage src={src} />
+		<Avatar asChild>
+			<Link href={`/${href}`} className={className}>
+				<AvatarImage src={src} {...props} />
 				<AvatarFallback />
-			</LinkToProfile>
+			</Link>
 		</Avatar>
 	);
 }
