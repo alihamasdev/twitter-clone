@@ -16,11 +16,11 @@ export default function ProtectedLayout({ children, dialog }: React.PropsWithChi
 				<header className="sticky top-0 hidden h-dvh max-w-65 min-w-20 overflow-y-auto px-1 py-4 sm:flex sm:flex-col xl:w-full">
 					<Sidebar />
 				</header>
-				<div className="min-h-[500vh] w-full max-w-150 sm:border-x">
+				<div className="min-h-dvh w-full max-w-150 sm:border-x">
 					{dialog}
 					{children}
 				</div>
-				<aside className="sticky top-0 hidden w-full max-w-88 min-w-75 space-y-4 px-1 py-4 lg:block">
+				<aside className="h-dvh sticky top-0 hidden w-full max-w-88 min-w-75 space-y-4 px-1 py-4 overflow-y-auto lg:block">
 					<Search />
 					<section className="bg-card text-card-foreground rounded-2xl border px-4 py-3">
 						<h1 className="text-xl font-extrabold">Fork it on GitHub</h1>

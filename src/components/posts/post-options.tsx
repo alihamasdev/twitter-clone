@@ -1,0 +1,54 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import { useFollowerInfo, useFollowerMutation } from "@/hooks/use-follow";
+import { useAuth } from "@/context/auth-context";
+import { type UserDataWithFollowInfo } from "@/types/user";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItemIcon,
+	DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { Icon } from "@/components/ui/icon";
+
+interface PostOptionsProps extends React.ComponentProps<typeof DropdownMenuTrigger> {
+	postId: string;
+	user: UserDataWithFollowInfo;
+}
+
+export function PostOptions({ user, postId, className, ...props }: PostOptionsProps) {
+	const { user: loginUser } = useAuth();
+	const isCurrentUsersPost = user.id === loginUser.id;
+	const followMutation = useFollowerMutation(user.id, user.isFollowedByUser);
+	const { data } = useFollowerInfo(user.id, { followers: user.followers, isFollowedByUser: user.isFollowedByUser });
+
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger
+				className={cn(
+					"size-7 flex-center group hover:bg-blue/10 cursor-pointer rounded-full absolute top-2 right-3",
+					className
+				)}
+				{...props}
+			>
+				<Icon id="ellipsis" className="fill-muted-foreground size-4 group-hover:fill-blue" />
+			</DropdownMenuTrigger>
+			<DropdownMenuContent align="end" className="min-w-70">
+				{isCurrentUsersPost ? (
+					<DropdownMenuItemIcon icon="delete" variant="destructive">
+						Delete post
+					</DropdownMenuItemIcon>
+				) : (
+					<DropdownMenuItemIcon
+						icon={data.isFollowedByUser ? "unfollow" : "follow"}
+						variant={data.isFollowedByUser ? "destructive" : "default"}
+						onClick={() => followMutation()}
+					>
+						{data.isFollowedByUser ? `Unfollow @${user.username}` : `Follow @${user.username}`}
+					</DropdownMenuItemIcon>
+				)}
+			</DropdownMenuContent>
+		</DropdownMenu>
+	);
+}
