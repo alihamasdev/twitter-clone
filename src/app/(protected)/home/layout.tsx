@@ -9,7 +9,7 @@ export default function HomeLayout({ children }: { children: React.ReactNode }) 
 			<Header backButton={false}>
 				<HeaderTitle>Home</HeaderTitle>
 			</Header>
-			<div className="px-4 py-3 border-b relative w-full">
+			<div className="relative w-full border-b px-4 py-3">
 				<PostForm />
 			</div>
 			{children}

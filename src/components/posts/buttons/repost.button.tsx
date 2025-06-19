@@ -52,10 +52,10 @@ export function RepostButton({ postId, isRepost, reposts, className, ...props }:
 		<motion.button
 			onClick={() => mutate()}
 			whileTap={{ scale: 0.9 }}
-			className={cn("flex items-center group cursor-pointer")}
+			className={cn("group flex cursor-pointer items-center")}
 			{...props}
 		>
-			<div className="group-hover:bg-green/10 size-8 flex-center rounded-full">
+			<div className="group-hover:bg-green/10 flex-center size-8 rounded-full">
 				<Icon
 					id={isRepost ? "retweet-solid" : "retweet"}
 					className={cn("group-hover:fill-green size-4.5", isRepost ? "fill-green" : "fill-muted-foreground")}

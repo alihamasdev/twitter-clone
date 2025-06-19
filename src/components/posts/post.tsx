@@ -28,7 +28,7 @@ export function Post({ post, ...props }: React.ComponentProps<typeof motion.arti
 
 	return (
 		<motion.article
-			className="px-4 py-3 transition-colors flex items-start gap-x-3 hover:bg-muted/50 border-b relative"
+			className="hover:bg-muted/50 relative flex items-start gap-x-3 border-b px-4 py-3 transition-colors"
 			onClick={(e) => {
 				const target = e.target as HTMLElement;
 				if (target.closest("button, a, [role='menu']")) return;
@@ -45,10 +45,10 @@ export function Post({ post, ...props }: React.ComponentProps<typeof motion.arti
 					<span className="text-muted-foreground cursor-default">{getTweetDate(data.createdAt)}</span>
 					<PostOptions className="ml-auto" user={data.user} postId={data.id} />
 				</div>
-				<p className="whitespace-pre-line break-words mt-1">
+				<p className="mt-1 break-words whitespace-pre-line">
 					<LinkFormating>{data.content}</LinkFormating>
 				</p>
-				<div className="flex items-center justify-between w-full mt-1.5">
+				<div className="mt-1.5 flex w-full items-center justify-between">
 					<CommentButton />
 					<RepostButton isRepost={data.isReposted} reposts={data.reposts} postId={data.id} />
 					<LikeButton isLiked={data.isLiked} likes={data.likes} postId={data.id} />

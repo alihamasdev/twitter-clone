@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Username } from "@/components/user";
 
 function LinkifyUrl({ className, ...props }: React.ComponentProps<typeof LinkItUrl>) {
-	return <LinkItUrl className={cn("text-accent hover:underline underline-offset-3", className)} {...props} />;
+	return <LinkItUrl className={cn("text-accent underline-offset-3 hover:underline", className)} {...props} />;
 }
 
 function LinkifyUsername({ children }: React.ComponentProps<typeof LinkItUrl>) {
@@ -15,7 +15,7 @@ function LinkifyUsername({ children }: React.ComponentProps<typeof LinkItUrl>) {
 				<Username
 					key={index}
 					href={match.slice(1)}
-					className="text-accent hover:underline underline-offset-3 inline-block"
+					className="text-accent inline-block underline-offset-3 hover:underline"
 				>
 					{match}
 				</Username>

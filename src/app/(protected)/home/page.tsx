@@ -38,7 +38,7 @@ export default function HomePage() {
 	const posts = data.pages.flatMap((page) => page.posts) || [];
 
 	if (!posts.length) {
-		return <p className="mt-15 text-base text-muted-foreground text-center">No one has posted anything yet.</p>;
+		return <p className="text-muted-foreground mt-15 text-center text-base">No one has posted anything yet.</p>;
 	}
 
 	return (

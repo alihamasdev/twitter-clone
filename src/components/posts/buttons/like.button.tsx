@@ -47,10 +47,10 @@ export function LikeButton({ postId, isLiked, likes, className, ...props }: Like
 		<motion.button
 			onClick={() => mutate()}
 			whileTap={{ scale: 0.9 }}
-			className={cn("flex items-center group cursor-pointer")}
+			className={cn("group flex cursor-pointer items-center")}
 			{...props}
 		>
-			<div className="group-hover:bg-pink/10 size-8 flex-center rounded-full">
+			<div className="group-hover:bg-pink/10 flex-center size-8 rounded-full">
 				<Icon
 					id={isLiked ? "like-solid" : "like"}
 					className={cn("group-hover:fill-pink size-4.5", isLiked ? "fill-pink" : "fill-muted-foreground")}

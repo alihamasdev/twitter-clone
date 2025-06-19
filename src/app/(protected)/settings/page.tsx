@@ -37,9 +37,9 @@ export default function SettingsPage() {
 				<Link
 					href={url}
 					key={title}
-					className="px-4 py-3 transition-colors hover:bg-muted/50 flex gap-x-4 items-center"
+					className="hover:bg-muted/50 flex items-center gap-x-4 px-4 py-3 transition-colors"
 				>
-					<Icon id={icon} className="size-6 fill-muted-foreground" />
+					<Icon id={icon} className="fill-muted-foreground size-6" />
 					<div className="w-full space-y-0.5">
 						<h3 className="text-foreground">{title}</h3>
 						<p className="text-muted-foreground text-sm/4 font-normal">{description}</p>

@@ -9,7 +9,7 @@ export function SuggestedUsers() {
 		<Suspense
 			name="suggested users"
 			fallback={
-				<section className="w-full rounded-2xl flex-center h-75 border">
+				<section className="flex-center h-75 w-full rounded-2xl border">
 					<Spinner className="mt-0" />
 				</section>
 			}

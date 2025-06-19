@@ -27,12 +27,12 @@ export function PostOptions({ user, postId, className, ...props }: PostOptionsPr
 		<DropdownMenu>
 			<DropdownMenuTrigger
 				className={cn(
-					"size-7 flex-center group hover:bg-blue/10 cursor-pointer rounded-full absolute top-2 right-3",
+					"flex-center group hover:bg-blue/10 absolute top-2 right-3 size-7 cursor-pointer rounded-full",
 					className
 				)}
 				{...props}
 			>
-				<Icon id="ellipsis" className="fill-muted-foreground size-4 group-hover:fill-blue" />
+				<Icon id="ellipsis" className="fill-muted-foreground group-hover:fill-blue size-4" />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="min-w-70">
 				{isCurrentUsersPost ? (

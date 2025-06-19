@@ -28,7 +28,7 @@ export default async function AccountPage() {
 			</div>
 			<div className="px-4 py-3">
 				<p>Account linked with</p>
-				<div className="flex items-center gap-x-3 mt-2">
+				<div className="mt-2 flex items-center gap-x-3">
 					{user.identities?.map(({ provider }) => (
 						<Button key={provider} size="icon">
 							{provider === "google" && <GoogleIcon />}

@@ -44,7 +44,7 @@ export function BookmarkButton({ isBookmarked, postId, className, ...props }: Bo
 		<motion.button
 			whileTap={{ scale: 0.9 }}
 			onClick={() => mutate()}
-			className={cn("size-8 flex-center rounded-full hover:bg-blue/10 group cursor-pointer", className)}
+			className={cn("flex-center hover:bg-blue/10 group size-8 cursor-pointer rounded-full", className)}
 			{...props}
 		>
 			<Icon

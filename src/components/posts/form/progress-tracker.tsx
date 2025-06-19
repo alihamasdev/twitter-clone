@@ -24,7 +24,7 @@ export function ProgressTracker({ inputLength }: { inputLength: number }) {
 
 	return (
 		<motion.div className="relative" {...fadeAnimation}>
-			<svg viewBox="0 0 48 48" className="size-6 transform -rotate-90">
+			<svg viewBox="0 0 48 48" className="size-6 -rotate-90 transform">
 				<circle cx="24" cy="24" r={radius} fill="none" stroke="var(--color-muted)" strokeWidth="6" />
 				<motion.circle
 					cx="24"

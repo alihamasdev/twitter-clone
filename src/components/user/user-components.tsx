@@ -7,7 +7,7 @@ function Name({ href, className, ...props }: React.ComponentProps<typeof Link>) 
 	return (
 		<Link
 			href={`/${href}`}
-			className={cn("text-foreground block font-bold line-clamp-1 hover:underline hover:underline-offset-2", className)}
+			className={cn("text-foreground line-clamp-1 block font-bold hover:underline hover:underline-offset-2", className)}
 			{...props}
 		/>
 	);
@@ -19,7 +19,7 @@ interface UsernameProps extends React.ComponentProps<typeof Link> {
 
 function Username({ href, className, children, ...props }: UsernameProps) {
 	return (
-		<Link href={`/${href}`} className={cn("text-muted-foreground block line-clamp-1", className)} {...props}>
+		<Link href={`/${href}`} className={cn("text-muted-foreground line-clamp-1 block", className)} {...props}>
 			{`@${children}`}
 		</Link>
 	);

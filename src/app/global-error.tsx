@@ -19,7 +19,7 @@ export default function GlobalError({ error }: GlobalErrorProps) {
 			<body style={chirp.style}>
 				<main className="flex-center h-dvh w-full flex-col gap-y-6">
 					<Icon id="twitter" className="size-15" />
-					<h2 className="text-foreground text-lg font-medium w-4/5 text-center text-pretty">{errorMessage}</h2>
+					<h2 className="text-foreground w-4/5 text-center text-lg font-medium text-pretty">{errorMessage}</h2>
 					<Button onClick={() => window.location.reload()}>Try Again</Button>
 				</main>
 			</body>

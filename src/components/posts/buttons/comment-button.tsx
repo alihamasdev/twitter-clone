@@ -3,10 +3,10 @@ import { Icon } from "@/components/ui/icon";
 export function CommentButton() {
 	return (
 		<button
-			className="size-8 flex-center rounded-full hover:bg-blue/10 group cursor-pointer disabled:opacity-50"
+			className="flex-center hover:bg-blue/10 group size-8 cursor-pointer rounded-full disabled:opacity-50"
 			disabled
 		>
-			<Icon id="comment" className="size-4.5 fill-muted-foreground group-hover:fill-blue" />
+			<Icon id="comment" className="fill-muted-foreground group-hover:fill-blue size-4.5" />
 		</button>
 	);
 }

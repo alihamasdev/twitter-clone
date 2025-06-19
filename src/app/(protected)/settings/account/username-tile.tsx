@@ -11,7 +11,7 @@ export function UsernameTile() {
 	return (
 		<Link
 			href="account/username"
-			className="px-4 py-3 flex items-center justify-between transition-colors hover:bg-muted/50"
+			className="hover:bg-muted/50 flex items-center justify-between px-4 py-3 transition-colors"
 		>
 			<div>
 				<p>Username</p>

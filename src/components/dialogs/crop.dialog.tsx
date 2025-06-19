@@ -170,7 +170,7 @@ export function CropDialog({
 						<CropperCropArea />
 					</Cropper>
 				)}
-				<AlertDialogFooter className="mt-0 border-t px-4 py-6 shrink-0">
+				<AlertDialogFooter className="mt-0 shrink-0 border-t px-4 py-6">
 					<div className="mx-auto flex w-full max-w-80 items-center gap-4">
 						<ZoomOutIcon className="text-muted-foreground shrink-0" size={16} />
 						<Slider

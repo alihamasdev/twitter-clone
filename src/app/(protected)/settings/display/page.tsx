@@ -26,30 +26,30 @@ export default function DisplayPage() {
 			<p className="text-muted-foreground px-4 py-3 text-sm">
 				Manage your color, and background. These settings affect all the X accounts on this browser.
 			</p>
-			<article className="px-4 pb-6 pt-3 w-full flex items-start gap-x-3 border-b">
+			<article className="flex w-full items-start gap-x-3 border-b px-4 pt-3 pb-6">
 				<Avatar src="/twitter.png" url={null} />
 				<div className="w-full space-y-1">
-					<div className="flex items-center gap-x-1 text-muted-foreground">
+					<div className="text-muted-foreground flex items-center gap-x-1">
 						<Name url={null}>Twitter</Name>
 						<Username url={null}>twitter</Username>
 						<p>·</p>
 						<p>26m</p>
 					</div>
-					<p className="whitespace-pre-line break-words">
+					<p className="break-words whitespace-pre-line">
 						At the heart of Twitter are short messages called Tweets — just like this one — which can include photos,
 						videos, links, text, hashtags, and mentions like{" "}
 						<span className="text-accent cursor-pointer">@twitter</span>
 					</p>
 				</div>
 			</article>
-			<section className="space-y-3 w-full px-4 pt-3 pb-6 border-b">
+			<section className="w-full space-y-3 border-b px-4 pt-3 pb-6">
 				<h3 className="text-xl font-extrabold">Color</h3>
-				<div className="flex justify-evenly items-center">
+				<div className="flex items-center justify-evenly">
 					{accentColors.map((value) => (
 						<label
 							key={value}
 							htmlFor={id + value}
-							className="size-10 rounded-full cursor-pointer flex-center"
+							className="flex-center size-10 cursor-pointer rounded-full"
 							style={{ backgroundColor: `var(--color-${value})` }}
 						>
 							<input
@@ -57,16 +57,16 @@ export default function DisplayPage() {
 								name="color"
 								id={id + value}
 								value={value}
-								className="hidden peer"
+								className="peer hidden"
 								checked={accent === value}
 								onChange={() => setAccent(value)}
 							/>
-							<Check className="text-white size-5 hidden peer-checked:block" />
+							<Check className="hidden size-5 text-white peer-checked:block" />
 						</label>
 					))}
 				</div>
 			</section>
-			<section className="space-y-3 w-full px-4 pt-3 pb-6 border-b">
+			<section className="w-full space-y-3 border-b px-4 pt-3 pb-6">
 				<h3 className="text-xl font-extrabold">Background</h3>
 				<div className="grid grid-cols-3 gap-x-3">
 					{backgroundList.map(({ name, value }) => (
@@ -74,7 +74,7 @@ export default function DisplayPage() {
 							key={value}
 							htmlFor={id + value}
 							className={cn(
-								"flex items-center justify-center gap-x-3 p-3 bg-background text-foreground rounded-sm h-16 cursor-pointer",
+								"bg-background text-foreground flex h-16 cursor-pointer items-center justify-center gap-x-3 rounded-sm p-3",
 								"has-checked:ring-accent has-checked:ring-3",
 								value
 							)}
@@ -85,10 +85,10 @@ export default function DisplayPage() {
 								id={id + value}
 								checked={theme === value}
 								onChange={() => setTheme(value)}
-								className="hidden peer"
+								className="peer hidden"
 							/>
-							<div className="flex-center rounded-full size-5 border-2 peer-checked:bg-accent peer-checked:border-accent peer-checked:*:block">
-								<Check className="text-white size-3 hidden" />
+							<div className="flex-center peer-checked:bg-accent peer-checked:border-accent size-5 rounded-full border-2 peer-checked:*:block">
+								<Check className="hidden size-3 text-white" />
 							</div>
 							<span className="font-bold">{name}</span>
 						</label>

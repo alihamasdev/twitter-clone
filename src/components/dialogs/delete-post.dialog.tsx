@@ -57,7 +57,7 @@ export function DeletePostDialog({ postId, ...props }: React.ComponentProps<type
 
 	return (
 		<Dialog {...props}>
-			<DialogContent className="w-80 h-75 p-8">
+			<DialogContent className="h-75 w-80 p-8">
 				<DialogHeader className="mb-0">
 					<DialogTitle>Delete post?</DialogTitle>
 				</DialogHeader>

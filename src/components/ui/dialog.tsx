@@ -60,7 +60,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
 
 function DialogTitle({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Title>) {
 	return (
-		<DialogPrimitive.Title data-slot="dialog-title" className={cn("text-xl font-extrabold ", className)} {...props} />
+		<DialogPrimitive.Title data-slot="dialog-title" className={cn("text-xl font-extrabold", className)} {...props} />
 	);
 }
 

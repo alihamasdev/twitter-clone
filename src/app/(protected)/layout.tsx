@@ -20,7 +20,7 @@ export default function ProtectedLayout({ children, dialog }: React.PropsWithChi
 					{dialog}
 					{children}
 				</div>
-				<aside className="h-dvh sticky top-0 hidden w-full max-w-88 min-w-75 space-y-4 px-1 py-4 overflow-y-auto lg:block">
+				<aside className="sticky top-0 hidden h-dvh w-full max-w-88 min-w-75 space-y-4 overflow-y-auto px-1 py-4 lg:block">
 					<Search />
 					<section className="bg-card text-card-foreground rounded-2xl border px-4 py-3">
 						<h1 className="text-xl font-extrabold">Fork it on GitHub</h1>

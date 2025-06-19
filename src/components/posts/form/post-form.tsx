@@ -70,7 +70,7 @@ export function PostForm({ isDialog, className, ...props }: React.ComponentProps
 					/>
 				)}
 			</AnimatePresence>
-			<div className={cn("relative w-full", { "opacity-50 pointer-events-none": isPending })} aria-disabled={isPending}>
+			<div className={cn("relative w-full", { "pointer-events-none opacity-50": isPending })} aria-disabled={isPending}>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full items-start gap-x-3">
 						<Avatar src={avatarUrl} href={username} />
@@ -83,13 +83,13 @@ export function PostForm({ isDialog, className, ...props }: React.ComponentProps
 										<Textarea
 											disabled={isPending}
 											placeholder="What's happening?"
-											className="max-h-100 border-none p-0 pb-3 text-xl focus:ring-0 font-medium w-full"
+											className="max-h-100 w-full border-none p-0 pb-3 text-xl font-medium focus:ring-0"
 											{...field}
 										/>
 									</FormControl>
 								)}
 							/>
-							<div className="w-full flex items-center border-t justify-between pt-3">
+							<div className="flex w-full items-center justify-between border-t pt-3">
 								<div className="flex">
 									{formButtons.map((id) => (
 										<Button key={id} variant="accent-ghost" size="icon" icon={id} disabled />
@@ -99,7 +99,7 @@ export function PostForm({ isDialog, className, ...props }: React.ComponentProps
 									<AnimatePresence>{tweetLength && <ProgressTracker inputLength={tweetLength} />}</AnimatePresence>
 									<Button
 										type="submit"
-										className="duration-200 transition-all"
+										className="transition-all duration-200"
 										disabled={isPending || !form.formState.isValid}
 									>
 										Post
@@ -118,7 +118,7 @@ function SuccessToast({ href }: { href: string }) {
 	return (
 		<div className="flex items-center gap-x-3">
 			<span>Your tweet has been sent</span>
-			<Link href={href} className="hover:underline font-bold">
+			<Link href={href} className="font-bold hover:underline">
 				View
 			</Link>
 		</div>

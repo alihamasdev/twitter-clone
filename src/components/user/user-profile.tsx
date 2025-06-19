@@ -36,16 +36,16 @@ export function UserProfile() {
 		return (
 			<Fragment>
 				<Header className="">
-					<Skeleton className="w-40 h-6" />
-					<Skeleton className="w-20 mt-1" />
+					<Skeleton className="h-6 w-40" />
+					<Skeleton className="mt-1 w-20" />
 				</Header>
 				<section className="relative w-full">
-					<Skeleton className="aspect-header border-b rounded-none h-auto" />
-					<Avatar className="bg-tooltip absolute animate-pulse -bottom-12 left-4 size-25 border-6 border-background lg:-bottom-15 lg:size-33 cursor-default" />
+					<Skeleton className="aspect-header h-auto rounded-none border-b" />
+					<Avatar className="bg-tooltip border-background absolute -bottom-12 left-4 size-25 animate-pulse cursor-default border-6 lg:-bottom-15 lg:size-33" />
 				</section>
 				<section className="px-4 py-3">
-					<Skeleton className="mt-12 lg:mt-15 w-40 h-6" />
-					<Skeleton className="mt-1 w-25 h-5" />
+					<Skeleton className="mt-12 h-6 w-40 lg:mt-15" />
+					<Skeleton className="mt-1 h-5 w-25" />
 					<Spinner />
 				</section>
 			</Fragment>
@@ -61,11 +61,11 @@ export function UserProfile() {
 					<HeaderTitle>{username}</HeaderTitle>
 				</Header>
 				<section className="relative w-full">
-					<div className="aspect-header border-b rounded-none h-auto bg-image" />
-					<Avatar className="bg-tooltip absolute -bottom-12 left-4 size-25 border-6 border-background lg:-bottom-15 lg:size-33 cursor-default" />
+					<div className="aspect-header bg-image h-auto rounded-none border-b" />
+					<Avatar className="bg-tooltip border-background absolute -bottom-12 left-4 size-25 cursor-default border-6 lg:-bottom-15 lg:size-33" />
 				</section>
 				<section className="px-4 py-3">
-					<p className="mt-12 lg:mt-15 text-xl font-extrabold text-foreground">{`@${username}`}</p>
+					<p className="text-foreground mt-12 text-xl font-extrabold lg:mt-15">{`@${username}`}</p>
 					<Error />
 				</section>
 			</Fragment>
@@ -105,7 +105,7 @@ export function UserProfile() {
 					)}
 				</div>
 				<Link href={`/${username}/avatar`}>
-					<Avatar className="bg-tooltip absolute -bottom-12 left-4 size-25 border-6 border-background lg:-bottom-15 lg:size-33">
+					<Avatar className="bg-tooltip border-background absolute -bottom-12 left-4 size-25 border-6 lg:-bottom-15 lg:size-33">
 						<AvatarImage src={avatarUrl} width={120} height={120} />
 						<AvatarFallback />
 					</Avatar>
@@ -116,9 +116,9 @@ export function UserProfile() {
 					<FollowButton size="default" userId={data.id} initialState={{ followers, isFollowedByUser }} />
 				</div>
 				<div className="mt-3 lg:mt-6">
-					<p className="text-xl font-extrabold text-foreground">{data.name}</p>
+					<p className="text-foreground text-xl font-extrabold">{data.name}</p>
 					<p className="text-muted-foreground text-base">{`@${data.username}`}</p>
-					<div className="space-y-3 mt-3">
+					<div className="mt-3 space-y-3">
 						<p className="text-foreground text-base">
 							<LinkFormating>{data.bio}</LinkFormating>
 						</p>
@@ -140,10 +140,10 @@ export function UserProfile() {
 							)}
 						</div>
 						<div className="flex items-center gap-x-4">
-							<Link href={`${username}/following`} className="border-b border-transparent hover:border-foreground">
+							<Link href={`${username}/following`} className="hover:border-foreground border-b border-transparent">
 								<FollowingCount initialState={{ following }} isCurrentUser={data.id === user.id} />
 							</Link>
-							<Link href={`${username}/followers`} className="border-b border-transparent hover:border-foreground">
+							<Link href={`${username}/followers`} className="hover:border-foreground border-b border-transparent">
 								<FollowersCount userId={data.id} initialState={{ followers, isFollowedByUser }} />
 							</Link>
 						</div>

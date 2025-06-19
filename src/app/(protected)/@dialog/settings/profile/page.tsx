@@ -67,7 +67,7 @@ export default function EditProfilePage() {
 
 	if (isPending) {
 		return (
-			<div className="size-full flex-center">
+			<div className="flex-center size-full">
 				<Spinner className="mt-0" />
 			</div>
 		);
@@ -76,7 +76,7 @@ export default function EditProfilePage() {
 	if (error) {
 		console.error(error);
 		return (
-			<div className="size-full flex-center">
+			<div className="flex-center size-full">
 				<Error className="mt-0" />
 			</div>
 		);
@@ -85,7 +85,7 @@ export default function EditProfilePage() {
 	return (
 		<DialogContent className="h-175">
 			{isLoading && (
-				<div className="size-full flex-center">
+				<div className="flex-center size-full">
 					<Spinner className="mt-0" />
 				</div>
 			)}
@@ -146,7 +146,7 @@ export default function EditProfilePage() {
 										<FormControl>
 											<Textarea className="pt-8" value={value || ""} {...field} />
 										</FormControl>
-										<FormLabel className="capitalize top-8">{field.name}</FormLabel>
+										<FormLabel className="top-8 capitalize">{field.name}</FormLabel>
 									</FormItem>
 									<FormMessage />
 								</div>

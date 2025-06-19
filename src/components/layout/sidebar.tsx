@@ -28,7 +28,7 @@ export function Sidebar() {
 
 	return (
 		<Fragment>
-			<nav className="xl:w-full flex flex-col items-center">
+			<nav className="flex flex-col items-center xl:w-full">
 				<Link href="/home" className="hover:bg-muted flex-center rounded-full p-3 transition-colors xl:self-start">
 					<Icon id="twitter" className="size-6.5 xl:size-8" />
 				</Link>
@@ -86,10 +86,10 @@ export function Sidebar() {
 						</Avatar>
 						<div className="hidden xl:contents">
 							<div className="flex flex-col items-start">
-								<p className="block line-clamp-1 text-base text-foreground">{user.name}</p>
-								<p className="block line-clamp-1 text-base text-muted-foreground">{`@${user.username}`}</p>
+								<p className="text-foreground line-clamp-1 block text-base">{user.name}</p>
+								<p className="text-muted-foreground line-clamp-1 block text-base">{`@${user.username}`}</p>
 							</div>
-							<Icon id="ellipsis" className="fill-muted-foreground size-4.5 ml-auto" />
+							<Icon id="ellipsis" className="fill-muted-foreground ml-auto size-4.5" />
 						</div>
 					</Button>
 				</DropdownMenuTrigger>
