@@ -6,7 +6,6 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { accentColors, useTheme } from "@/context/theme-context";
 import { Header, HeaderTitle } from "@/components/layout/header";
-import { Avatar, Name, Username } from "@/components/user";
 
 export default function DisplayPage() {
 	const id = useId();
@@ -26,22 +25,6 @@ export default function DisplayPage() {
 			<p className="text-muted-foreground px-4 py-3 text-sm">
 				Manage your color, and background. These settings affect all the X accounts on this browser.
 			</p>
-			<article className="flex w-full items-start gap-x-3 border-b px-4 pt-3 pb-6">
-				<Avatar src="/twitter.png" url={null} />
-				<div className="w-full space-y-1">
-					<div className="text-muted-foreground flex items-center gap-x-1">
-						<Name url={null}>Twitter</Name>
-						<Username url={null}>twitter</Username>
-						<p>·</p>
-						<p>26m</p>
-					</div>
-					<p className="break-words whitespace-pre-line">
-						At the heart of Twitter are short messages called Tweets — just like this one — which can include photos,
-						videos, links, text, hashtags, and mentions like{" "}
-						<span className="text-accent cursor-pointer">@twitter</span>
-					</p>
-				</div>
-			</article>
 			<section className="w-full space-y-3 border-b px-4 pt-3 pb-6">
 				<h3 className="text-xl font-extrabold">Color</h3>
 				<div className="flex items-center justify-evenly">
