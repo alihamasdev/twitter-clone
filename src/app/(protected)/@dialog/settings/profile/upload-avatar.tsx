@@ -1,21 +1,17 @@
 "use client";
 
 import { Fragment, useEffect, useState } from "react";
-import { type User } from "@prisma/client";
-import { type ControllerRenderProps } from "react-hook-form";
 
-import { type ProfileSchema } from "@/lib/validation";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CropDialog } from "@/components/dialogs/crop.dialog";
 
 interface UploadAvatarProps {
-	field: ControllerRenderProps<ProfileSchema, "avatar">;
-	previousValue: User["avatarUrl"];
+	previousValue: string;
 }
 
-export function UploadAvatar({ field, previousValue }: UploadAvatarProps) {
+export function UploadAvatar({ previousValue }: UploadAvatarProps) {
 	const [finalImageUrl, setFinalImageUrl] = useState<string | null>(null);
 	const [{ files }, { openFileDialog, removeFile, getInputProps }] = useFileUpload();
 
@@ -40,7 +36,7 @@ export function UploadAvatar({ field, previousValue }: UploadAvatarProps) {
 						className="bg-background hover:bg-background/80 absolute-center"
 					/>
 				</Avatar>
-				<input name={field.name} className="sr-only" tabIndex={-1} {...getInputProps()} />
+				<input className="sr-only" tabIndex={-1} {...getInputProps()} />
 			</div>
 
 			<CropDialog
@@ -48,8 +44,6 @@ export function UploadAvatar({ field, previousValue }: UploadAvatarProps) {
 				removeFileAction={removeFile}
 				finalImageUrl={finalImageUrl}
 				setFinalImageUrlAction={setFinalImageUrl}
-				formChangeAction={field.onChange}
-				fileName={`avatar.png`}
 				aspectRatio={1 / 1}
 				outputWidth={400}
 				outputHeight={400}

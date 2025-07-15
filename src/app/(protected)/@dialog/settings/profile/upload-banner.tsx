@@ -2,20 +2,16 @@
 
 import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
-import { type User } from "@prisma/client";
-import { type ControllerRenderProps } from "react-hook-form";
 
-import { type ProfileSchema } from "@/lib/validation";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { Button } from "@/components/ui/button";
 import { CropDialog } from "@/components/dialogs/crop.dialog";
 
 interface UploadBannerProps {
-	field: ControllerRenderProps<ProfileSchema, "banner">;
-	previousValue: User["bannerUrl"];
+	previousValue: string | null;
 }
 
-export function UploadBanner({ field, previousValue }: UploadBannerProps) {
+export function UploadBanner({ previousValue }: UploadBannerProps) {
 	const [finalImageUrl, setFinalImageUrl] = useState<string | null>(null);
 	const [{ files }, { openFileDialog, removeFile, getInputProps }] = useFileUpload();
 
@@ -32,6 +28,7 @@ export function UploadBanner({ field, previousValue }: UploadBannerProps) {
 		<Fragment>
 			<div className="bg-image aspect-header relative w-full overflow-hidden [&_img]:opacity-80">
 				{finalImageUrl ? (
+					// eslint-disable-next-line @next/next/no-img-element
 					<img src={finalImageUrl} className="aspect-header w-full object-cover object-center" alt="User Header" />
 				) : (
 					previousValue && (
@@ -52,7 +49,7 @@ export function UploadBanner({ field, previousValue }: UploadBannerProps) {
 					className="bg-background hover:bg-background/80 absolute-center"
 				/>
 
-				<input name={field.name} className="sr-only" tabIndex={-1} {...getInputProps()} />
+				<input className="sr-only" tabIndex={-1} {...getInputProps()} />
 			</div>
 
 			<CropDialog
@@ -60,8 +57,6 @@ export function UploadBanner({ field, previousValue }: UploadBannerProps) {
 				removeFileAction={removeFile}
 				finalImageUrl={finalImageUrl}
 				setFinalImageUrlAction={setFinalImageUrl}
-				formChangeAction={field.onChange}
-				fileName={`banner.png`}
 				aspectRatio={3 / 1}
 				outputWidth={1500}
 				outputHeight={500}

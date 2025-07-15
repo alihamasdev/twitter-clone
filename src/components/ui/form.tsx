@@ -39,28 +39,34 @@ const FormField = <
 	);
 };
 
-const useFormField = () => {
-	const fieldContext = use(FormFieldContext);
-	const itemContext = use(FormItemContext);
-	const { getFieldState } = useFormContext();
-	const formState = useFormState({ name: fieldContext.name });
-	const fieldState = getFieldState(fieldContext.name, formState);
+function useFormField<
+	TFieldValues extends FieldValues = FieldValues,
+	TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+>() {
+	const { name } = use(FormFieldContext);
+	const { id } = use(FormItemContext);
+	const { getFieldState, setValue } = useFormContext();
+	const formState = useFormState({ name });
+	const fieldState = getFieldState(name, formState);
 
-	if (!fieldContext) {
+	const setFieldValue = (fieldValue: TFieldValues[TName]) => {
+		setValue(name, fieldValue, { shouldValidate: true });
+	};
+
+	if (!name) {
 		throw new Error("useFormField should be used within <FormField>");
 	}
 
-	const { id } = itemContext;
-
 	return {
 		id,
-		name: fieldContext.name,
+		name,
 		formItemId: `${id}-form-item`,
 		formDescriptionId: `${id}-form-item-description`,
 		formMessageId: `${id}-form-item-message`,
+		setFieldValue,
 		...fieldState
 	};
-};
+}
 
 type FormItemContextValue = {
 	id: string;

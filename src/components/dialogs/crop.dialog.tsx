@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Cropper, CropperCropArea, CropperDescription, CropperImage } from "@/components/ui/cropper";
+import { useFormField } from "@/components/ui/form";
 import { Slider } from "@/components/ui/slider";
 
 type Area = { x: number; y: number; width: number; height: number };
@@ -68,9 +69,7 @@ interface CropDialogProps extends Partial<React.ComponentProps<typeof Cropper>> 
 	outputWidth?: number;
 	outputHeight?: number;
 	finalImageUrl: string | null;
-	setFinalImageUrlAction: React.Dispatch<React.SetStateAction<string | null>>;
-	formChangeAction: (...event: any[]) => void;
-	fileName: string;
+	setFinalImageUrlAction: (value: string | null) => void;
 }
 
 export function CropDialog({
@@ -78,10 +77,8 @@ export function CropDialog({
 	removeFileAction,
 	finalImageUrl,
 	setFinalImageUrlAction,
-	formChangeAction,
 	outputWidth,
 	outputHeight,
-	fileName,
 	className,
 	...props
 }: CropDialogProps) {
@@ -92,6 +89,8 @@ export function CropDialog({
 	const previousFileIdRef = useRef<string | undefined | null>(null);
 	const fileId = files[0]?.id;
 	const previewUrl = files[0]?.preview || null;
+
+	const { name, setFieldValue } = useFormField();
 
 	useEffect(() => {
 		if (fileId && fileId !== previousFileIdRef.current) {
@@ -125,7 +124,7 @@ export function CropDialog({
 			if (!croppedBlob) throw new Error("Failed to generate cropped image blob.");
 
 			const newFinalUrl = URL.createObjectURL(croppedBlob);
-			const croppedFile = new File([croppedBlob], fileName, {
+			const croppedFile = new File([croppedBlob], `${name}.png`, {
 				type: croppedBlob.type,
 				lastModified: Date.now()
 			});
@@ -135,7 +134,7 @@ export function CropDialog({
 			}
 
 			setFinalImageUrlAction(newFinalUrl);
-			formChangeAction(croppedFile);
+			setFieldValue(croppedFile);
 		} catch (error) {
 			console.error("Error during apply:", error);
 		} finally {

@@ -105,18 +105,18 @@ export default function EditProfilePage() {
 						<FormField
 							name="banner"
 							control={form.control}
-							render={({ field }) => (
+							render={() => (
 								<FormControl>
-									<UploadBanner field={field} previousValue={data.bannerUrl} />
+									<UploadBanner previousValue={data.bannerUrl} />
 								</FormControl>
 							)}
 						/>
 						<FormField
 							name="avatar"
 							control={form.control}
-							render={({ field }) => (
+							render={() => (
 								<FormControl>
-									<UploadAvatar field={field} previousValue={data.avatarUrl} />
+									<UploadAvatar previousValue={data.avatarUrl} />
 								</FormControl>
 							)}
 						/>
