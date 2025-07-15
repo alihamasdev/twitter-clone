@@ -47,7 +47,7 @@ export function LikeButton({ postId, isLiked, likes, className, ...props }: Like
 		<motion.button
 			onClick={() => mutate()}
 			whileTap={{ scale: 0.9 }}
-			className={cn("group flex cursor-pointer items-center")}
+			className={cn("group flex cursor-pointer items-center", className)}
 			{...props}
 		>
 			<div className="group-hover:bg-pink/10 flex-center size-8 rounded-full">

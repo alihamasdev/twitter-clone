@@ -39,6 +39,7 @@ export function PostForm({ isDialog, className, ...props }: React.ComponentProps
 
 	const handleCloseDialog = () => {
 		if (isDialog) {
+			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 			history.length > 1 ? router.back() : router.push("/home");
 		}
 	};

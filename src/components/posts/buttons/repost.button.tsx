@@ -52,7 +52,7 @@ export function RepostButton({ postId, isRepost, reposts, className, ...props }:
 		<motion.button
 			onClick={() => mutate()}
 			whileTap={{ scale: 0.9 }}
-			className={cn("group flex cursor-pointer items-center")}
+			className={cn("group flex cursor-pointer items-center", className)}
 			{...props}
 		>
 			<div className="group-hover:bg-green/10 flex-center size-8 rounded-full">

@@ -8,7 +8,8 @@ function BackButton({ variant = "ghost", size = "icon", icon = "back", ...props 
 	const router = useRouter();
 
 	const handleBack = () => {
-		window.history.length > 1 ? router.back() : router.push("/home");
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+		history.length > 1 ? router.back() : router.push("/home");
 	};
 
 	return <Button size={size} icon={icon} variant={variant} onClick={handleBack} {...props} />;

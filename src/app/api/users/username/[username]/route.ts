@@ -37,6 +37,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 
 		return NextResponse.json(profile);
 	} catch (error) {
+		console.error(error);
 		return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
 	}
 }

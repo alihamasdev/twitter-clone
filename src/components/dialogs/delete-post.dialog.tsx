@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
 import { Post } from "@prisma/client";
 import { useMutation, useQueryClient, type InfiniteData, type QueryKey } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
@@ -19,8 +18,6 @@ import {
 } from "@/components/ui/dialog";
 
 export function DeletePostDialog({ postId, ...props }: React.ComponentProps<typeof Dialog> & { postId: string }) {
-	const router = useRouter();
-	const path = usePathname();
 	const queryClient = useQueryClient();
 	const queryKey: QueryKey = [`post`, postId];
 
@@ -49,7 +46,7 @@ export function DeletePostDialog({ postId, ...props }: React.ComponentProps<type
 			queryClient.setQueryData([`posts`, `feed`], context?.prevPosts);
 			toast.error(`Something went wrong, please try again`);
 		},
-		onSuccess(data, variables, context) {
+		onSuccess() {
 			queryClient.removeQueries({ queryKey });
 			toast.success(`Your post was deleted`);
 		}
@@ -62,8 +59,8 @@ export function DeletePostDialog({ postId, ...props }: React.ComponentProps<type
 					<DialogTitle>Delete post?</DialogTitle>
 				</DialogHeader>
 				<DialogDescription>
-					This can't be undone and it will be removed from your profile, the timeline of any accounts that follow you,
-					and from search results.
+					This can&apos;t be undone and it will be removed from your profile, the timeline of any accounts that follow
+					you, and from search results.
 				</DialogDescription>
 				<DialogFooter>
 					<Button variant="destructive" size="xl" onClick={() => mutate()}>

@@ -43,7 +43,7 @@ export function Post({ post, ...props }: React.ComponentProps<typeof motion.arti
 					<Username href={data.user.username}>{data.user.username}</Username>
 					<span className="text-muted-foreground">·</span>
 					<span className="text-muted-foreground cursor-default">{getTweetDate(data.createdAt)}</span>
-					<PostOptions className="ml-auto" user={data.user} postId={data.id} />
+					<PostOptions className="ml-auto" user={data.user} />
 				</div>
 				<p className="mt-1 break-words whitespace-pre-line">
 					<LinkFormating>{data.content}</LinkFormating>

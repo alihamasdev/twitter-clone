@@ -12,6 +12,7 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ userId
 
 		return NextResponse.json({ following: followingCount });
 	} catch (error) {
+		console.error(error);
 		return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
 	}
 }

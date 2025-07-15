@@ -13,11 +13,11 @@ import {
 import { Icon } from "@/components/ui/icon";
 
 interface PostOptionsProps extends React.ComponentProps<typeof DropdownMenuTrigger> {
-	postId: string;
+	postId?: string;
 	user: UserDataWithFollowInfo;
 }
 
-export function PostOptions({ user, postId, className, ...props }: PostOptionsProps) {
+export function PostOptions({ user, className, ...props }: PostOptionsProps) {
 	const { user: loginUser } = useAuth();
 	const isCurrentUsersPost = user.id === loginUser.id;
 	const followMutation = useFollowerMutation(user.id, user.isFollowedByUser);

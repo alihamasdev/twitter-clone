@@ -42,7 +42,7 @@ export default function HomePage() {
 	}
 
 	return (
-		<section className="w-full pb-96">
+		<section className="w-full pb-50">
 			{posts.map((data, index) => {
 				const postData = {
 					id: data.id,
@@ -67,7 +67,7 @@ export default function HomePage() {
 
 				return <Post key={data.id} post={postData} ref={lastItem ? ref : undefined} />;
 			})}
-			{isFetchingNextPage && <Spinner className="my-10" />}
+			{hasNextPage && <Spinner className="my-10" />}
 		</section>
 	);
 }

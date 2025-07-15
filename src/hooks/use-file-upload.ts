@@ -234,7 +234,7 @@ export const useFileUpload = (options: FileUploadOptions = {}): [FileUploadState
 			}
 		},
 		[
-			state.files.length,
+			state.files,
 			maxFiles,
 			multiple,
 			maxSize,

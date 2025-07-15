@@ -46,6 +46,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 
 		return NextResponse.json(data);
 	} catch (error) {
+		console.error(error);
 		return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
 	}
 }
@@ -54,12 +55,13 @@ export async function DELETE(_request: NextRequest, { params }: { params: Promis
 	try {
 		const { postId } = await params;
 
-		const data = await prisma.post.delete({
+		await prisma.post.delete({
 			where: { id: postId }
 		});
 
 		return NextResponse.json({ message: "Request accepted" });
 	} catch (error) {
+		console.error(error);
 		return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });
 	}
 }

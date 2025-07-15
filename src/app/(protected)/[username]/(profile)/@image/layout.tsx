@@ -13,6 +13,7 @@ export default function ImagesLayout({ children }: { children: React.ReactNode }
 	const { isPending } = useProfile(username);
 
 	const handleClose = () => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		history.length > 1 ? router.back() : router.push(`/${username}`);
 	};
 

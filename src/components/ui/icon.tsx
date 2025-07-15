@@ -4,6 +4,7 @@ interface IconProps extends React.SVGAttributes<HTMLOrSVGElement> {
 	id: IconId;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const icons = [
 	"twitter",
 	"cross",
