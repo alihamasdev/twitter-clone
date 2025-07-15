@@ -1,12 +1,10 @@
 "use client";
 
 import { useTransition } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
 
 import { cn } from "@/lib/utils";
 import { postSchema, type PostSchema } from "@/lib/validation";
@@ -17,17 +15,19 @@ import { type IconId } from "@/components/ui/icon";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar } from "@/components/user";
 
-import { createPost } from "./action";
+import { useSubmitPostMutation } from "./mutation";
 import { ProgressTracker } from "./progress-tracker";
 
 const formButtons = ["image", "emoji", "gif", "poll", "schedule"] satisfies IconId[];
 
 export function PostForm({ isDialog, className, ...props }: React.ComponentProps<"div"> & { isDialog?: boolean }) {
+	const router = useRouter();
+	const { mutate } = useSubmitPostMutation();
+	const [isPending, startTransition] = useTransition();
+
 	const {
 		user: { avatarUrl, username }
 	} = useAuth();
-	const [isPending, startTransition] = useTransition();
-	const router = useRouter();
 
 	const form = useForm<PostSchema>({
 		mode: "onSubmit",
@@ -44,18 +44,17 @@ export function PostForm({ isDialog, className, ...props }: React.ComponentProps
 		}
 	};
 
-	const onSubmit = (values: PostSchema) => {
+	const onSubmit = ({ content }: PostSchema) => {
 		startTransition(async () => {
-			const { data, error } = await createPost(values);
-
-			if (error || !data) {
-				toast.error(error);
-				return;
-			}
-
-			toast.success(<SuccessToast href={`/${username}/status/${data.id}`} />);
-			form.reset({ content: "" });
-			handleCloseDialog();
+			mutate(
+				{ content },
+				{
+					onSuccess: () => {
+						form.reset({ content: "" });
+						handleCloseDialog();
+					}
+				}
+			);
 		});
 	};
 
@@ -111,17 +110,6 @@ export function PostForm({ isDialog, className, ...props }: React.ComponentProps
 					</form>
 				</Form>
 			</div>
-		</div>
-	);
-}
-
-function SuccessToast({ href }: { href: string }) {
-	return (
-		<div className="flex items-center gap-x-3">
-			<span>Your tweet has been sent</span>
-			<Link href={href} className="font-bold hover:underline">
-				View
-			</Link>
 		</div>
 	);
 }
