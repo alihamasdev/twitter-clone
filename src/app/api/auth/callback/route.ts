@@ -11,12 +11,7 @@ export async function GET(request: NextRequest) {
 		const supabase = await createClient();
 		const { error } = await supabase.auth.exchangeCodeForSession(code);
 		if (!error) {
-			const isDevEnv = process.env.NODE_ENV === "development";
-			if (isDevEnv) {
-				return NextResponse.redirect(`${baseUrl}/home`);
-			} else {
-				return NextResponse.redirect(`${baseUrl}/home`);
-			}
+			return NextResponse.redirect(`${baseUrl}/home`);
 		}
 	}
 

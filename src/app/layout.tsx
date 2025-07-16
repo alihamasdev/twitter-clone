@@ -11,7 +11,7 @@ import { chirp } from "./fonts/chirp";
 
 export const metadata: Metadata = {
 	metadataBase: new URL(baseUrl),
-	title: { template: "%s | Twitter", default: "Twitter" },
+	title: { template: "%s | Twitter", default: "Twitter Clone | Ali Hamas" },
 	description: "Full stack twitter clone with next.js, prisma, supabase and tailwindcss"
 };
 

@@ -5,6 +5,15 @@ const nextConfig: NextConfig = {
 		loader: "custom",
 		loaderFile: "./src/lib/supabase/image-loader.tsx"
 	},
+	async redirects() {
+		return [
+			{
+				source: "/",
+				destination: "/home",
+				permanent: true
+			}
+		];
+	},
 	experimental: {
 		reactCompiler: true,
 		authInterrupts: true,
