@@ -35,7 +35,7 @@ export function UserProfile() {
 	if (isPending) {
 		return (
 			<Fragment>
-				<Header className="">
+				<Header>
 					<Skeleton className="h-6 w-40" />
 					<Skeleton className="mt-1 w-20" />
 				</Header>
@@ -53,8 +53,6 @@ export function UserProfile() {
 	}
 
 	if (error) {
-		console.error(error);
-
 		return (
 			<Fragment>
 				<Header>
@@ -141,7 +139,7 @@ export function UserProfile() {
 						</div>
 						<div className="flex items-center gap-x-4">
 							<Link href={`${username}/following`} className="hover:border-foreground border-b border-transparent">
-								<FollowingCount initialState={{ following }} isCurrentUser={data.id === user.id} />
+								<FollowingCount userId={data.id} initialState={{ following }} />
 							</Link>
 							<Link href={`${username}/followers`} className="hover:border-foreground border-b border-transparent">
 								<FollowersCount userId={data.id} initialState={{ followers, isFollowedByUser }} />

@@ -3,7 +3,6 @@
 import { Fragment } from "react";
 
 import { useFollowerInfo, useFollowingInfo } from "@/hooks/use-follow";
-import { useAuth } from "@/context/auth-context";
 import type { FollowerInfo, FollowingInfo } from "@/types/user";
 import { NumberAnimation } from "@/components/number-animation";
 
@@ -24,17 +23,16 @@ export function FollowersCount({ userId, initialState }: FollowersCountProps) {
 }
 
 interface FollowingCountProps {
+	userId: string;
 	initialState: FollowingInfo;
-	isCurrentUser: boolean;
 }
 
-export function FollowingCount({ initialState, isCurrentUser }: FollowingCountProps) {
-	const { user } = useAuth();
-	const { data } = useFollowingInfo(user.id, initialState);
+export function FollowingCount({ userId, initialState }: FollowingCountProps) {
+	const { data } = useFollowingInfo(userId, initialState);
 
 	return (
 		<Fragment>
-			<NumberAnimation value={isCurrentUser ? data.following : initialState.following} />
+			<NumberAnimation value={data.following} />
 			<span className="text-muted-foreground pl-1">Following</span>
 		</Fragment>
 	);
