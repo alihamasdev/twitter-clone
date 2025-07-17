@@ -12,7 +12,6 @@ import { UserData } from "@/types/user";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Header, HeaderTitle } from "@/components/layout/header";
 
 import { updateUsername } from "./action";
 
@@ -43,9 +42,6 @@ export default function UsernamePage() {
 
 	return (
 		<Fragment>
-			<Header>
-				<HeaderTitle>Change username</HeaderTitle>
-			</Header>
 			<div className="px-4 py-3">
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)}>

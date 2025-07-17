@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { type Metadata } from "next";
 
 import { validateUser } from "@/lib/auth";
 import { getFullDate } from "@/lib/date";
@@ -7,6 +8,10 @@ import { Header, HeaderTitle } from "@/components/layout/header";
 import { GithubIcon, GoogleIcon } from "@/components/pages/auth/auth-icons";
 
 import { UsernameTile } from "./username-tile";
+
+export const metadata: Metadata = {
+	title: "Account Information"
+};
 
 export default async function AccountPage() {
 	const user = await validateUser();

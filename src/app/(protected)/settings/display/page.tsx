@@ -5,7 +5,6 @@ import { Check } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { accentColors, useTheme } from "@/context/theme-context";
-import { Header, HeaderTitle } from "@/components/layout/header";
 
 export default function DisplayPage() {
 	const id = useId();
@@ -19,9 +18,6 @@ export default function DisplayPage() {
 
 	return (
 		<Fragment>
-			<Header>
-				<HeaderTitle>Display</HeaderTitle>
-			</Header>
 			<p className="text-muted-foreground px-4 py-3 text-sm">
 				Manage your color, and background. These settings affect all the X accounts on this browser.
 			</p>

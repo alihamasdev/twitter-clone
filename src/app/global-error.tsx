@@ -16,6 +16,7 @@ export default function GlobalError({ error }: GlobalErrorProps) {
 
 	return (
 		<html lang="en">
+			<title>Something went wrong | Twitter</title>
 			<body style={chirp.style}>
 				<main className="flex-center h-dvh w-full flex-col gap-y-6">
 					<Icon id="twitter" className="size-15" />
