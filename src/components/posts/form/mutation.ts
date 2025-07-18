@@ -21,7 +21,8 @@ export function useSubmitPostMutation() {
 			await queryClient.cancelQueries({ queryKey });
 
 			queryClient.setQueriesData<InfiniteData<PostPage, string | null>>({ queryKey }, (oldData) => {
-				if (!oldData) return oldData;
+				const firstPage = oldData?.pages[0];
+				if (!oldData || !firstPage) return oldData;
 
 				const newPostPayload = {
 					...newPost,
@@ -33,16 +34,13 @@ export function useSubmitPostMutation() {
 					reposts: 0
 				} satisfies PostData;
 
-				const firstPage = oldData.pages[0];
-				if (firstPage) {
-					return {
-						pageParams: oldData.pageParams,
-						pages: [
-							{ posts: [newPostPayload, ...firstPage.posts], nextCursor: firstPage.nextCursor },
-							...oldData.pages.slice(1)
-						]
-					};
-				}
+				return {
+					pageParams: oldData.pageParams,
+					pages: [
+						{ posts: [newPostPayload, ...firstPage.posts], nextCursor: firstPage.nextCursor },
+						...oldData.pages.slice(1)
+					]
+				};
 			});
 
 			queryClient.setQueryData<ProfilePageUser>([`profile`, user.username], (oldData) =>

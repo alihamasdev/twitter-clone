@@ -21,6 +21,7 @@ export function InfinitePostsContainer({ children, queryKey, apiRouteUrl }: Infi
 	const { ref, inView } = useInView({ threshold: 0 });
 
 	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfiniteQuery({
+		// eslint-disable-next-line @tanstack/query/exhaustive-deps
 		queryKey,
 		queryFn: ({ pageParam }) =>
 			axios.get<PostPage>(apiRouteUrl, { params: pageParam ? { cursor: pageParam } : {} }).then((res) => res.data),

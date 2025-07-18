@@ -1,12 +1,12 @@
 "use client";
 
-import { useMutation, useQueryClient, type QueryKey } from "@tanstack/react-query";
+import { useMutation, useQueryClient, type InfiniteData, type QueryKey } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { toast } from "react-hot-toast";
 
 import { axios } from "@/lib/axios";
 import { cn } from "@/lib/utils";
-import { type PostData } from "@/types/post";
+import { PostPage, type PostData } from "@/types/post";
 import { Icon } from "@/components/ui/icon";
 
 interface BookmarkButtonProps extends React.ComponentProps<typeof motion.button> {
@@ -30,11 +30,30 @@ export function BookmarkButton({ isBookmarked, postId, className, ...props }: Bo
 				oldData ? { ...oldData, isBookmarked: oldData.isBookmarked ? false : true } : undefined
 			);
 
-			return { prevState };
+			return prevState;
+		},
+		onSuccess: (_data, _variables, postData) => {
+			queryClient.setQueryData<InfiniteData<PostPage, string | null>>([`posts`, `bookmarks`], (oldData) => {
+				const firstPage = oldData?.pages[0];
+				if (!oldData || !firstPage) return oldData;
+
+				return {
+					pageParams: oldData.pageParams,
+					pages: [
+						{
+							posts: isBookmarked
+								? [postData, ...firstPage.posts]
+								: firstPage.posts.filter((post) => post.id !== postData.id),
+							nextCursor: firstPage.nextCursor
+						},
+						...oldData.pages.slice(1)
+					]
+				};
+			});
 		},
 		onError(error, _variables, context) {
 			console.log(error);
-			queryClient.setQueryData(queryKey, context?.prevState);
+			queryClient.setQueryData(queryKey, context);
 			toast.error(`Something went wrong, try again`);
 		},
 		onSettled: () => queryClient.invalidateQueries({ queryKey })
