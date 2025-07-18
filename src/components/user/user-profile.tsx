@@ -13,7 +13,6 @@ import { Error } from "@/components/ui/error";
 import { Icon, type IconId } from "@/components/ui/icon";
 import { LinkTabs } from "@/components/ui/link-tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Spinner } from "@/components/ui/spinner";
 import { Header, HeaderDescription, HeaderTitle } from "@/components/layout/header";
 import { NumberAnimation } from "@/components/number-animation";
 import { FollowButton } from "@/components/user";
@@ -44,7 +43,6 @@ export function UserProfile() {
 				<section className="px-4 py-3">
 					<Skeleton className="mt-12 h-6 w-40 lg:mt-15" />
 					<Skeleton className="mt-1 h-5 w-25" />
-					<Spinner />
 				</section>
 			</Fragment>
 		);
