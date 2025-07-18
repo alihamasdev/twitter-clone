@@ -3,6 +3,7 @@
 import { Fragment } from "react";
 
 import { useFollowerInfo, useFollowingInfo } from "@/hooks/use-follow";
+import { usePostsCount } from "@/hooks/use-posts-count";
 import type { FollowerInfo, FollowingInfo } from "@/types/user";
 import { NumberAnimation } from "@/components/number-animation";
 
@@ -34,6 +35,17 @@ export function FollowingCount({ userId, initialState }: FollowingCountProps) {
 		<Fragment>
 			<NumberAnimation value={data.following} />
 			<span className="text-muted-foreground pl-1">Following</span>
+		</Fragment>
+	);
+}
+
+export function PostsCount({ userId, initialState }: { userId: string; initialState: { posts: number } }) {
+	const { data } = usePostsCount(userId, initialState);
+
+	return (
+		<Fragment>
+			<NumberAnimation value={data.posts} />
+			<span className="pl-1">{data.posts === 1 ? `post` : `posts`}</span>
 		</Fragment>
 	);
 }

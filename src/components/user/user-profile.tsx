@@ -14,10 +14,9 @@ import { Icon, type IconId } from "@/components/ui/icon";
 import { LinkTabs } from "@/components/ui/link-tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Header, HeaderDescription, HeaderTitle } from "@/components/layout/header";
-import { NumberAnimation } from "@/components/number-animation";
 import { FollowButton } from "@/components/user";
 
-import { FollowersCount, FollowingCount } from "./counts";
+import { FollowersCount, FollowingCount, PostsCount } from "./counts";
 
 type ProfileMeta = {
 	icon: IconId;
@@ -80,8 +79,7 @@ export function UserProfile() {
 			<Header>
 				<HeaderTitle>{data.name}</HeaderTitle>
 				<HeaderDescription>
-					<NumberAnimation value={posts} />
-					<span className="pl-1">{posts === 1 ? `post` : `posts`}</span>
+					<PostsCount userId={data.id} initialState={{ posts }} />
 				</HeaderDescription>
 			</Header>
 			<section className="relative w-full">
