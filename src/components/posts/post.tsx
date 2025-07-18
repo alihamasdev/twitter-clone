@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "motion/react";
+import { motion, type HTMLMotionProps } from "motion/react";
 
 import { axios } from "@/lib/axios";
 import { getTweetDate } from "@/lib/date";
@@ -17,7 +17,7 @@ import { RepostButton } from "./buttons/repost.button";
 import { ShareButton } from "./buttons/share.button";
 import { PostOptions } from "./post-options";
 
-export function Post({ post, ...props }: React.ComponentProps<typeof motion.article> & { post: PostData }) {
+export function Post({ post, ...props }: HTMLMotionProps<"article"> & { post: PostData }) {
 	const router = useRouter();
 	const { data } = useQuery({
 		queryKey: [`post`, post.id],

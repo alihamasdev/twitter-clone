@@ -4,7 +4,8 @@ import { useMutation, useQueryClient, type InfiniteData, type QueryKey } from "@
 import { toast } from "react-hot-toast";
 
 import { useAuth } from "@/context/auth-context";
-import type { PostPage, PostPayload } from "@/types/post";
+import type { PostData, PostPage } from "@/types/post";
+import { ProfilePageUser } from "@/types/user";
 
 import { createPost } from "./action";
 
@@ -24,12 +25,13 @@ export function useSubmitPostMutation() {
 
 				const newPostPayload = {
 					...newPost,
-					user: { ...user, _count: { followers: 0 }, followers: [] },
-					likes: [],
-					bookmarks: [],
-					reposts: [],
-					_count: { likes: 0, reposts: 0 }
-				} satisfies PostPayload;
+					user: { ...user, isFollowedByUser: false, followers: Infinity },
+					isBookmarked: false,
+					isLiked: false,
+					isReposted: false,
+					likes: 0,
+					reposts: 0
+				} satisfies PostData;
 
 				const firstPage = oldData.pages[0];
 				if (firstPage) {
@@ -41,9 +43,13 @@ export function useSubmitPostMutation() {
 						]
 					};
 				}
-
-				toast.success("You post has been created");
 			});
+
+			queryClient.setQueryData<ProfilePageUser>([`profile`, user.username], (oldData) =>
+				oldData ? { ...oldData, posts: oldData.posts + 1 } : oldData
+			);
+
+			toast.success("You post has been created");
 		},
 		onError(error) {
 			console.error(error);

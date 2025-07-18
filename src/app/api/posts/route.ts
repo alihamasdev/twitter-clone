@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { PAGE_SIZE } from "@/utils/contants";
-import { getPostDataInclude, PostPage, PostPayload } from "@/types/post";
+import { getPostDataInclude, PostData, type PostPage, type PostPayload } from "@/types/post";
 
 export async function GET(request: NextRequest) {
 	try {
@@ -16,12 +16,32 @@ export async function GET(request: NextRequest) {
 
 		const query = getPostDataInclude(user.id);
 
-		const posts = (await prisma.post.findMany({
+		const postPayload = (await prisma.post.findMany({
 			include: query,
 			orderBy: { createdAt: "desc" },
 			take: PAGE_SIZE + 1,
 			cursor: cursor ? { id: cursor } : undefined
 		})) satisfies PostPayload[];
+
+		const posts: PostData[] = postPayload.map((data) => ({
+			id: data.id,
+			content: data.content,
+			createdAt: data.createdAt,
+			userId: data.userId,
+			user: {
+				id: data.user.id,
+				name: data.user.name,
+				username: data.user.username,
+				avatarUrl: data.user.avatarUrl,
+				followers: data.user._count.followers,
+				isFollowedByUser: !!data.user.followers.length
+			},
+			likes: data._count.likes,
+			reposts: data._count.reposts,
+			isBookmarked: !!data.bookmarks.length,
+			isLiked: !!data.likes.length,
+			isReposted: !!data.reposts.length
+		}));
 
 		const nextCursor = posts.length > PAGE_SIZE ? posts[PAGE_SIZE].id : null;
 

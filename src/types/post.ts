@@ -1,6 +1,6 @@
 import type { Post, Prisma } from "@prisma/client";
 
-import { getFollowersInfo, userDataSelect, type UserDataWithFollowInfo } from "./user";
+import { getUserDataWithFollowesInfo, type UserDataWithFollowInfo } from "./user";
 
 export function getPostDataInclude(loggedInUserId: string) {
 	return {
@@ -8,7 +8,7 @@ export function getPostDataInclude(loggedInUserId: string) {
 		likes: { select: { id: true }, where: { userId: loggedInUserId } },
 		reposts: { select: { id: true }, where: { userId: loggedInUserId } },
 		bookmarks: { select: { id: true }, where: { userId: loggedInUserId } },
-		user: { select: { ...userDataSelect, ...getFollowersInfo(loggedInUserId) } }
+		user: { select: getUserDataWithFollowesInfo(loggedInUserId) }
 	} satisfies Prisma.PostInclude;
 }
 
@@ -26,6 +26,6 @@ export interface PostData extends Post {
 }
 
 export interface PostPage {
-	posts: PostPayload[];
+	posts: PostData[];
 	nextCursor: string | null;
 }

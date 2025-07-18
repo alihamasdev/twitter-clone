@@ -8,7 +8,6 @@ import { format } from "date-fns";
 
 import { LinkFormating } from "@/lib/link-format";
 import { useProfile } from "@/hooks/use-profile";
-import { useAuth } from "@/context/auth-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Error } from "@/components/ui/error";
 import { Icon, type IconId } from "@/components/ui/icon";
@@ -28,7 +27,6 @@ type ProfileMeta = {
 };
 
 export function UserProfile() {
-	const { user } = useAuth();
 	const { username } = useParams<{ username: string }>();
 	const { data, isPending, error } = useProfile(username);
 
