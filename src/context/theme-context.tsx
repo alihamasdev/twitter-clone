@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, use } from "react";
+import { createContext, use, useEffect } from "react";
 
 import { useLocalStorage } from "@/hooks/use-local-storage";
 
@@ -22,6 +22,14 @@ const ThemeContext = createContext<AccentContextType | null>(null);
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
 	const [theme, setTheme] = useLocalStorage<ThemeColors>(`theme`, `dark`);
 	const [accent, setAccent] = useLocalStorage<AccentColors>(`accent`, `blue`);
+
+	useEffect(() => {
+		document.documentElement.className = theme;
+	}, [theme]);
+
+	useEffect(() => {
+		document.documentElement.setAttribute("data-accent", accent);
+	}, [theme]);
 
 	return <ThemeContext value={{ theme, setTheme, accent, setAccent }}>{children}</ThemeContext>;
 }
