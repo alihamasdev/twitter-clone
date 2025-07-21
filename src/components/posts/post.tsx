@@ -1,12 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
 import { motion, type HTMLMotionProps } from "motion/react";
 
-import { axios } from "@/lib/axios";
 import { getTweetDate } from "@/lib/date";
 import { LinkFormating } from "@/lib/link-format";
+import { usePost } from "@/hooks/use-post";
 import { type PostData } from "@/types/post";
 import { Avatar, Name, Username } from "@/components/user";
 
@@ -17,14 +16,15 @@ import { RepostButton } from "./buttons/repost.button";
 import { ShareButton } from "./buttons/share.button";
 import { PostOptions } from "./post-options";
 
-export function Post({ post, ...props }: HTMLMotionProps<"article"> & { post: PostData }) {
+interface PostProps extends HTMLMotionProps<"article"> {
+	post: PostData;
+}
+
+export function Post({ post, ...props }: PostProps) {
 	const router = useRouter();
-	const { data } = useQuery({
-		queryKey: [`post`, post.id],
-		queryFn: () => axios.get<PostData>(`/api/posts/${post.id}`).then((res) => res.data),
-		staleTime: Infinity,
-		initialData: post
-	});
+
+	const { data } = usePost(post.id, post);
+	if (!data) return null;
 
 	return (
 		<motion.article
