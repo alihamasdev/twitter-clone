@@ -1,10 +1,10 @@
 import { Fragment } from "react";
 import { type Metadata } from "next";
-import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
 import { Icon, type IconId } from "@/components/ui/icon";
 import { Header, HeaderTitle } from "@/components/layout/header";
+import { Link } from "@/components/link";
 
 export const metadata: Metadata = {
 	title: "Settings"

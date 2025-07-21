@@ -2,7 +2,6 @@
 
 import { Fragment } from "react";
 import Form from "next/form";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
@@ -16,6 +15,7 @@ import {
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Icon } from "@/components/ui/icon";
+import { Link } from "@/components/link";
 
 import { getSidebarLinks, moreSidebarLinks } from "./sidebar-links";
 

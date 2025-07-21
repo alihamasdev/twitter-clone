@@ -2,7 +2,6 @@
 
 import { Fragment } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { useParams } from "next/navigation";
 import { format } from "date-fns";
 
@@ -14,6 +13,7 @@ import { Icon, type IconId } from "@/components/ui/icon";
 import { LinkTabs } from "@/components/ui/link-tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Header, HeaderDescription, HeaderTitle } from "@/components/layout/header";
+import { Link } from "@/components/link";
 import { FollowButton } from "@/components/user";
 
 import { FollowersCount, FollowingCount, PostsCount } from "./counts";
@@ -144,7 +144,7 @@ export function UserProfile() {
 			</section>
 			<div className="grid grid-cols-3 border-b">
 				<LinkTabs href={`/${username}`}>Tweets</LinkTabs>
-				<LinkTabs href={`/${username}/retweets`}>Retweets</LinkTabs>
+				<LinkTabs href={`/${username}/reposts`}>Retweets</LinkTabs>
 				<LinkTabs href={`/${username}/likes`}>Likes</LinkTabs>
 			</div>
 		</Fragment>

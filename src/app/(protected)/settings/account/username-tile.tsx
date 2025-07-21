@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
 import { useAuth } from "@/context/auth-context";
+import { Link } from "@/components/link";
 
 export function UsernameTile() {
 	const { user } = useAuth();

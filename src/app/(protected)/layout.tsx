@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { getLoginUserData } from "@/lib/dal";
 import { AuthProvider } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
@@ -27,9 +25,9 @@ export default function ProtectedLayout({ children, dialog }: React.PropsWithChi
 						<p className="mt-2 mb-3 text-base">
 							Explore the codebase behind Twitter and contribute to its development.
 						</p>
-						<Link href="https://github.com/alihamasdev/twitter" target="_blank">
+						<a href="https://github.com/alihamasdev/twitter" target="_blank" rel="noopener noreferrer">
 							<Button variant="accent">Repository</Button>
-						</Link>
+						</a>
 					</section>
 					<SuggestedUsers />
 					<p className="text-muted-foreground text-center text-sm">&#169; {new Date().getFullYear()} Twitter, Inc.</p>
