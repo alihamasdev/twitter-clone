@@ -29,7 +29,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 	useEffect(() => {
 		document.documentElement.setAttribute("data-accent", accent);
-	}, [theme]);
+	}, [accent]);
 
 	return <ThemeContext value={{ theme, setTheme, accent, setAccent }}>{children}</ThemeContext>;
 }
