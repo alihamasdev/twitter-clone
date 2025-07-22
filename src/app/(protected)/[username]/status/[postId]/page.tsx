@@ -41,7 +41,7 @@ export default function UserStatusPage() {
 							<Name href={data.user.username}>{data.user.name}</Name>
 							<Username href={data.user.username}>{data.user.username}</Username>
 						</div>
-						<PostOptions className="right-0 ml-auto" user={data.user} />
+						<PostOptions className="right-0 ml-auto" user={data.user} postId={data.id} />
 					</div>
 				</div>
 				<p className="break-words whitespace-pre-line">

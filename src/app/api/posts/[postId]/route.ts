@@ -55,11 +55,14 @@ export async function DELETE(_request: NextRequest, { params }: { params: Promis
 	try {
 		const { postId } = await params;
 
-		await prisma.post.delete({
-			where: { id: postId }
-		});
+		const user = await validateUser();
+		if (!user) {
+			return Response.json({ error: "Unauthorized" }, { status: 401 });
+		}
 
-		return NextResponse.json({ message: "Request accepted" });
+		await prisma.post.delete({ where: { id: postId, userId: user.id } });
+
+		return NextResponse.json({ message: "Post deleted" });
 	} catch (error) {
 		console.error(error);
 		return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });

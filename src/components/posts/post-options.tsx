@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { useFollowerInfo, useFollowerMutation } from "@/hooks/use-follow";
+import { useDeletePostMutation } from "@/hooks/use-post";
 import { useAuth } from "@/context/auth-context";
 import { type UserDataWithFollowInfo } from "@/types/user";
 import {
@@ -13,15 +14,16 @@ import {
 import { Icon } from "@/components/ui/icon";
 
 interface PostOptionsProps extends React.ComponentProps<typeof DropdownMenuTrigger> {
-	postId?: string;
+	postId: string;
 	user: UserDataWithFollowInfo;
 }
 
-export function PostOptions({ user, className, ...props }: PostOptionsProps) {
+export function PostOptions({ user, postId, className, ...props }: PostOptionsProps) {
 	const { user: loginUser } = useAuth();
 	const isCurrentUsersPost = user.id === loginUser.id;
 	const followMutation = useFollowerMutation(user.id, user.isFollowedByUser);
 	const { data } = useFollowerInfo(user.id, { followers: user.followers, isFollowedByUser: user.isFollowedByUser });
+	const { mutate } = useDeletePostMutation(postId, loginUser.username);
 
 	return (
 		<DropdownMenu>
@@ -36,7 +38,7 @@ export function PostOptions({ user, className, ...props }: PostOptionsProps) {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="min-w-70">
 				{isCurrentUsersPost ? (
-					<DropdownMenuItemIcon icon="delete" variant="destructive">
+					<DropdownMenuItemIcon icon="delete" variant="destructive" onClick={() => mutate()}>
 						Delete post
 					</DropdownMenuItemIcon>
 				) : (

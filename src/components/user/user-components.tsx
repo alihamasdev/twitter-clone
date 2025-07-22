@@ -1,7 +1,8 @@
-import Link, { LinkProps } from "next/link";
+import { type LinkProps } from "next/link";
 
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Link } from "@/components/link";
 
 function Name({ href, className, ...props }: React.ComponentProps<typeof Link>) {
 	return (
