@@ -4,8 +4,7 @@ import { useMutation, useQueryClient, type InfiniteData, type QueryKey } from "@
 import { toast } from "react-hot-toast";
 
 import { useAuth } from "@/context/auth-context";
-import type { PostData, PostPage } from "@/types/post";
-import { ProfilePageUser } from "@/types/user";
+import type { PostData, PostPage, PostsCount } from "@/types/post";
 
 import { createPost } from "./action";
 
@@ -20,32 +19,40 @@ export function useSubmitPostMutation() {
 		onSuccess: async (newPost) => {
 			await queryClient.cancelQueries({ queryKey });
 
-			queryClient.setQueriesData<InfiniteData<PostPage, string | null>>({ queryKey }, (oldData) => {
-				const firstPage = oldData?.pages[0];
-				if (!oldData || !firstPage) return oldData;
+			const newPostPayload = {
+				...newPost,
+				user: { ...user, isFollowedByUser: false, followers: 0 },
+				isBookmarked: false,
+				isLiked: false,
+				isReposted: false,
+				likes: 0,
+				reposts: 0
+			} satisfies PostData;
 
-				const newPostPayload = {
-					...newPost,
-					user: { ...user, isFollowedByUser: false, followers: Infinity },
-					isBookmarked: false,
-					isLiked: false,
-					isReposted: false,
-					likes: 0,
-					reposts: 0
-				} satisfies PostData;
+			// Update both feed and user profile posts in a single operation
+			queryClient.setQueriesData<InfiniteData<PostPage, string | null>>(
+				{
+					queryKey: [`posts`],
+					predicate: ({ queryKey }) => queryKey.includes(`feed`) || queryKey.includes(user.username)
+				},
+				(oldData) => {
+					const firstPage = oldData?.pages[0];
+					if (!oldData || !firstPage) return oldData;
 
-				return {
-					pageParams: oldData.pageParams,
-					pages: [
-						{ posts: [newPostPayload, ...firstPage.posts], nextCursor: firstPage.nextCursor },
-						...oldData.pages.slice(1)
-					]
-				};
-			});
-
-			queryClient.setQueryData<ProfilePageUser>([`profile`, user.username], (oldData) =>
-				oldData ? { ...oldData, posts: oldData.posts + 1 } : oldData
+					return {
+						pageParams: oldData.pageParams,
+						pages: [
+							{ posts: [newPostPayload, ...firstPage.posts], nextCursor: firstPage.nextCursor },
+							...oldData.pages.slice(1)
+						]
+					};
+				}
 			);
+
+			// Update user profile posts count
+			queryClient.setQueryData<PostsCount>([`posts`, `count`, user.id], (oldData) => ({
+				posts: (oldData?.posts || 0) + 1
+			}));
 
 			toast.success("You post has been created");
 		},

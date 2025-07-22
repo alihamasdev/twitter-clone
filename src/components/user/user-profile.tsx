@@ -143,8 +143,8 @@ export function UserProfile() {
 				</div>
 			</section>
 			<div className="grid grid-cols-3 border-b">
-				<LinkTabs href={`/${username}`}>Tweets</LinkTabs>
-				<LinkTabs href={`/${username}/reposts`}>Retweets</LinkTabs>
+				<LinkTabs href={`/${username}`}>Posts</LinkTabs>
+				<LinkTabs href={`/${username}/reposts`}>Reposts</LinkTabs>
 				<LinkTabs href={`/${username}/likes`}>Likes</LinkTabs>
 			</div>
 		</Fragment>
