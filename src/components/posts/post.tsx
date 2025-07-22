@@ -50,8 +50,13 @@ export function Post({ post, ...props }: PostProps) {
 				</p>
 				<div className="mt-1.5 flex w-full items-center justify-between">
 					<CommentButton />
-					<RepostButton isRepost={data.isReposted} reposts={data.reposts} postId={data.id} />
-					<LikeButton isLiked={data.isLiked} likes={data.likes} postId={data.id} />
+					<RepostButton
+						isRepost={data.isReposted}
+						reposts={data.reposts}
+						postId={data.id}
+						username={data.user.username}
+					/>
+					<LikeButton isLiked={data.isLiked} likes={data.likes} postId={data.id} username={data.user.username} />
 					<BookmarkButton isBookmarked={data.isBookmarked} postId={data.id} />
 					<ShareButton tweetUrl={`/${data.user.username}/status/${data.id}`} />
 				</div>
