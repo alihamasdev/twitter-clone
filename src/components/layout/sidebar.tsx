@@ -1,9 +1,9 @@
 "use client";
 
 import { Fragment } from "react";
-import Form from "next/form";
 import { usePathname, useRouter } from "next/navigation";
 
+import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/auth-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,6 +25,11 @@ export function Sidebar() {
 	const { user } = useAuth();
 
 	const sidebarLinks = getSidebarLinks(user.username);
+
+	const handleLogout = async () => {
+		const supabase = createClient();
+		await supabase.auth.signOut();
+	};
 
 	return (
 		<Fragment>
@@ -95,11 +100,9 @@ export function Sidebar() {
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="start" className="min-w-70">
 					<DropdownMenuItem disabled>Add an existing account</DropdownMenuItem>
-					<Form action={`/api/auth/logout`}>
-						<DropdownMenuItem variant="destructive" className="w-full" asChild>
-							<button type="submit">{`Log out of @${user.username}`}</button>
-						</DropdownMenuItem>
-					</Form>
+					<DropdownMenuItem variant="destructive" className="w-full" onClick={handleLogout}>
+						{`Log out of @${user.username}`}
+					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</Fragment>
