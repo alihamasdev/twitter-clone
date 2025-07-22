@@ -4,10 +4,7 @@ export default async function ProfileTweetsPage({ params }: { params: Promise<{ 
 	const { username } = await params;
 
 	return (
-		<InfinitePostsContainer
-			queryKey={[`posts`, `profile`, username]}
-			apiRouteUrl={`/api/users/username/${username}/posts`}
-		>
+		<InfinitePostsContainer queryKey={[`posts`, username]} apiRouteUrl={`/api/users/username/${username}/posts`}>
 			<div className="mx-auto mt-15 flex w-2/3 flex-col gap-y-2">
 				<h2 className="text-primary text-center text-2xl font-extrabold">{`@${username} hasn't posted anything yet`}</h2>
 				<p className="text-muted-foreground text-center text-sm">When they do, their posts will show up here</p>

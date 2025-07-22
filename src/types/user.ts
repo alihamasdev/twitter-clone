@@ -1,5 +1,7 @@
 import type { Prisma, User } from "@prisma/client";
 
+import { type PostsCount } from "./post";
+
 export const userDataSelect = {
 	id: true,
 	name: true,
@@ -31,6 +33,4 @@ export interface FollowingInfo {
 
 export type UserDataWithFollowInfo = UserData & FollowerInfo;
 
-export interface ProfilePageUser extends User, FollowerInfo, FollowingInfo {
-	posts: number;
-}
+export type ProfilePageUser = User & FollowerInfo & FollowingInfo & PostsCount;

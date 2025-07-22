@@ -12,6 +12,10 @@ export function getPostDataInclude(loggedInUserId: string) {
 	} satisfies Prisma.PostInclude;
 }
 
+export type PostPayload = Prisma.PostGetPayload<{
+	include: ReturnType<typeof getPostDataInclude>;
+}>;
+
 export function getPostCounts() {
 	return {
 		_count: { select: { likes: true, reposts: true } }
@@ -36,9 +40,9 @@ export function getPostBookmarkInfo(loggedInUserId: string) {
 	} satisfies Prisma.PostInclude;
 }
 
-export type PostPayload = Prisma.PostGetPayload<{
-	include: ReturnType<typeof getPostDataInclude>;
-}>;
+export interface PostsCount {
+	posts: number;
+}
 
 export interface PostData extends Post {
 	likes: number;
