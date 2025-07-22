@@ -51,7 +51,7 @@ export function UserProfile() {
 		return (
 			<Fragment>
 				<Header>
-					<HeaderTitle>{username}</HeaderTitle>
+					<HeaderTitle>Profile</HeaderTitle>
 				</Header>
 				<section className="relative w-full">
 					<div className="aspect-header bg-image h-auto rounded-none border-b" />
