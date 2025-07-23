@@ -17,6 +17,7 @@ function DialogTrigger({ ...props }: React.ComponentProps<typeof DialogPrimitive
 function DialogOverlay({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
 	return (
 		<DialogPrimitive.Overlay
+			role="overlay"
 			data-slot="dialog-overlay"
 			className={cn(
 				"data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 bg-overlay fixed inset-0 z-50",

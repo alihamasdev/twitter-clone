@@ -31,7 +31,7 @@ export function Post({ post, ...props }: PostProps) {
 			className="hover:bg-muted/50 relative flex items-start gap-x-3 border-b px-4 py-3 transition-colors"
 			onClick={(e) => {
 				const target = e.target as HTMLElement;
-				if (target.closest("button, a, [role='menu']")) return;
+				if (target.closest("button, a, [role='menu'], [role='dialog'], [role='overlay']")) return;
 				router.push(`/${data.user.username}/status/${data.id}`);
 			}}
 			{...props}

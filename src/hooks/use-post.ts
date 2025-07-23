@@ -18,16 +18,17 @@ export function usePost(postId: string, initialData?: PostData) {
 export function useDeletePostMutation(postId: string, username: string) {
 	const queryClient = useQueryClient();
 
-	const queryKey: QueryKey = [`posts`, `feed`];
+	const feedQueryKey: QueryKey = [`posts`, `feed`];
+	const profileQueryKey: QueryKey = [`posts`, username];
 
 	return useMutation({
 		mutationFn: () => axios.delete(`/api/posts/${postId}`),
 		onMutate: async () => {
-			await queryClient.cancelQueries({ queryKey });
+			await queryClient.cancelQueries({ queryKey: feedQueryKey });
+			await queryClient.cancelQueries({ queryKey: profileQueryKey });
 
-			const previousPost = queryClient.getQueryData<PostPage>(queryKey);
-
-			queryClient.setQueryData<InfiniteData<PostPage, string | null>>(queryKey, (oldData) => {
+			const previousFeedPosts = queryClient.getQueryData<PostPage>(feedQueryKey);
+			queryClient.setQueryData<InfiniteData<PostPage, string | null>>(feedQueryKey, (oldData) => {
 				const firstPage = oldData?.pages[0];
 				if (!oldData || !firstPage) return oldData;
 
@@ -43,10 +44,7 @@ export function useDeletePostMutation(postId: string, username: string) {
 				};
 			});
 
-			return previousPost;
-		},
-		onSuccess: () => {
-			toast.success("Post deleted successfully");
+			const previousProfilePosts = queryClient.getQueryData<PostPage>(profileQueryKey);
 			queryClient.setQueryData<InfiniteData<PostPage, string | null>>([`posts`, username], (oldData) => {
 				const firstPage = oldData?.pages[0];
 				if (!oldData || !firstPage) return oldData;
@@ -62,11 +60,18 @@ export function useDeletePostMutation(postId: string, username: string) {
 					]
 				};
 			});
+
+			return { previousFeedPosts, previousProfilePosts };
 		},
 		onError(error, _variables, context) {
 			console.error(error);
-			queryClient.setQueryData([`post`, postId], context);
+			queryClient.setQueryData(feedQueryKey, context?.previousFeedPosts);
+			queryClient.setQueryData(profileQueryKey, context?.previousProfilePosts);
 			toast.error("Something went wrong while deleting the post, try again");
+		},
+		onSuccess: () => {
+			toast.success("Post deleted successfully");
+			queryClient.removeQueries({ queryKey: [`post`, postId] });
 		}
 	});
 }

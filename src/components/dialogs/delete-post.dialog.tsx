@@ -1,11 +1,7 @@
 "use client";
 
-import { Post } from "@prisma/client";
-import { useMutation, useQueryClient, type InfiniteData, type QueryKey } from "@tanstack/react-query";
-import { toast } from "react-hot-toast";
-
-import { axios } from "@/lib/axios";
-import { type PostPage } from "@/types/post";
+import { useDeletePostMutation } from "@/hooks/use-post";
+import { useAuth } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -17,40 +13,13 @@ import {
 	DialogTitle
 } from "@/components/ui/dialog";
 
-export function DeletePostDialog({ postId, ...props }: React.ComponentProps<typeof Dialog> & { postId: string }) {
-	const queryClient = useQueryClient();
-	const queryKey: QueryKey = [`post`, postId];
+interface DeletePostDialogProps extends React.ComponentProps<typeof Dialog> {
+	postId: string;
+}
 
-	const { mutate } = useMutation({
-		mutationFn: () => axios.delete<Post>(`/api/posts/${postId}`),
-		onMutate: async () => {
-			await queryClient.cancelQueries({ queryKey });
-
-			const prevPosts = queryClient.getQueryData<PostPage>([`posts`, `feed`]);
-
-			queryClient.setQueryData<InfiniteData<PostPage, string | null>>([`posts`, `feed`], (oldData) => {
-				if (!oldData) return;
-				return {
-					pageParams: oldData.pageParams,
-					pages: oldData.pages.map((page) => ({
-						nextCursor: page.nextCursor,
-						posts: page.posts.filter((p) => p.id !== postId)
-					}))
-				};
-			});
-
-			return { prevPosts };
-		},
-		onError(error, _variables, context) {
-			console.error("Error while deleting post", error);
-			queryClient.setQueryData([`posts`, `feed`], context?.prevPosts);
-			toast.error(`Something went wrong, please try again`);
-		},
-		onSuccess() {
-			queryClient.removeQueries({ queryKey });
-			toast.success(`Your post was deleted`);
-		}
-	});
+export function DeletePostDialog({ postId, ...props }: DeletePostDialogProps) {
+	const { user } = useAuth();
+	const { mutate } = useDeletePostMutation(postId, user.username);
 
 	return (
 		<Dialog {...props}>
