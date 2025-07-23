@@ -5,7 +5,6 @@ import Image from "next/image";
 import { notFound, useParams } from "next/navigation";
 import { format } from "date-fns";
 
-import { LinkFormating } from "@/lib/link-format";
 import { useProfile } from "@/hooks/use-profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Icon, type IconId } from "@/components/ui/icon";
@@ -35,7 +34,7 @@ export function UserProfile() {
 					<Skeleton className="mt-1 w-20" />
 				</Header>
 				<section className="relative w-full">
-					<Skeleton className="aspect-header h-auto rounded-none border-b" />
+					<Skeleton className="aspect-header h-auto rounded-none" />
 					<Avatar className="bg-tooltip border-background absolute -bottom-12 left-4 size-25 animate-pulse cursor-default border-6 lg:-bottom-15 lg:size-33" />
 				</section>
 				<section className="px-4 py-3">
@@ -72,7 +71,7 @@ export function UserProfile() {
 				</HeaderDescription>
 			</Header>
 			<section className="relative w-full">
-				<div className="bg-image aspect-header relative overflow-hidden border-b">
+				<div className="bg-image aspect-header relative overflow-hidden">
 					{bannerUrl && (
 						<Link href={`/${username}/banner`}>
 							<Image
@@ -100,9 +99,7 @@ export function UserProfile() {
 					<p className="text-foreground text-xl font-extrabold">{data.name}</p>
 					<p className="text-muted-foreground text-base">{`@${data.username}`}</p>
 					<div className="mt-3 space-y-3">
-						<p className="text-foreground text-base">
-							<LinkFormating>{data.bio}</LinkFormating>
-						</p>
+						<p className="text-foreground text-base break-words whitespace-pre-line">{data.bio}</p>
 						<div className="flex flex-wrap items-center gap-x-4 gap-y-2">
 							{profileMeta.map(
 								({ icon, data, link }) =>

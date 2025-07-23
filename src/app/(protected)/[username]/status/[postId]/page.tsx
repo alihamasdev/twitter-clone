@@ -3,7 +3,6 @@
 import { notFound, useParams } from "next/navigation";
 
 import { getFullDate } from "@/lib/date";
-import { LinkFormating } from "@/lib/link-format";
 import { usePost } from "@/hooks/use-post";
 import { Error } from "@/components/ui/error";
 import { Spinner } from "@/components/ui/spinner";
@@ -44,9 +43,7 @@ export default function UserStatusPage() {
 						<PostOptions className="right-0 ml-auto" user={data.user} postId={data.id} />
 					</div>
 				</div>
-				<p className="break-words whitespace-pre-line">
-					<LinkFormating>{data.content}</LinkFormating>
-				</p>
+				<p className="break-words whitespace-pre-line">{data.content}</p>
 				<p className="text-muted-foreground">{getFullDate(data.createdAt)}</p>
 			</div>
 			<div className="flex w-full items-center justify-between border-y px-4 py-2">
