@@ -10,10 +10,7 @@ export async function createPost(data: PostSchema) {
 		throw new Error("Invalid post data");
 	}
 
-	const user = await validateUser();
-	if (!user) {
-		throw new Error("User not authenticated");
-	}
+	const loggedInUser = await validateUser();
 
-	return await prisma.post.create({ data: { content: data.content, userId: user.id } });
+	return await prisma.post.create({ data: { content: data.content, userId: loggedInUser.sub } });
 }

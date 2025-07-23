@@ -1,7 +1,7 @@
 "use client";
 
-import { Avatar as AvatarPrimitive } from "radix-ui";
 import { UserRound } from "lucide-react";
+import { Avatar as AvatarPrimitive } from "radix-ui";
 
 import { cn } from "@/lib/utils";
 

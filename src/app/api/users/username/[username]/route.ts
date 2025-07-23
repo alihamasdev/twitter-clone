@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -9,15 +9,12 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 		const { username } = await params;
 
 		const loggedInUser = await validateUser();
-		if (!loggedInUser) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-		}
 
 		const user = await prisma.user.findUnique({
 			where: { username },
 			include: {
 				_count: { select: { posts: true, followers: true, following: true } },
-				followers: { where: { followingId: loggedInUser.id }, select: { id: true } }
+				followers: { where: { followingId: loggedInUser.sub }, select: { id: true } }
 			}
 		});
 

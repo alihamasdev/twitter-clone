@@ -11,11 +11,10 @@ export async function updateUsername(username: string) {
 		const { success, error } = usernameSchema.safeParse({ username });
 		if (!success) return { error: new Error(error.message), data: null };
 
-		const user = await validateUser();
-		if (!user) return { error: new Error("Unauthorized"), data: null };
+		const loggedInUser = await validateUser();
 
 		const data = await prisma.user.update({
-			where: { id: user.id },
+			where: { id: loggedInUser.sub },
 			data: { username },
 			select: { username: true }
 		});

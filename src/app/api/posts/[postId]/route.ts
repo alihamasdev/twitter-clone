@@ -1,4 +1,5 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { notFound } from "next/navigation";
+import { NextRequest, NextResponse } from "next/server";
 
 import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -8,12 +9,9 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 	try {
 		const { postId } = await params;
 
-		const user = await validateUser();
-		if (!user) {
-			return Response.json({ error: "Unauthorized" }, { status: 401 });
-		}
+		const loggedInUser = await validateUser();
 
-		const query = getPostDataInclude(user.id);
+		const query = getPostDataInclude(loggedInUser.sub);
 
 		const post = (await prisma.post.findUnique({
 			where: { id: postId },
@@ -21,7 +19,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 		})) satisfies PostPayload | null;
 
 		if (!post) {
-			return NextResponse.json({ error: "Not Found" }, { status: 404 });
+			return notFound();
 		}
 
 		const data = {
@@ -55,12 +53,9 @@ export async function DELETE(_request: NextRequest, { params }: { params: Promis
 	try {
 		const { postId } = await params;
 
-		const user = await validateUser();
-		if (!user) {
-			return Response.json({ error: "Unauthorized" }, { status: 401 });
-		}
+		const loggedInUser = await validateUser();
 
-		await prisma.post.delete({ where: { id: postId, userId: user.id } });
+		await prisma.post.delete({ where: { id: postId, userId: loggedInUser.sub } });
 
 		return NextResponse.json({ message: "Post deleted" });
 	} catch (error) {

@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -7,14 +7,11 @@ export async function POST(_request: NextRequest, { params }: { params: Promise<
 	try {
 		const { postId } = await params;
 
-		const user = await validateUser();
-		if (!user) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-		}
+		const loggedInUser = await validateUser();
 
 		await prisma.bookmark.upsert({
-			where: { postId_userId: { postId, userId: user.id } },
-			create: { postId, userId: user.id },
+			where: { postId_userId: { postId, userId: loggedInUser.sub } },
+			create: { postId, userId: loggedInUser.sub },
 			update: {}
 		});
 
@@ -29,13 +26,10 @@ export async function DELETE(_request: NextRequest, { params }: { params: Promis
 	try {
 		const { postId } = await params;
 
-		const user = await validateUser();
-		if (!user) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-		}
+		const loggedInUser = await validateUser();
 
 		await prisma.bookmark.delete({
-			where: { postId_userId: { postId, userId: user.id } }
+			where: { postId_userId: { postId, userId: loggedInUser.sub } }
 		});
 
 		return NextResponse.json({ message: "Request accepted" });

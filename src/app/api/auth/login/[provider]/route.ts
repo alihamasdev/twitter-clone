@@ -1,25 +1,23 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { type Provider } from "@supabase/auth-js";
 
 import { createClient } from "@/lib/supabase/server";
+import { baseUrl } from "@/utils/contants";
 
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ provider: Provider }> }) {
 	const { provider } = await params;
-	const baseUrl =
-		process.env.NODE_ENV === "production" ? `https://twitter-alihamas.vercel.app` : "http://localhost:3000";
 
-	const { auth } = await createClient();
-	const {
-		data: { url },
-		error
-	} = await auth.signInWithOAuth({
+	const supabase = await createClient();
+	const { data, error } = await supabase.auth.signInWithOAuth({
 		provider,
 		options: { redirectTo: `${baseUrl}/api/auth/callback` }
 	});
 
-	if (error || !url) {
+	console.log({ data, baseUrl });
+
+	if (error || !data.url) {
 		return NextResponse.redirect(`${baseUrl}/auth/error`);
 	}
 
-	return NextResponse.redirect(url);
+	return NextResponse.redirect(data.url);
 }

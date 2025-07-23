@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -10,20 +10,19 @@ export async function GET(request: NextRequest) {
 	try {
 		const cursor = request.nextUrl.searchParams.get("cursor") || undefined;
 
-		const user = await validateUser();
-		if (!user) {
-			return Response.json({ error: "Unauthorized" }, { status: 401 });
-		}
+		const loggedInUser = await validateUser();
 
 		const postPayload = await prisma.bookmark.findMany({
-			where: { userId: user.id },
+			where: { userId: loggedInUser.sub },
 			orderBy: { createdAt: "desc" },
 			take: PAGE_SIZE + 1,
 			cursor: cursor ? { id: Number(cursor) } : undefined,
 			select: {
 				id: true,
-				user: { select: getUserDataWithFollowesInfo(user.id) },
-				post: { include: { ...getPostCounts(), ...getPostLikeInfo(user.id), ...getPostRepostInfo(user.id) } }
+				user: { select: getUserDataWithFollowesInfo(loggedInUser.sub) },
+				post: {
+					include: { ...getPostCounts(), ...getPostLikeInfo(loggedInUser.sub), ...getPostRepostInfo(loggedInUser.sub) }
+				}
 			}
 		});
 

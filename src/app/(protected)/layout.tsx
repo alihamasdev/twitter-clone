@@ -25,7 +25,7 @@ export default function ProtectedLayout({ children, dialog }: React.PropsWithChi
 						<p className="mt-2 mb-3 text-base">
 							Explore the codebase behind Twitter and contribute to its development.
 						</p>
-						<a href="https://github.com/alihamasdev/twitter" target="_blank" rel="noopener noreferrer">
+						<a href="https://github.com/alihamasdev/twitter-clone" target="_blank" rel="noopener noreferrer">
 							<Button variant="accent">Repository</Button>
 						</a>
 					</section>

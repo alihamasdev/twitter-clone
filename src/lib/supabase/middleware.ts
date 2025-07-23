@@ -1,14 +1,12 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
 export async function updateSession(request: NextRequest) {
-	let supabaseResponse = NextResponse.next({
-		request
-	});
+	let supabaseResponse = NextResponse.next({ request });
 
 	const supabase = createServerClient(
 		process.env.NEXT_PUBLIC_SUPABASE_URL!,
-		process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+		process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
 		{
 			cookies: {
 				getAll() {
@@ -23,18 +21,16 @@ export async function updateSession(request: NextRequest) {
 		}
 	);
 
-	const {
-		data: { user }
-	} = await supabase.auth.getUser();
+	const { data } = await supabase.auth.getClaims();
 
 	// All routes are protected routed except routes starting with /auth
-	if (!user && !request.nextUrl.pathname.startsWith("/auth")) {
+	if (!data?.claims && !request.nextUrl.pathname.startsWith("/auth")) {
 		const url = request.nextUrl.clone();
 		url.pathname = "/auth";
 		return NextResponse.redirect(url);
 	}
 
-	if (user && request.nextUrl.pathname.startsWith("/auth")) {
+	if (data?.claims && request.nextUrl.pathname.startsWith("/auth")) {
 		const url = request.nextUrl.clone();
 		url.pathname = "/home";
 		return NextResponse.redirect(url);

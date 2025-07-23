@@ -1,10 +1,14 @@
+import { unauthorized } from "next/navigation";
+
 import { createClient } from "@/lib/supabase/server";
 
-export async function validateUser(jwt?: string) {
+export async function validateUser() {
 	const { auth } = await createClient();
-	const {
-		data: { user }
-	} = await auth.getUser(jwt);
+	const { data, error } = await auth.getClaims();
 
-	return user;
+	if (error || !data) {
+		return unauthorized();
+	}
+
+	return data.claims;
 }

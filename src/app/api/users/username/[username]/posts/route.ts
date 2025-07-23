@@ -1,4 +1,5 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { notFound } from "next/navigation";
+import { NextRequest, NextResponse } from "next/server";
 
 import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -11,19 +12,16 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 		const cursor = request.nextUrl.searchParams.get("cursor") || undefined;
 
 		const loggedInUser = await validateUser();
-		if (!loggedInUser) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-		}
 
 		const user = await prisma.user.findUnique({ where: { username }, select: { id: true } });
 		if (!user) {
-			return NextResponse.json({ error: "Not Found" }, { status: 404 });
+			return notFound();
 		}
 
 		const postPayload = (await prisma.post.findMany({
 			where: { userId: user.id },
 			orderBy: { createdAt: "desc" },
-			include: getPostDataInclude(user.id),
+			include: getPostDataInclude(loggedInUser.sub),
 			take: PAGE_SIZE + 1,
 			cursor: cursor ? { id: cursor } : undefined
 		})) satisfies PostPayload[];

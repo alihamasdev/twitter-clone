@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -9,13 +9,10 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ userId
 		const { userId } = await params;
 
 		const loggedInUser = await validateUser();
-		if (!loggedInUser) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-		}
 
 		const user = await prisma.user.findUnique({
 			where: { id: userId },
-			select: getFollowersInfo(loggedInUser.id)
+			select: getFollowersInfo(loggedInUser.sub)
 		});
 
 		if (!user) {
@@ -39,13 +36,10 @@ export async function POST(_: NextRequest, { params }: { params: Promise<{ userI
 		const { userId } = await params;
 
 		const loggedInUser = await validateUser();
-		if (!loggedInUser) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-		}
 
 		await prisma.follow.upsert({
-			where: { followerId_followingId: { followingId: loggedInUser.id, followerId: userId } },
-			create: { followingId: loggedInUser.id, followerId: userId },
+			where: { followerId_followingId: { followingId: loggedInUser.sub, followerId: userId } },
+			create: { followingId: loggedInUser.sub, followerId: userId },
 			update: {}
 		});
 
@@ -61,11 +55,8 @@ export async function DELETE(_: NextRequest, { params }: { params: Promise<{ use
 		const { userId } = await params;
 
 		const loggedInUser = await validateUser();
-		if (!loggedInUser) {
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-		}
 
-		await prisma.follow.deleteMany({ where: { followerId: userId, followingId: loggedInUser.id } });
+		await prisma.follow.deleteMany({ where: { followerId: userId, followingId: loggedInUser.sub } });
 
 		return NextResponse.json({ success: true });
 	} catch (error) {

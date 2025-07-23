@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
@@ -9,12 +9,9 @@ export async function GET(request: NextRequest) {
 	try {
 		const cursor = request.nextUrl.searchParams.get("cursor") || undefined;
 
-		const user = await validateUser();
-		if (!user) {
-			return Response.json({ error: "Unauthorized" }, { status: 401 });
-		}
+		const loggedInUser = await validateUser();
 
-		const query = getPostDataInclude(user.id);
+		const query = getPostDataInclude(loggedInUser.sub);
 
 		const postPayload = (await prisma.post.findMany({
 			include: query,

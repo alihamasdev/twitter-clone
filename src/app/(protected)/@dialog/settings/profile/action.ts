@@ -17,18 +17,17 @@ export async function updateProfile(
 		if (!success) return { error: error.message, data: null };
 
 		const loggedInUser = await validateUser();
-		if (!loggedInUser) return { error: "Unauthorized", data: null };
 
 		const { avatar, banner, ...staticData } = data;
 		const supabase = await createClient();
 
 		const [avatarUrl, bannerUrl] = await Promise.all([
-			uploadFile(supabase, `${loggedInUser.id}/avatar.png`, avatar),
-			uploadFile(supabase, `${loggedInUser.id}/banner.png`, banner)
+			uploadFile(supabase, `${loggedInUser.sub}/avatar.png`, avatar),
+			uploadFile(supabase, `${loggedInUser.sub}/banner.png`, banner)
 		]);
 
 		const updatedData = await prisma.user.update({
-			where: { id: loggedInUser.id },
+			where: { id: loggedInUser.sub },
 			data: { avatarUrl: avatarUrl ? `${supabaseStorageUrl}${avatarUrl}` : undefined, bannerUrl, ...staticData }
 		});
 
