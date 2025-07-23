@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { redirect } from "next/navigation";
+import { NextRequest } from "next/server";
 import { type Provider } from "@supabase/auth-js";
 
 import { createClient } from "@/lib/supabase/server";
@@ -16,8 +17,8 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 	console.log({ data, baseUrl });
 
 	if (error || !data.url) {
-		return NextResponse.redirect(`${baseUrl}/auth/error`);
+		return redirect(`${baseUrl}/auth/error`);
 	}
 
-	return NextResponse.redirect(data.url);
+	return redirect(data.url);
 }

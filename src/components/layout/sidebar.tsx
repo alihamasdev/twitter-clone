@@ -29,6 +29,7 @@ export function Sidebar() {
 	const handleLogout = async () => {
 		const supabase = createClient();
 		await supabase.auth.signOut();
+		router.push("/auth");
 	};
 
 	return (

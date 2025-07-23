@@ -2,14 +2,13 @@
 
 import { type Provider } from "@supabase/auth-js";
 
-import { axios } from "@/lib/axios";
 import { Button } from "@/components/ui/button";
 
 import { GithubIcon, GoogleIcon } from "./auth-icons";
 
 export function OAuthButtons() {
 	const handleOAuth = (provider: Provider) => {
-		axios.get(`/api/auth/login/${provider}`);
+		window.location.href = `/api/auth/login/${provider}`;
 	};
 
 	return (
