@@ -2,13 +2,12 @@
 
 import { Fragment } from "react";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import { format } from "date-fns";
 
 import { LinkFormating } from "@/lib/link-format";
 import { useProfile } from "@/hooks/use-profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Error } from "@/components/ui/error";
 import { Icon, type IconId } from "@/components/ui/icon";
 import { LinkTabs } from "@/components/ui/link-tabs";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -48,21 +47,11 @@ export function UserProfile() {
 	}
 
 	if (error) {
-		return (
-			<Fragment>
-				<Header>
-					<HeaderTitle>Profile</HeaderTitle>
-				</Header>
-				<section className="relative w-full">
-					<div className="aspect-header bg-image h-auto rounded-none border-b" />
-					<Avatar className="bg-tooltip border-background absolute -bottom-12 left-4 size-25 cursor-default border-6 lg:-bottom-15 lg:size-33" />
-				</section>
-				<section className="px-4 py-3">
-					<p className="text-foreground mt-12 text-xl font-extrabold lg:mt-15">{`@${username}`}</p>
-					<Error />
-				</section>
-			</Fragment>
-		);
+		if (error.message.includes("404")) {
+			return notFound();
+		}
+
+		return;
 	}
 
 	const createDate = format(data.createdAt, `LLLL yyyy`);

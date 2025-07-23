@@ -29,7 +29,7 @@ export function Sidebar() {
 	const handleLogout = async () => {
 		const supabase = createClient();
 		await supabase.auth.signOut();
-		router.push("/auth");
+		window.location.href = "/auth";
 	};
 
 	return (
@@ -39,7 +39,7 @@ export function Sidebar() {
 					<Icon id="twitter" className="size-6.5 xl:size-8" />
 				</Link>
 				{sidebarLinks.map(({ url, name, icon, activeIcon, disabled }) => {
-					const isActive = path === url;
+					const isActive = path.startsWith(url);
 					return (
 						<Link
 							key={name}

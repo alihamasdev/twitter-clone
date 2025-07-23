@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useInfiniteQuery, type QueryKey } from "@tanstack/react-query";
+import { useInfiniteQuery, type UndefinedInitialDataInfiniteOptions } from "@tanstack/react-query";
 import { AnimatePresence } from "motion/react";
 import { useInView } from "react-intersection-observer";
 
@@ -11,25 +11,27 @@ import { Error } from "@/components/ui/error";
 import { Spinner } from "@/components/ui/spinner";
 import { Post } from "@/components/posts/post";
 
-interface InfinitePostsContainerProps {
-	queryKey: QueryKey;
+interface InfinitePostsContainerProps
+	extends Omit<UndefinedInitialDataInfiniteOptions<PostPage>, "initialPageParam" | "getNextPageParam" | "queryFn"> {
 	apiRouteUrl: string;
 	children: React.ReactNode;
 }
 
-export function InfinitePostsContainer({ children, queryKey, apiRouteUrl }: InfinitePostsContainerProps) {
+export function InfinitePostsContainer({
+	children,
+	apiRouteUrl,
+	staleTime = 15 * 60 * 1000,
+	...options
+}: InfinitePostsContainerProps) {
 	const { ref, inView } = useInView({ threshold: 0 });
 
 	const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } = useInfiniteQuery({
-		// eslint-disable-next-line @tanstack/query/exhaustive-deps
-		queryKey,
 		queryFn: ({ pageParam }) =>
 			axios.get<PostPage>(apiRouteUrl, { params: pageParam ? { cursor: pageParam } : {} }).then((res) => res.data),
 		initialPageParam: null as string | number | null,
 		getNextPageParam: (lastPage) => lastPage.nextCursor,
-		staleTime: 5 * 1000,
-		refetchInterval: 5 * 1000,
-		refetchOnMount: true
+		staleTime,
+		...options
 	});
 
 	useEffect(() => {
