@@ -34,3 +34,8 @@ export interface FollowingInfo {
 export type UserDataWithFollowInfo = UserData & FollowerInfo;
 
 export type ProfilePageUser = User & FollowerInfo & FollowingInfo & PostsCount;
+
+export interface UserPage {
+	users: UserDataWithFollowInfo[];
+	nextCursor: string | number | null;
+}

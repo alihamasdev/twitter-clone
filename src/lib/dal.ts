@@ -1,10 +1,11 @@
 "use server";
 
 import { cache } from "react";
+import { notFound } from "next/navigation";
 
 import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { getFollowersInfo, userDataSelect, type UserData, type UserDataWithFollowInfo } from "@/types/user";
+import { getUserDataWithFollowesInfo, userDataSelect, type UserData, type UserDataWithFollowInfo } from "@/types/user";
 
 /** Gets currently loggedIn user from database for global state `AuthContext` */
 export const getLoginUserData = cache(async (): Promise<UserData | null> => {
@@ -21,11 +22,10 @@ export const getLoginUserData = cache(async (): Promise<UserData | null> => {
 export const getUsersList = cache(async (limit = 4) => {
 	const loggedInUser = await validateUser();
 
-	const followerInfo = getFollowersInfo(loggedInUser.sub);
 	const data = await prisma.user.findMany({
 		take: limit,
 		where: { NOT: { id: loggedInUser.sub } },
-		select: { ...userDataSelect, ...followerInfo }
+		select: getUserDataWithFollowesInfo(loggedInUser.sub)
 	});
 
 	const dataList: UserDataWithFollowInfo[] = data.map(({ _count, followers, ...data }) => {
@@ -37,4 +37,17 @@ export const getUsersList = cache(async (limit = 4) => {
 	});
 
 	return dataList;
+});
+
+export const getUserByUsername = cache(async (username: string) => {
+	const user = await prisma.user.findUnique({
+		where: { username },
+		select: { id: true, name: true }
+	});
+
+	if (!user) {
+		return notFound();
+	}
+
+	return { userId: user.id, name: user.name };
 });

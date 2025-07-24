@@ -31,14 +31,15 @@ model User {
 }
 
 model Follow {
-  id          Int    @id @default(autoincrement())
-  followerId  String @map("follower_id") @db.Uuid
-  follower    User   @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
-  followingId String @map("following_id") @db.Uuid
-  following   User   @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(dbgenerated("now()")) @map("created_at") @db.Timestamptz(6)
+  followerId  String   @map("follower_id") @db.Uuid
+  follower    User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String   @map("following_id") @db.Uuid
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId])
-  @@index([followerId, followingId])
+  @@index([id, followerId, followingId, createdAt])
   @@map("follow")
 }
 
