@@ -10,7 +10,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 			where: { userId }
 		});
 
-		return NextResponse.json(posts);
+		return NextResponse.json({ posts });
 	} catch (error) {
 		console.error(error);
 		return NextResponse.json({ message: "Internal Server Error" }, { status: 500 });

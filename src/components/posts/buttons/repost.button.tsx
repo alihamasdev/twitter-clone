@@ -14,10 +14,10 @@ interface RepostButtonProps extends React.ComponentProps<typeof motion.button> {
 	isRepost: boolean;
 	reposts: number;
 	postId: string;
-	username: string;
+	userId: string;
 }
 
-export function RepostButton({ postId, isRepost, reposts, username, className, ...props }: RepostButtonProps) {
+export function RepostButton({ postId, isRepost, reposts, userId, className, ...props }: RepostButtonProps) {
 	const queryClient = useQueryClient();
 	const queryKey: QueryKey = [`post`, postId];
 
@@ -42,7 +42,7 @@ export function RepostButton({ postId, isRepost, reposts, username, className, .
 			return prevState;
 		},
 		onSuccess(_data, _variables, postData) {
-			queryClient.setQueryData<InfiniteData<PostPage, string | null>>([`posts`, `repost`, username], (oldData) => {
+			queryClient.setQueryData<InfiniteData<PostPage, string | null>>([`posts`, `repost`, userId], (oldData) => {
 				const firstPage = oldData?.pages[0];
 				if (!oldData || !firstPage) return oldData;
 

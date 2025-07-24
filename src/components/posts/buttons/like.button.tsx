@@ -14,10 +14,10 @@ interface LikeButtonProps extends React.ComponentProps<typeof motion.button> {
 	isLiked: boolean;
 	likes: number;
 	postId: string;
-	username: string;
+	userId: string;
 }
 
-export function LikeButton({ postId, isLiked, likes, username, className, ...props }: LikeButtonProps) {
+export function LikeButton({ postId, isLiked, likes, userId, className, ...props }: LikeButtonProps) {
 	const queryClient = useQueryClient();
 	const queryKey: QueryKey = [`post`, postId];
 
@@ -37,7 +37,7 @@ export function LikeButton({ postId, isLiked, likes, username, className, ...pro
 			return prevState;
 		},
 		onSuccess(_data, _variables, postData) {
-			queryClient.setQueryData<InfiniteData<PostPage, string | null>>([`posts`, `like`, username], (oldData) => {
+			queryClient.setQueryData<InfiniteData<PostPage, string | null>>([`posts`, `like`, userId], (oldData) => {
 				const firstPage = oldData?.pages[0];
 				if (!oldData || !firstPage) return oldData;
 

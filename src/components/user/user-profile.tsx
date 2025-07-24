@@ -118,10 +118,10 @@ export function UserProfile() {
 							)}
 						</div>
 						<div className="flex items-center gap-x-4">
-							<Link href={`${username}/following`} className="hover:border-foreground border-b border-transparent">
+							<Link href={`/${username}/following`} className="hover:border-foreground border-b border-transparent">
 								<FollowingCount userId={data.id} initialState={{ following }} />
 							</Link>
-							<Link href={`${username}/followers`} className="hover:border-foreground border-b border-transparent">
+							<Link href={`/${username}/followers`} className="hover:border-foreground border-b border-transparent">
 								<FollowersCount userId={data.id} initialState={{ followers, isFollowedByUser }} />
 							</Link>
 						</div>

@@ -37,9 +37,6 @@ export default function UsernamePage() {
 
 			queryClient.setQueryData([`auth`], (oldData: UserData) => ({ ...oldData, username: data.username }));
 
-			queryClient.removeQueries({ queryKey: [`posts`, data.username] });
-			queryClient.removeQueries({ queryKey: [`posts`, `like`, data.username] });
-			queryClient.removeQueries({ queryKey: [`posts`, `repost`, data.username] });
 			queryClient.removeQueries({ queryKey: [`profile`, data.username] });
 
 			toast.success("Username changed successfully");

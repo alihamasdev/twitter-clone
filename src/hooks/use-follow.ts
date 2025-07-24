@@ -50,6 +50,7 @@ export function useFollowerMutation(userId: string, isFollowing: boolean) {
 		onSettled: () => {
 			queryClient.invalidateQueries({ queryKey: followQueryKey });
 			queryClient.invalidateQueries({ queryKey: followingQueryKey });
+			queryClient.invalidateQueries({ queryKey: [`following`, user.id] });
 		}
 	});
 

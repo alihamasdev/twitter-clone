@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 
 import { validateUser } from "@/lib/auth";
@@ -7,20 +6,15 @@ import { PAGE_SIZE } from "@/utils/contants";
 import { getPostCounts, getPostLikeInfo, getPostRepostInfo, PostPage } from "@/types/post";
 import { getUserDataWithFollowesInfo } from "@/types/user";
 
-export async function GET(request: NextRequest, { params }: { params: Promise<{ username: string }> }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
 	try {
-		const { username } = await params;
+		const { userId } = await params;
 		const cursor = request.nextUrl.searchParams.get("cursor") || undefined;
 
 		const loggedInUser = await validateUser();
 
-		const user = await prisma.user.findUnique({ where: { username }, select: { id: true } });
-		if (!user) {
-			return notFound();
-		}
-
 		const postPayload = await prisma.repost.findMany({
-			where: { userId: user.id },
+			where: { userId: userId },
 			orderBy: { createdAt: "desc" },
 			take: PAGE_SIZE + 1,
 			cursor: cursor ? { id: Number(cursor) } : undefined,

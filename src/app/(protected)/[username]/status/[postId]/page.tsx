@@ -48,13 +48,8 @@ export default function UserStatusPage() {
 			</div>
 			<div className="flex w-full items-center justify-between border-y px-4 py-2">
 				<CommentButton />
-				<RepostButton
-					isRepost={data.isReposted}
-					reposts={data.reposts}
-					postId={data.id}
-					username={data.user.username}
-				/>
-				<LikeButton isLiked={data.isLiked} likes={data.likes} postId={data.id} username={data.user.username} />
+				<RepostButton isRepost={data.isReposted} reposts={data.reposts} postId={data.id} userId={data.user.id} />
+				<LikeButton isLiked={data.isLiked} likes={data.likes} postId={data.id} userId={data.user.id} />
 				<BookmarkButton isBookmarked={data.isBookmarked} postId={data.id} />
 				<ShareButton tweetUrl={`/${data.user.username}/status/${data.id}`} />
 			</div>

@@ -19,7 +19,7 @@ interface DeletePostDialogProps extends React.ComponentProps<typeof Dialog> {
 
 export function DeletePostDialog({ postId, ...props }: DeletePostDialogProps) {
 	const { user } = useAuth();
-	const { mutate } = useDeletePostMutation(postId, user.username);
+	const { mutate } = useDeletePostMutation(postId, user.id);
 
 	return (
 		<Dialog {...props}>

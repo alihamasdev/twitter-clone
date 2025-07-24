@@ -25,13 +25,15 @@ export function Post({ post, ...props }: PostProps) {
 	const { data } = usePost(post.id, post);
 	if (!data) return null;
 
+	const tweetUrl = `/${data.user.username}/status/${data.id}`;
+
 	return (
 		<motion.article
 			className="hover:bg-muted/50 relative flex items-start gap-x-3 border-b px-4 py-3 transition-colors"
 			onClick={(e) => {
 				const target = e.target as HTMLElement;
 				if (target.closest("button, a, [role='menu'], [role='dialog'], [role='overlay']")) return;
-				router.push(`/${data.user.username}/status/${data.id}`);
+				router.push(tweetUrl);
 			}}
 			{...props}
 		>
@@ -47,15 +49,10 @@ export function Post({ post, ...props }: PostProps) {
 				<p className="mt-1 break-words whitespace-pre-line">{data.content}</p>
 				<div className="mt-1.5 flex w-full items-center justify-between">
 					<CommentButton />
-					<RepostButton
-						isRepost={data.isReposted}
-						reposts={data.reposts}
-						postId={data.id}
-						username={data.user.username}
-					/>
-					<LikeButton isLiked={data.isLiked} likes={data.likes} postId={data.id} username={data.user.username} />
+					<RepostButton isRepost={data.isReposted} reposts={data.reposts} postId={data.id} userId={data.user.id} />
+					<LikeButton isLiked={data.isLiked} likes={data.likes} postId={data.id} userId={data.user.id} />
 					<BookmarkButton isBookmarked={data.isBookmarked} postId={data.id} />
-					<ShareButton tweetUrl={`/${data.user.username}/status/${data.id}`} />
+					<ShareButton tweetUrl={tweetUrl} />
 				</div>
 			</div>
 		</motion.article>

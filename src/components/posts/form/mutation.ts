@@ -33,7 +33,7 @@ export function useSubmitPostMutation() {
 			queryClient.setQueriesData<InfiniteData<PostPage, string | null>>(
 				{
 					queryKey: [`posts`],
-					predicate: ({ queryKey }) => queryKey.includes(`feed`) || queryKey.includes(user.username)
+					predicate: ({ queryKey }) => queryKey.includes(`feed`) || queryKey.includes(user.id)
 				},
 				(oldData) => {
 					const firstPage = oldData?.pages[0];
@@ -59,6 +59,9 @@ export function useSubmitPostMutation() {
 		onError(error) {
 			console.error(error);
 			toast.error("Something went wrong while creating post");
+		},
+		onSettled() {
+			queryClient.invalidateQueries({ queryKey: [`posts`, `count`, user.id] });
 		}
 	});
 
