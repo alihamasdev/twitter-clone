@@ -6,7 +6,7 @@ export default async function ProfileRetweetsPage({ params }: { params: Promise<
 	const { userId } = await getUserByUsername(username);
 
 	return (
-		<InfinitePostsContainer queryKey={[`posts`, `repost`, userId]} apiRouteUrl={`/api/users/${userId}/posts/reposted`}>
+		<InfinitePostsContainer queryKey={[`posts`, `repost`, userId]} apiRouteUrl={`/api/${userId}/posts/reposted`}>
 			<div className="mx-auto mt-15 flex w-2/3 flex-col gap-y-2">
 				<h2 className="text-primary text-center text-2xl font-extrabold">{`@${username} hasn't reposted anything yet`}</h2>
 				<p className="text-muted-foreground text-center text-sm">When they do, their posts will show up here</p>

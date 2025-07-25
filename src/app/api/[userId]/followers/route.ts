@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { PAGE_SIZE } from "@/utils/contants";
-import { getUserDataWithFollowesInfo, type UserPage } from "@/types/user";
+import { getUserDataWithFollowesInfo, type UserDataWithFollowInfo, type UserPage } from "@/types/user";
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
 	try {
@@ -13,18 +13,15 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 		const loggedInUser = await validateUser();
 
 		const usersPayload = await prisma.follow.findMany({
-			where: { followingId: userId },
+			where: { followerId: userId },
 			orderBy: { createdAt: "desc" },
 			take: PAGE_SIZE + 1,
 			cursor: cursor ? { id: Number(cursor) } : undefined,
-			select: { id: true, follower: { select: getUserDataWithFollowesInfo(loggedInUser.sub) } }
+			select: { id: true, following: { select: getUserDataWithFollowesInfo(loggedInUser.sub) } }
 		});
 
-		const users = usersPayload.map(({ follower: { id, name, username, avatarUrl, _count, followers } }) => ({
-			id,
-			name,
-			username,
-			avatarUrl,
+		const users: UserDataWithFollowInfo[] = usersPayload.map(({ following: { _count, followers, ...user } }) => ({
+			...user,
 			followers: _count.followers,
 			isFollowedByUser: !!followers.length
 		}));

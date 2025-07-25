@@ -10,7 +10,7 @@ import type { FollowerInfo, FollowingInfo } from "@/types/user";
 export function useFollowerInfo(userId: string, initialState: FollowerInfo) {
 	return useQuery({
 		queryKey: [`follower-info`, userId],
-		queryFn: () => axios.get<FollowerInfo>(`/api/users/${userId}/followers`).then((res) => res.data),
+		queryFn: () => axios.get<FollowerInfo>(`/api/${userId}/followers/info`).then((res) => res.data),
 		initialData: initialState,
 		staleTime: Infinity
 	});
@@ -23,8 +23,7 @@ export function useFollowerMutation(userId: string, isFollowing: boolean) {
 	const followingQueryKey: QueryKey = [`following-count`, user.id];
 
 	const { mutate } = useMutation({
-		mutationFn: () =>
-			isFollowing ? axios.delete(`/api/users/${userId}/followers`) : axios.post(`/api/users/${userId}/followers`),
+		mutationFn: () => (isFollowing ? axios.delete(`/api/${userId}/follow`) : axios.post(`/api/${userId}/follow`)),
 		onMutate: async () => {
 			await queryClient.cancelQueries({ queryKey: followQueryKey });
 
@@ -60,7 +59,7 @@ export function useFollowerMutation(userId: string, isFollowing: boolean) {
 export function useFollowingInfo(userId: string, initialState: FollowingInfo) {
 	return useQuery({
 		queryKey: [`following-count`, userId],
-		queryFn: () => axios.get<{ following: number }>(`/api/users/${userId}/following`).then((res) => res.data),
+		queryFn: () => axios.get<{ following: number }>(`/api/${userId}/following/info`).then((res) => res.data),
 		initialData: initialState,
 		staleTime: Infinity
 	});

@@ -16,5 +16,6 @@ List of all the query used in the projects
 | 10  | `["following-info", userId]`  | Following info details        | [`FollowingInfo {}`](./src/types/user.ts)   |
 | 11  | `["followers", userId]`       | People following user         | [`UserPage []`](./src/types/user.ts)        |
 | 12  | `["following", userId]`       | User following people         | [`UserPage []`](./src/types/user.ts)        |
+| 12  | `["people"]`                  | All users list                | [`UserPage []`](./src/types/user.ts)        |
 
 Note : `[]` shows infite query & `{}` single query

@@ -6,7 +6,7 @@ export default async function ProfileLikesPage({ params }: { params: Promise<{ u
 	const { userId } = await getUserByUsername(username);
 
 	return (
-		<InfinitePostsContainer queryKey={[`posts`, `like`, userId]} apiRouteUrl={`/api/users/${userId}/posts/liked`}>
+		<InfinitePostsContainer queryKey={[`posts`, `like`, userId]} apiRouteUrl={`/api/${userId}/posts/liked`}>
 			<div className="mx-auto mt-15 flex w-2/3 flex-col gap-y-2">
 				<h2 className="text-primary text-center text-2xl font-extrabold">{`@${username} hasn't liked anything yet`}</h2>
 				<p className="text-muted-foreground text-center text-sm">When they do, their posts will show up here</p>

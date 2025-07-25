@@ -6,7 +6,7 @@ export default async function ProfileFollowingPage({ params }: { params: Promise
 	const { userId } = await getUserByUsername(username);
 
 	return (
-		<InfiniteUsersContainer apiRouteUrl={`/api/users/${userId}/following/users`} queryKey={[`following`, userId]}>
+		<InfiniteUsersContainer apiRouteUrl={`/api/${userId}/following`} queryKey={[`following`, userId]}>
 			<div className="mx-auto mt-15 flex w-2/3 flex-col gap-y-2">
 				<h2 className="text-primary text-center text-2xl font-extrabold">Be in the know</h2>
 				<p className="text-muted-foreground text-center text-sm">

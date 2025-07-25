@@ -2,7 +2,7 @@ import { InfiniteUsersContainer } from "@/components/user/infinite-users-contain
 
 export default async function ProfileFollowingPage() {
 	return (
-		<InfiniteUsersContainer apiRouteUrl={`/api/users`} queryKey={[`users`]}>
+		<InfiniteUsersContainer apiRouteUrl={`/api/people`} queryKey={[`people`]}>
 			<div className="mx-auto mt-15 flex w-2/3 flex-col gap-y-2">
 				<h2 className="text-primary text-center text-2xl font-extrabold">Be in the know</h2>
 				<p className="text-muted-foreground text-center text-sm">
