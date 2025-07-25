@@ -2,6 +2,7 @@ import { Suspense } from "react";
 
 import { getUsersList } from "@/lib/dal";
 import { Spinner } from "@/components/ui/spinner";
+import { Link } from "@/components/link";
 import { UserCard } from "@/components/user/user-card";
 
 export function SuggestedUsers() {
@@ -28,6 +29,9 @@ export async function UsersList() {
 			{data?.map(({ followers, isFollowedByUser, ...user }) => (
 				<UserCard key={user.id} user={user} follow={{ followers, isFollowedByUser }} />
 			))}
+			<Link href={`/people`} className="hover:bg-muted text-accent block w-full px-4 py-3 transition-colors">
+				Show more
+			</Link>
 		</section>
 	);
 }

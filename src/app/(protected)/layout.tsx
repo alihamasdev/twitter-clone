@@ -30,7 +30,7 @@ export default function ProtectedLayout({ children, dialog }: React.PropsWithChi
 						</a>
 					</section>
 					<SuggestedUsers />
-					<p className="text-muted-foreground text-center text-sm">&#169; {new Date().getFullYear()} Twitter, Inc.</p>
+					<p className="text-muted-foreground text-center text-sm">&#169; {new Date().getFullYear()} Ali Hamas, Inc.</p>
 				</aside>
 			</main>
 		</AuthProvider>
