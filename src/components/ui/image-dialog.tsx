@@ -17,7 +17,7 @@ function ImageDialogContent({ className, children, ...props }: React.ComponentPr
 		<DialogPrimitive.Portal data-slot="image-dialog-portal">
 			<DialogPrimitive.Overlay
 				data-slot="image-dialog-overlay"
-				className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/90"
+				className="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50"
 			/>
 			<DialogPrimitive.Content
 				data-slot="dialog-content"
