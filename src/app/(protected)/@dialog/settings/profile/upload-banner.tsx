@@ -9,9 +9,10 @@ import { CropDialog } from "@/components/dialogs/crop.dialog";
 
 interface UploadBannerProps {
 	previousValue: string | null;
+	disabled: boolean;
 }
 
-export function UploadBanner({ previousValue }: UploadBannerProps) {
+export function UploadBanner({ previousValue, disabled }: UploadBannerProps) {
 	const [finalImageUrl, setFinalImageUrl] = useState<string | null>(null);
 	const [{ files }, { openFileDialog, removeFile, getInputProps }] = useFileUpload();
 
@@ -45,6 +46,7 @@ export function UploadBanner({ previousValue }: UploadBannerProps) {
 				<Button
 					size="icon"
 					icon="upload"
+					disabled={disabled}
 					onClick={openFileDialog}
 					className="bg-background hover:bg-background/80 absolute-center"
 				/>

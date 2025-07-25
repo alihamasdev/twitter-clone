@@ -9,9 +9,10 @@ import { CropDialog } from "@/components/dialogs/crop.dialog";
 
 interface UploadAvatarProps {
 	previousValue: string;
+	disabled: boolean;
 }
 
-export function UploadAvatar({ previousValue }: UploadAvatarProps) {
+export function UploadAvatar({ previousValue, disabled }: UploadAvatarProps) {
 	const [finalImageUrl, setFinalImageUrl] = useState<string | null>(null);
 	const [{ files }, { openFileDialog, removeFile, getInputProps }] = useFileUpload();
 
@@ -32,6 +33,7 @@ export function UploadAvatar({ previousValue }: UploadAvatarProps) {
 					<Button
 						size="icon"
 						icon="upload"
+						disabled={disabled}
 						onClick={openFileDialog}
 						className="bg-background hover:bg-background/80 absolute-center"
 					/>

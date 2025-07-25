@@ -28,7 +28,7 @@ export default function EditProfilePage() {
 	const router = useRouter();
 	const queryClient = useQueryClient();
 	const [isLoading, startTransition] = useTransition();
-	const { data, error, isPending } = useProfile(user.username);
+	const { data, error, isPending } = useProfile(user.id);
 
 	const form = useForm({
 		mode: "onChange",
@@ -52,7 +52,7 @@ export default function EditProfilePage() {
 				return;
 			}
 
-			queryClient.setQueryData<ProfilePageUser>([`profile`, user.username], (oldData) =>
+			queryClient.setQueryData<ProfilePageUser>([`profile`, user.id], (oldData) =>
 				oldData ? { ...oldData, ...data } : undefined
 			);
 			queryClient.setQueryData([`auth`], (oldData: UserData) => ({
@@ -83,12 +83,7 @@ export default function EditProfilePage() {
 	}
 
 	return (
-		<DialogContent className="h-175">
-			{isLoading && (
-				<div className="flex-center size-full">
-					<Spinner className="mt-0" />
-				</div>
-			)}
+		<DialogContent className="h-full max-h-[85dvh]">
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} hidden={isLoading}>
 					<DialogHeader className="bg-background/80 sticky top-0 z-10 mb-0 flex-row justify-between border-b px-4 py-3 backdrop-blur-md">
@@ -97,34 +92,37 @@ export default function EditProfilePage() {
 							<DialogTitle>Edit Profile</DialogTitle>
 							<DialogDescription />
 						</div>
-						<Button type="submit" size="sm" disabled={isLoading || !form.formState.isValid}>
-							Save
+						<Button type="submit" size="sm" className="min-w-16" disabled={isLoading || !form.formState.isValid}>
+							{isLoading ? "Save" : <Spinner className="border-muted-foreground/50 mt-0 size-4 border-3" />}
 						</Button>
 					</DialogHeader>
 					<div className="relative w-full">
 						<FormField
 							name="banner"
+							disabled={isLoading}
 							control={form.control}
 							render={() => (
 								<FormControl>
-									<UploadBanner previousValue={data.bannerUrl} />
+									<UploadBanner previousValue={data.bannerUrl} disabled={isLoading} />
 								</FormControl>
 							)}
 						/>
 						<FormField
 							name="avatar"
+							disabled={isLoading}
 							control={form.control}
 							render={() => (
 								<FormControl>
-									<UploadAvatar previousValue={data.avatarUrl} />
+									<UploadAvatar previousValue={data.avatarUrl} disabled={isLoading} />
 								</FormControl>
 							)}
 						/>
 					</div>
 					<div className="mt-18 space-y-6 px-4 pt-3 pb-6">
 						<FormField
-							control={form.control}
 							name="name"
+							disabled={isLoading}
+							control={form.control}
 							render={({ field }) => (
 								<div className="grid gap-y-2">
 									<FormItem>
@@ -138,8 +136,9 @@ export default function EditProfilePage() {
 							)}
 						/>
 						<FormField
-							control={form.control}
 							name="bio"
+							disabled={isLoading}
+							control={form.control}
 							render={({ field: { value, ...field } }) => (
 								<div className="grid gap-y-2">
 									<FormItem>
@@ -153,8 +152,9 @@ export default function EditProfilePage() {
 							)}
 						/>
 						<FormField
-							control={form.control}
 							name="location"
+							disabled={isLoading}
+							control={form.control}
 							render={({ field: { value, ...field } }) => (
 								<div className="grid gap-y-2">
 									<FormItem>
@@ -168,8 +168,9 @@ export default function EditProfilePage() {
 							)}
 						/>
 						<FormField
-							control={form.control}
 							name="website"
+							disabled={isLoading}
+							control={form.control}
 							render={({ field: { value, ...field } }) => (
 								<div className="grid gap-y-2">
 									<FormItem>
