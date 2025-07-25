@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function HomeLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<Fragment>
-			<Header backButton={false}>
+			<Header>
 				<HeaderTitle>Home</HeaderTitle>
 			</Header>
 			<div className="relative w-full border-b px-4 py-3">

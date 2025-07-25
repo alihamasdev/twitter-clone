@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Icon, type IconId } from "@/components/ui/icon";
 import { LinkTabs } from "@/components/ui/link-tabs";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Header, HeaderDescription, HeaderTitle } from "@/components/layout/header";
+import { BackButton, Header, HeaderDescription, HeaderTitle } from "@/components/layout/header";
 import { Link } from "@/components/link";
 import { TextParser } from "@/components/text-parser";
 import { FollowButton } from "@/components/user";
@@ -29,8 +29,11 @@ export function UserProfile({ userId }: { userId: string }) {
 		return (
 			<Fragment>
 				<Header>
-					<Skeleton className="h-6 w-40" />
-					<Skeleton className="mt-1 w-20" />
+					<BackButton />
+					<div>
+						<Skeleton className="h-6 w-40" />
+						<Skeleton className="mt-1 w-20" />
+					</div>
 				</Header>
 				<section className="relative w-full">
 					<Skeleton className="aspect-header h-auto rounded-none" />
@@ -60,10 +63,13 @@ export function UserProfile({ userId }: { userId: string }) {
 	return (
 		<Fragment>
 			<Header>
-				<HeaderTitle>{data.name}</HeaderTitle>
-				<HeaderDescription>
-					<PostsCount userId={data.id} initialState={{ posts }} />
-				</HeaderDescription>
+				<BackButton />
+				<div>
+					<HeaderTitle>{data.name}</HeaderTitle>
+					<HeaderDescription className="flex items-center">
+						<PostsCount userId={data.id} initialState={{ posts }} />
+					</HeaderDescription>
+				</div>
 			</Header>
 			<section className="relative w-full">
 				<div className="bg-image aspect-header relative overflow-hidden">

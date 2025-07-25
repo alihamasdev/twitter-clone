@@ -4,15 +4,26 @@ import { useRouter } from "next/navigation";
 
 import { Button, type ButtonProps } from "@/components/ui/button";
 
-function BackButton({ variant = "ghost", size = "icon", icon = "back", ...props }: ButtonProps) {
-	const router = useRouter();
-
-	const handleBack = () => {
-		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-		history.length > 1 ? router.back() : router.push("/home");
-	};
-
-	return <Button size={size} icon={icon} variant={variant} onClick={handleBack} {...props} />;
+interface BackButtonProps extends ButtonProps {
+	pushUrl?: string | null;
 }
 
-export { BackButton };
+export function BackButton({
+	pushUrl = "/home",
+	variant = "ghost",
+	size = "icon",
+	icon = "back",
+	...props
+}: BackButtonProps) {
+	const router = useRouter();
+
+	return (
+		<Button
+			size={size}
+			icon={icon}
+			variant={variant}
+			onClick={() => (pushUrl ? router.push(pushUrl) : router.back())}
+			{...props}
+		/>
+	);
+}

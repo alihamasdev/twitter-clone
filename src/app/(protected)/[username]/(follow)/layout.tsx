@@ -2,7 +2,7 @@ import { Fragment } from "react";
 
 import { getUserByUsername } from "@/lib/dal";
 import { LinkTabs } from "@/components/ui/link-tabs";
-import { Header, HeaderTitle } from "@/components/layout/header";
+import { BackButton, Header, HeaderTitle } from "@/components/layout/header";
 
 export default async function ProfileFollowLayout({
 	children,
@@ -17,6 +17,7 @@ export default async function ProfileFollowLayout({
 	return (
 		<Fragment>
 			<Header className="border-none">
+				<BackButton pushUrl={`/${username}`} />
 				<HeaderTitle>{name}</HeaderTitle>
 			</Header>
 			<div className="grid grid-cols-2 border-b">

@@ -3,7 +3,7 @@ import { type Metadata } from "next";
 import { ChevronRight } from "lucide-react";
 
 import { Icon, type IconId } from "@/components/ui/icon";
-import { Header, HeaderTitle } from "@/components/layout/header";
+import { BackButton, Header, HeaderTitle } from "@/components/layout/header";
 import { Link } from "@/components/link";
 
 export const metadata: Metadata = {
@@ -36,6 +36,7 @@ export default function SettingsPage() {
 	return (
 		<Fragment>
 			<Header>
+				<BackButton />
 				<HeaderTitle>Settings</HeaderTitle>
 			</Header>
 			{settingsTiles.map(({ title, description, icon, url }) => (

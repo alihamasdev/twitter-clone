@@ -4,7 +4,7 @@ import { unauthorized } from "next/navigation";
 
 import { getFullDate } from "@/lib/date";
 import { createClient } from "@/lib/supabase/server";
-import { Header, HeaderTitle } from "@/components/layout/header";
+import { BackButton, Header, HeaderTitle } from "@/components/layout/header";
 
 import { UsernameTile } from "./username-tile";
 
@@ -25,6 +25,7 @@ export default async function AccountPage() {
 	return (
 		<Fragment>
 			<Header>
+				<BackButton pushUrl="/settings" />
 				<HeaderTitle>Account Information</HeaderTitle>
 			</Header>
 			<UsernameTile />

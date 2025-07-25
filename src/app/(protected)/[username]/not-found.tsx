@@ -4,7 +4,7 @@ import { Fragment } from "react";
 import { useParams } from "next/navigation";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Header, HeaderTitle } from "@/components/layout/header";
+import { BackButton, Header, HeaderTitle } from "@/components/layout/header";
 
 export default function NotFound() {
 	const { username } = useParams<{ username: string }>();
@@ -12,6 +12,7 @@ export default function NotFound() {
 	return (
 		<Fragment>
 			<Header>
+				<BackButton />
 				<HeaderTitle>Profile</HeaderTitle>
 			</Header>
 			<section className="relative w-full">

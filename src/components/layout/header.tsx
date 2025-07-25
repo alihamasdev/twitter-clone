@@ -1,11 +1,7 @@
 import { cn } from "@/lib/utils";
 import { BackButton } from "@/components/ui/back-button";
 
-interface HeaderProps extends React.ComponentProps<"header"> {
-	backButton?: boolean;
-}
-
-function Header({ backButton = true, children, className, ...props }: HeaderProps) {
+function Header({ className, ...props }: React.ComponentProps<"header">) {
 	return (
 		<header
 			className={cn(
@@ -13,10 +9,7 @@ function Header({ backButton = true, children, className, ...props }: HeaderProp
 				className
 			)}
 			{...props}
-		>
-			{backButton && <BackButton />}
-			<div className="flex flex-col">{children}</div>
-		</header>
+		/>
 	);
 }
 
@@ -28,4 +21,4 @@ function HeaderDescription({ className, ...props }: React.ComponentProps<"p">) {
 	return <p className={cn("text-muted-foreground text-sm font-normal", className)} {...props} />;
 }
 
-export { Header, HeaderTitle, HeaderDescription };
+export { Header, HeaderTitle, HeaderDescription, BackButton };
