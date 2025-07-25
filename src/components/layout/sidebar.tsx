@@ -3,7 +3,6 @@
 import { Fragment } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/auth-context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,12 +24,6 @@ export function Sidebar() {
 	const { user } = useAuth();
 
 	const sidebarLinks = getSidebarLinks(user.username);
-
-	const handleLogout = async () => {
-		const supabase = createClient();
-		await supabase.auth.signOut();
-		window.location.href = "/auth";
-	};
 
 	return (
 		<Fragment>
@@ -101,7 +94,11 @@ export function Sidebar() {
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="start" className="min-w-70">
 					<DropdownMenuItem disabled>Add an existing account</DropdownMenuItem>
-					<DropdownMenuItem variant="destructive" className="w-full" onClick={handleLogout}>
+					<DropdownMenuItem
+						className="w-full"
+						variant="destructive"
+						onClick={() => (window.location.href = "/api/auth/logout")}
+					>
 						{`Log out of @${user.username}`}
 					</DropdownMenuItem>
 				</DropdownMenuContent>
