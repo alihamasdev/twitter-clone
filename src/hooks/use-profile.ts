@@ -5,10 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import { axios } from "@/lib/axios";
 import { type ProfilePageUser } from "@/types/user";
 
-export function useProfile(username: string) {
+export function useProfile(userId: string) {
 	return useQuery({
-		queryKey: [`profile`, username],
-		queryFn: () => axios.get<ProfilePageUser>(`/api/users/username/${username}`).then((res) => res.data),
+		queryKey: [`profile`, userId],
+		queryFn: () => axios.get<ProfilePageUser>(`/api/users/${userId}`).then((res) => res.data),
 		staleTime: 15 * 60 * 1000 // 15 minutes
 	});
 }

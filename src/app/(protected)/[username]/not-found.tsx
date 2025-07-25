@@ -2,17 +2,12 @@
 
 import { Fragment } from "react";
 import { useParams } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Header, HeaderTitle } from "@/components/layout/header";
 
 export default function NotFound() {
-	const queryClient = useQueryClient();
 	const { username } = useParams<{ username: string }>();
-
-	queryClient.removeQueries({ queryKey: [`profile`, username] });
-	queryClient.removeQueries({ queryKey: [`posts`, username] });
 
 	return (
 		<Fragment>

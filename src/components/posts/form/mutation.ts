@@ -29,25 +29,31 @@ export function useSubmitPostMutation() {
 				reposts: 0
 			} satisfies PostData;
 
-			// Update both feed and user profile posts in a single operation
-			queryClient.setQueriesData<InfiniteData<PostPage, string | null>>(
-				{
-					queryKey: [`posts`],
-					predicate: ({ queryKey }) => queryKey.includes(`feed`) || queryKey.includes(user.id)
-				},
-				(oldData) => {
-					const firstPage = oldData?.pages[0];
-					if (!oldData || !firstPage) return oldData;
+			queryClient.setQueriesData<InfiniteData<PostPage, string | null>>({ queryKey }, (oldData) => {
+				const firstPage = oldData?.pages[0];
+				if (!oldData || !firstPage) return oldData;
 
-					return {
-						pageParams: oldData.pageParams,
-						pages: [
-							{ posts: [newPostPayload, ...firstPage.posts], nextCursor: firstPage.nextCursor },
-							...oldData.pages.slice(1)
-						]
-					};
-				}
-			);
+				return {
+					pageParams: oldData.pageParams,
+					pages: [
+						{ posts: [newPostPayload, ...firstPage.posts], nextCursor: firstPage.nextCursor },
+						...oldData.pages.slice(1)
+					]
+				};
+			});
+
+			queryClient.setQueriesData<InfiniteData<PostPage, string | null>>({ queryKey: [`posts`, user.id] }, (oldData) => {
+				const firstPage = oldData?.pages[0];
+				if (!oldData || !firstPage) return oldData;
+
+				return {
+					pageParams: oldData.pageParams,
+					pages: [
+						{ posts: [newPostPayload, ...firstPage.posts], nextCursor: firstPage.nextCursor },
+						...oldData.pages.slice(1)
+					]
+				};
+			});
 
 			// Update user profile posts count
 			queryClient.setQueryData<PostsCount>([`posts`, `count`, user.id], (oldData) => ({

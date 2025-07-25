@@ -2,7 +2,6 @@
 
 import { Fragment } from "react";
 import Image from "next/image";
-import { notFound, useParams } from "next/navigation";
 import { format } from "date-fns";
 
 import { useProfile } from "@/hooks/use-profile";
@@ -12,6 +11,7 @@ import { LinkTabs } from "@/components/ui/link-tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Header, HeaderDescription, HeaderTitle } from "@/components/layout/header";
 import { Link } from "@/components/link";
+import { TextParser } from "@/components/text-parser";
 import { FollowButton } from "@/components/user";
 
 import { FollowersCount, FollowingCount, PostsCount } from "./counts";
@@ -22,9 +22,8 @@ type ProfileMeta = {
 	link?: boolean;
 };
 
-export function UserProfile() {
-	const { username } = useParams<{ username: string }>();
-	const { data, isPending, error } = useProfile(username);
+export function UserProfile({ userId }: { userId: string }) {
+	const { data, isPending, error } = useProfile(userId);
 
 	if (isPending) {
 		return (
@@ -46,10 +45,6 @@ export function UserProfile() {
 	}
 
 	if (error) {
-		if (error.message.includes("404")) {
-			return notFound();
-		}
-
 		return;
 	}
 
@@ -73,7 +68,7 @@ export function UserProfile() {
 			<section className="relative w-full">
 				<div className="bg-image aspect-header relative overflow-hidden">
 					{bannerUrl && (
-						<Link href={`/${username}/banner`}>
+						<Link href={`/${data.username}/banner`}>
 							<Image
 								src={bannerUrl}
 								width={600}
@@ -84,7 +79,7 @@ export function UserProfile() {
 						</Link>
 					)}
 				</div>
-				<Link href={`/${username}/avatar`}>
+				<Link href={`/${data.username}/avatar`}>
 					<Avatar className="bg-tooltip border-background absolute -bottom-12 left-4 size-25 border-6 lg:-bottom-15 lg:size-33">
 						<AvatarImage src={avatarUrl} width={120} height={120} />
 						<AvatarFallback />
@@ -99,7 +94,7 @@ export function UserProfile() {
 					<p className="text-foreground text-xl font-extrabold">{data.name}</p>
 					<p className="text-muted-foreground text-base">{`@${data.username}`}</p>
 					<div className="mt-3 space-y-3">
-						<p className="text-foreground text-base break-words whitespace-pre-line">{data.bio}</p>
+						<TextParser className="text-foreground text-base">{data.bio}</TextParser>
 						<div className="flex flex-wrap items-center gap-x-4 gap-y-2">
 							{profileMeta.map(
 								({ icon, data, link }) =>
@@ -118,10 +113,16 @@ export function UserProfile() {
 							)}
 						</div>
 						<div className="flex items-center gap-x-4">
-							<Link href={`/${username}/following`} className="hover:border-foreground border-b border-transparent">
+							<Link
+								href={`/${data.username}/following`}
+								className="hover:border-foreground border-b border-transparent"
+							>
 								<FollowingCount userId={data.id} initialState={{ following }} />
 							</Link>
-							<Link href={`/${username}/followers`} className="hover:border-foreground border-b border-transparent">
+							<Link
+								href={`/${data.username}/followers`}
+								className="hover:border-foreground border-b border-transparent"
+							>
 								<FollowersCount userId={data.id} initialState={{ followers, isFollowedByUser }} />
 							</Link>
 						</div>
@@ -129,9 +130,9 @@ export function UserProfile() {
 				</div>
 			</section>
 			<div className="grid grid-cols-3 border-b">
-				<LinkTabs href={`/${username}`}>Posts</LinkTabs>
-				<LinkTabs href={`/${username}/reposts`}>Reposts</LinkTabs>
-				<LinkTabs href={`/${username}/likes`}>Likes</LinkTabs>
+				<LinkTabs href={`/${data.username}`}>Posts</LinkTabs>
+				<LinkTabs href={`/${data.username}/reposts`}>Reposts</LinkTabs>
+				<LinkTabs href={`/${data.username}/likes`}>Likes</LinkTabs>
 			</div>
 		</Fragment>
 	);

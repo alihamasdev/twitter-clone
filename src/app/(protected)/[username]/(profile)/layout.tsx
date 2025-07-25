@@ -1,12 +1,22 @@
 import { Fragment } from "react";
 
+import { getUserByUsername } from "@/lib/dal";
 import { UserProfile } from "@/components/user/user-profile";
 
-export default async function Layout({ children, image }: { children: React.ReactNode; image: React.ReactNode }) {
+interface ProfileLayoutProps {
+	children: React.ReactNode;
+	image: React.ReactNode;
+	params: Promise<{ username: string }>;
+}
+
+export default async function ProfileLayout({ children, image, params }: ProfileLayoutProps) {
+	const { username } = await params;
+	const { userId } = await getUserByUsername(username);
+
 	return (
 		<Fragment>
 			{image}
-			<UserProfile />
+			<UserProfile userId={userId} />
 			{children}
 		</Fragment>
 	);

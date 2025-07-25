@@ -4,14 +4,14 @@ import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { type ProfilePageUser } from "@/types/user";
 
-export async function GET(_request: NextRequest, { params }: { params: Promise<{ username: string }> }) {
+export async function GET(_request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
 	try {
-		const { username } = await params;
+		const { userId } = await params;
 
 		const loggedInUser = await validateUser();
 
 		const user = await prisma.user.findUnique({
-			where: { username },
+			where: { id: userId },
 			include: {
 				_count: { select: { posts: true, followers: true, following: true } },
 				followers: { where: { followingId: loggedInUser.sub }, select: { id: true } }
