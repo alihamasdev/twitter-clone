@@ -6,6 +6,7 @@ import { motion, type HTMLMotionProps } from "motion/react";
 import { getTweetDate } from "@/lib/date";
 import { usePost } from "@/hooks/use-post";
 import { type PostData } from "@/types/post";
+import { TextParser } from "@/components/text-parser";
 import { Avatar, Name, Username } from "@/components/user";
 
 import { BookmarkButton } from "./buttons/bookmark.button";
@@ -46,7 +47,8 @@ export function Post({ post, ...props }: PostProps) {
 					<span className="text-muted-foreground cursor-default">{getTweetDate(data.createdAt)}</span>
 					<PostOptions className="ml-auto" user={data.user} postId={data.id} />
 				</div>
-				<p className="mt-1 break-words whitespace-pre-line">{data.content}</p>
+				{/* <p className="mt-1 break-words whitespace-pre-line">{data.content}</p> */}
+				<TextParser className="mt-1">{data.content}</TextParser>
 				<div className="mt-1.5 flex w-full items-center justify-between">
 					<CommentButton />
 					<RepostButton isRepost={data.isReposted} reposts={data.reposts} postId={data.id} userId={data.user.id} />
