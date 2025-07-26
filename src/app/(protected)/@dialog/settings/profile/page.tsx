@@ -12,7 +12,14 @@ import { useProfile } from "@/hooks/use-profile";
 import { useAuth } from "@/context/auth-context";
 import type { ProfilePageUser, UserData } from "@/types/user";
 import { Button } from "@/components/ui/button";
-import { DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle
+} from "@/components/ui/dialog";
 import { Error } from "@/components/ui/error";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -20,8 +27,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 
 import { updateProfile } from "./action";
-import { UploadAvatar } from "./upload-avatar";
-import { UploadBanner } from "./upload-banner";
+import { UploadAvatar, UploadBanner } from "./upload-files";
 
 export default function EditProfilePage() {
 	const { user } = useAuth();
@@ -29,6 +35,11 @@ export default function EditProfilePage() {
 	const queryClient = useQueryClient();
 	const [isLoading, startTransition] = useTransition();
 	const { data, error, isPending } = useProfile(user.id);
+
+	const handleClose = () => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
+		history.length > 1 ? router.back() : router.push("/home");
+	};
 
 	const form = useForm({
 		mode: "onChange",
@@ -61,7 +72,7 @@ export default function EditProfilePage() {
 				avatarUrl: data.avatarUrl
 			}));
 
-			router.back();
+			handleClose();
 		});
 	}
 
@@ -83,109 +94,111 @@ export default function EditProfilePage() {
 	}
 
 	return (
-		<DialogContent className="h-full max-h-[85dvh]">
-			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} hidden={isLoading}>
-					<DialogHeader className="bg-background/80 sticky top-0 z-10 mb-0 flex-row justify-between border-b px-4 py-3 backdrop-blur-md">
-						<div className="flex items-center gap-x-3">
-							<DialogClose variant="ghost" size="icon" icon="cross" />
-							<DialogTitle>Edit Profile</DialogTitle>
-							<DialogDescription />
+		<Dialog open={true} onOpenChange={handleClose}>
+			<DialogContent className="h-full max-h-[85dvh]">
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} hidden={isLoading}>
+						<DialogHeader className="bg-background/80 sticky top-0 z-10 mb-0 flex-row justify-between border-b px-4 py-3 backdrop-blur-md">
+							<div className="flex items-center gap-x-3">
+								<DialogClose variant="ghost" size="icon" icon="cross" />
+								<DialogTitle>Edit Profile</DialogTitle>
+								<DialogDescription />
+							</div>
+							<Button type="submit" size="sm" className="min-w-16" disabled={isLoading || !form.formState.isValid}>
+								{isLoading ? "Save" : <Spinner className="border-muted-foreground/50 mt-0 size-4 border-3" />}
+							</Button>
+						</DialogHeader>
+						<div className="relative w-full">
+							<FormField
+								name="banner"
+								disabled={isLoading}
+								control={form.control}
+								render={() => (
+									<FormControl>
+										<UploadBanner defaultValue={data.bannerUrl} disabled={isLoading} />
+									</FormControl>
+								)}
+							/>
+							<FormField
+								name="avatar"
+								disabled={isLoading}
+								control={form.control}
+								render={() => (
+									<FormControl>
+										<UploadAvatar defaultValue={data.avatarUrl} disabled={isLoading} />
+									</FormControl>
+								)}
+							/>
 						</div>
-						<Button type="submit" size="sm" className="min-w-16" disabled={isLoading || !form.formState.isValid}>
-							{isLoading ? "Save" : <Spinner className="border-muted-foreground/50 mt-0 size-4 border-3" />}
-						</Button>
-					</DialogHeader>
-					<div className="relative w-full">
-						<FormField
-							name="banner"
-							disabled={isLoading}
-							control={form.control}
-							render={() => (
-								<FormControl>
-									<UploadBanner previousValue={data.bannerUrl} disabled={isLoading} />
-								</FormControl>
-							)}
-						/>
-						<FormField
-							name="avatar"
-							disabled={isLoading}
-							control={form.control}
-							render={() => (
-								<FormControl>
-									<UploadAvatar previousValue={data.avatarUrl} disabled={isLoading} />
-								</FormControl>
-							)}
-						/>
-					</div>
-					<div className="mt-18 space-y-6 px-4 pt-3 pb-6">
-						<FormField
-							name="name"
-							disabled={isLoading}
-							control={form.control}
-							render={({ field }) => (
-								<div className="grid gap-y-2">
-									<FormItem>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormLabel className="capitalize">{field.name}</FormLabel>
-									</FormItem>
-									<FormMessage />
-								</div>
-							)}
-						/>
-						<FormField
-							name="bio"
-							disabled={isLoading}
-							control={form.control}
-							render={({ field: { value, ...field } }) => (
-								<div className="grid gap-y-2">
-									<FormItem>
-										<FormControl>
-											<Textarea className="pt-8" value={value || ""} {...field} />
-										</FormControl>
-										<FormLabel className="top-8 capitalize">{field.name}</FormLabel>
-									</FormItem>
-									<FormMessage />
-								</div>
-							)}
-						/>
-						<FormField
-							name="location"
-							disabled={isLoading}
-							control={form.control}
-							render={({ field: { value, ...field } }) => (
-								<div className="grid gap-y-2">
-									<FormItem>
-										<FormControl>
-											<Input value={value || ""} {...field} />
-										</FormControl>
-										<FormLabel className="capitalize">{field.name}</FormLabel>
-									</FormItem>
-									<FormMessage />
-								</div>
-							)}
-						/>
-						<FormField
-							name="website"
-							disabled={isLoading}
-							control={form.control}
-							render={({ field: { value, ...field } }) => (
-								<div className="grid gap-y-2">
-									<FormItem>
-										<FormControl>
-											<Input value={value || ""} {...field} />
-										</FormControl>
-										<FormLabel className="capitalize">{field.name}</FormLabel>
-									</FormItem>
-									<FormMessage />
-								</div>
-							)}
-						/>
-					</div>
-				</form>
-			</Form>
-		</DialogContent>
+						<div className="mt-18 space-y-6 px-4 pt-3 pb-6">
+							<FormField
+								name="name"
+								disabled={isLoading}
+								control={form.control}
+								render={({ field }) => (
+									<div className="grid gap-y-2">
+										<FormItem>
+											<FormControl>
+												<Input {...field} />
+											</FormControl>
+											<FormLabel className="capitalize">{field.name}</FormLabel>
+										</FormItem>
+										<FormMessage />
+									</div>
+								)}
+							/>
+							<FormField
+								name="bio"
+								disabled={isLoading}
+								control={form.control}
+								render={({ field: { value, ...field } }) => (
+									<div className="grid gap-y-2">
+										<FormItem>
+											<FormControl>
+												<Textarea className="pt-8" value={value || ""} {...field} />
+											</FormControl>
+											<FormLabel className="top-8 capitalize">{field.name}</FormLabel>
+										</FormItem>
+										<FormMessage />
+									</div>
+								)}
+							/>
+							<FormField
+								name="location"
+								disabled={isLoading}
+								control={form.control}
+								render={({ field: { value, ...field } }) => (
+									<div className="grid gap-y-2">
+										<FormItem>
+											<FormControl>
+												<Input value={value || ""} {...field} />
+											</FormControl>
+											<FormLabel className="capitalize">{field.name}</FormLabel>
+										</FormItem>
+										<FormMessage />
+									</div>
+								)}
+							/>
+							<FormField
+								name="website"
+								disabled={isLoading}
+								control={form.control}
+								render={({ field: { value, ...field } }) => (
+									<div className="grid gap-y-2">
+										<FormItem>
+											<FormControl>
+												<Input value={value || ""} {...field} />
+											</FormControl>
+											<FormLabel className="capitalize">{field.name}</FormLabel>
+										</FormItem>
+										<FormMessage />
+									</div>
+								)}
+							/>
+						</div>
+					</form>
+				</Form>
+			</DialogContent>
+		</Dialog>
 	);
 }
