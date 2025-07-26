@@ -22,6 +22,10 @@ export const getUserDataWithFollowesInfo = (loggedInUserId: string) => {
 	return { ...userDataSelect, ...getFollowersInfo(loggedInUserId) } satisfies Prisma.UserSelect;
 };
 
+export type UserDataWithFollowInfoPayload = Prisma.UserGetPayload<{
+	select: ReturnType<typeof getUserDataWithFollowesInfo>;
+}>;
+
 export interface FollowerInfo {
 	followers: number;
 	isFollowedByUser: boolean;
@@ -38,4 +42,12 @@ export type ProfilePageUser = User & FollowerInfo & FollowingInfo & PostsCount;
 export interface UserPage {
 	users: UserDataWithFollowInfo[];
 	nextCursor: string | number | null;
+}
+
+export function formatUserData({ _count, followers, ...user }: UserDataWithFollowInfoPayload): UserDataWithFollowInfo {
+	return {
+		...user,
+		followers: _count.followers,
+		isFollowedByUser: !!followers.length
+	};
 }

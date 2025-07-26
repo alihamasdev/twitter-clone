@@ -4,47 +4,35 @@ import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { PAGE_SIZE } from "@/utils/contants";
 import { getPostDataInclude, type PostData, type PostPage, type PostPayload } from "@/types/post";
+import { formatUserData } from "@/types/user";
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
 	try {
 		const { userId } = await params;
 		const cursor = request.nextUrl.searchParams.get("cursor") || undefined;
 
-		const loggedInUser = await validateUser();
+		const { sub: loginUserId } = await validateUser();
 
 		const postPayload = (await prisma.post.findMany({
-			where: { userId: userId },
-			orderBy: { createdAt: "desc" },
-			include: getPostDataInclude(loggedInUser.sub),
 			take: PAGE_SIZE + 1,
-			cursor: cursor ? { id: cursor } : undefined
+			orderBy: { createdAt: "desc" },
+			where: { userId },
+			cursor: cursor ? { id: cursor } : undefined,
+			include: getPostDataInclude(loginUserId)
 		})) satisfies PostPayload[];
 
-		const posts: PostData[] = postPayload.map((data) => ({
-			id: data.id,
-			content: data.content,
-			createdAt: data.createdAt,
-			userId: data.userId,
-			user: {
-				id: data.user.id,
-				name: data.user.name,
-				username: data.user.username,
-				avatarUrl: data.user.avatarUrl,
-				followers: data.user._count.followers,
-				isFollowedByUser: !!data.user.followers.length
-			},
-			likes: data._count.likes,
-			reposts: data._count.reposts,
-			isBookmarked: !!data.bookmarks.length,
-			isLiked: !!data.likes.length,
-			isReposted: !!data.reposts.length
-		}));
-
-		const nextCursor = posts.length > PAGE_SIZE ? posts[PAGE_SIZE].id : null;
+		const posts = postPayload.map(({ _count, likes, reposts, bookmarks, user, ...post }) => ({
+			...post,
+			..._count,
+			user: formatUserData(user),
+			isBookmarked: !!bookmarks.length,
+			isLiked: !!likes.length,
+			isReposted: !!reposts.length
+		})) satisfies PostData[];
 
 		const data: PostPage = {
 			posts: posts.slice(0, PAGE_SIZE),
-			nextCursor
+			nextCursor: posts.length > PAGE_SIZE ? posts[PAGE_SIZE].id : null
 		};
 
 		return NextResponse.json(data);

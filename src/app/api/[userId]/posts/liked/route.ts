@@ -3,55 +3,46 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { PAGE_SIZE } from "@/utils/contants";
-import { getPostCounts, getPostLikeInfo, getPostRepostInfo, PostPage } from "@/types/post";
-import { getUserDataWithFollowesInfo } from "@/types/user";
+import { getPostBookmarkInfo, getPostRepostInfo, postDataCounts, type PostData, type PostPage } from "@/types/post";
+import { formatUserData, getUserDataWithFollowesInfo } from "@/types/user";
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
 	try {
 		const { userId } = await params;
 		const cursor = request.nextUrl.searchParams.get("cursor") || undefined;
 
-		const loggedInUser = await validateUser();
+		const { sub: loginUserId } = await validateUser();
 
 		const postPayload = await prisma.like.findMany({
-			where: { userId: userId },
-			orderBy: { createdAt: "desc" },
 			take: PAGE_SIZE + 1,
+			orderBy: { createdAt: "desc" },
+			where: { userId },
 			cursor: cursor ? { id: Number(cursor) } : undefined,
 			select: {
 				id: true,
-				user: { select: getUserDataWithFollowesInfo(loggedInUser.sub) },
+				user: { select: getUserDataWithFollowesInfo(loginUserId) },
 				post: {
-					include: { ...getPostCounts(), ...getPostLikeInfo(loggedInUser.sub), ...getPostRepostInfo(loggedInUser.sub) }
+					include: {
+						_count: postDataCounts,
+						bookmarks: getPostBookmarkInfo(loginUserId),
+						reposts: getPostRepostInfo(loginUserId)
+					}
 				}
 			}
 		});
 
-		const posts = postPayload.map(({ post, user }) => ({
-			id: post.id,
-			content: post.content,
-			createdAt: post.createdAt,
-			userId: post.userId,
-			user: {
-				id: user.id,
-				name: user.name,
-				username: user.username,
-				avatarUrl: user.avatarUrl,
-				followers: user._count.followers,
-				isFollowedByUser: !!user.followers.length
-			},
-			likes: post._count.likes,
-			reposts: post._count.reposts,
-			isBookmarked: true,
-			isLiked: !!post.likes.length,
-			isReposted: !!post.reposts.length
-		}));
-
-		const nextCursor = posts.length > PAGE_SIZE ? postPayload[PAGE_SIZE].id : null;
+		const posts = postPayload.map(({ user, post: { _count, reposts, bookmarks, ...post } }) => ({
+			...post,
+			..._count,
+			user: formatUserData(user),
+			isBookmarked: !!bookmarks.length,
+			isReposted: !!reposts.length,
+			isLiked: true
+		})) satisfies PostData[];
 
 		const data: PostPage = {
 			posts: posts.slice(0, PAGE_SIZE),
-			nextCursor
+			nextCursor: posts.length > PAGE_SIZE ? postPayload[PAGE_SIZE].id : null
 		};
 
 		return NextResponse.json(data);
