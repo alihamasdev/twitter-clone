@@ -12,5 +12,11 @@ export async function createPost(data: PostSchema) {
 
 	const loggedInUser = await validateUser();
 
-	return await prisma.post.create({ data: { content: data.content, userId: loggedInUser.sub } });
+	return await prisma.post.create({
+		data: {
+			content: data.content,
+			parentId: data.parentId,
+			userId: loggedInUser.sub
+		}
+	});
 }

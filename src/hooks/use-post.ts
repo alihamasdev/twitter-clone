@@ -4,12 +4,13 @@ import { useMutation, useQuery, useQueryClient, type InfiniteData, type QueryKey
 import toast from "react-hot-toast";
 
 import { axios } from "@/lib/axios";
+import { getPostById } from "@/lib/dal";
 import type { PostData, PostPage, PostsCount } from "@/types/post";
 
-export function usePost(postId: string, initialData?: PostData) {
+export function usePost(initialData: PostData) {
 	return useQuery({
-		queryKey: [`post`, postId],
-		queryFn: () => axios.get<PostData>(`/api/posts/${postId}`).then((res) => res.data),
+		queryKey: [`post`, initialData.id],
+		queryFn: () => getPostById(initialData.id),
 		staleTime: Infinity,
 		initialData
 	});

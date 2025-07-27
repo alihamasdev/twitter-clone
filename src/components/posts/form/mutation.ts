@@ -25,35 +25,45 @@ export function useSubmitPostMutation() {
 				isBookmarked: false,
 				isLiked: false,
 				isReposted: false,
+				comments: 0,
 				likes: 0,
 				reposts: 0
 			} satisfies PostData;
 
-			queryClient.setQueriesData<InfiniteData<PostPage, string | null>>({ queryKey }, (oldData) => {
-				const firstPage = oldData?.pages[0];
-				if (!oldData || !firstPage) return oldData;
+			if (!newPost.parentId) {
+				queryClient.setQueriesData<InfiniteData<PostPage, string | null>>({ queryKey }, (oldData) => {
+					const firstPage = oldData?.pages[0];
+					if (!oldData || !firstPage) return oldData;
 
-				return {
-					pageParams: oldData.pageParams,
-					pages: [
-						{ posts: [newPostPayload, ...firstPage.posts], nextCursor: firstPage.nextCursor },
-						...oldData.pages.slice(1)
-					]
-				};
-			});
+					return {
+						pageParams: oldData.pageParams,
+						pages: [
+							{ posts: [newPostPayload, ...firstPage.posts], nextCursor: firstPage.nextCursor },
+							...oldData.pages.slice(1)
+						]
+					};
+				});
 
-			queryClient.setQueriesData<InfiniteData<PostPage, string | null>>({ queryKey: [`posts`, user.id] }, (oldData) => {
-				const firstPage = oldData?.pages[0];
-				if (!oldData || !firstPage) return oldData;
+				queryClient.setQueriesData<InfiniteData<PostPage, string | null>>(
+					{ queryKey: [`posts`, user.id] },
+					(oldData) => {
+						const firstPage = oldData?.pages[0];
+						if (!oldData || !firstPage) return oldData;
 
-				return {
-					pageParams: oldData.pageParams,
-					pages: [
-						{ posts: [newPostPayload, ...firstPage.posts], nextCursor: firstPage.nextCursor },
-						...oldData.pages.slice(1)
-					]
-				};
-			});
+						return {
+							pageParams: oldData.pageParams,
+							pages: [
+								{ posts: [newPostPayload, ...firstPage.posts], nextCursor: firstPage.nextCursor },
+								...oldData.pages.slice(1)
+							]
+						};
+					}
+				);
+			} else {
+				queryClient.setQueryData<PostData>([`post`, newPost.parentId], (oldData) =>
+					oldData ? { ...oldData, comments: oldData.comments + 1 } : oldData
+				);
+			}
 
 			// Update user profile posts count
 			queryClient.setQueryData<PostsCount>([`posts`, `count`, user.id], (oldData) => ({
@@ -66,7 +76,9 @@ export function useSubmitPostMutation() {
 			console.error(error);
 			toast.error("Something went wrong while creating post");
 		},
-		onSettled() {
+		onSettled(data) {
+			queryClient.invalidateQueries({ queryKey: [`post`, data?.id] });
+			queryClient.invalidateQueries({ queryKey: [`post`, data?.parentId] });
 			queryClient.invalidateQueries({ queryKey: [`posts`, `count`, user.id] });
 		}
 	});

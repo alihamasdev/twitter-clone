@@ -21,10 +21,8 @@ interface PostProps extends HTMLMotionProps<"article"> {
 }
 
 export function Post({ post, ...props }: PostProps) {
-	const router = useRouter();
-
-	const { data } = usePost(post.id, post);
-	if (!data) return null;
+	const { push } = useRouter();
+	const { data } = usePost(post);
 
 	const tweetUrl = `/${data.user.username}/status/${data.id}`;
 
@@ -34,25 +32,24 @@ export function Post({ post, ...props }: PostProps) {
 			onClick={(e) => {
 				const target = e.target as HTMLElement;
 				if (target.closest("button, a, [role='menu'], [role='dialog'], [role='overlay']")) return;
-				router.push(tweetUrl);
+				push(tweetUrl);
 			}}
 			{...props}
 		>
 			<Avatar src={data.user.avatarUrl} href={data.user.username} />
 			<div className="w-full">
-				<div className="flex items-start gap-x-1">
+				<div className="flex items-center gap-x-1">
 					<Name href={data.user.username}>{data.user.name}</Name>
 					<Username href={data.user.username}>{data.user.username}</Username>
 					<span className="text-muted-foreground">·</span>
 					<span className="text-muted-foreground cursor-default">{getTweetDate(data.createdAt)}</span>
 					<PostOptions className="ml-auto" user={data.user} postId={data.id} />
 				</div>
-				{/* <p className="mt-1 break-words whitespace-pre-line">{data.content}</p> */}
 				<TextParser className="mt-1">{data.content}</TextParser>
 				<div className="mt-1.5 flex w-full items-center justify-between">
-					<CommentButton />
-					<RepostButton isRepost={data.isReposted} reposts={data.reposts} postId={data.id} userId={data.user.id} />
-					<LikeButton isLiked={data.isLiked} likes={data.likes} postId={data.id} userId={data.user.id} />
+					<CommentButton postData={data} />
+					<RepostButton isRepost={data.isReposted} reposts={data.reposts} postId={data.id} />
+					<LikeButton isLiked={data.isLiked} likes={data.likes} postId={data.id} />
 					<BookmarkButton isBookmarked={data.isBookmarked} postId={data.id} />
 					<ShareButton tweetUrl={tweetUrl} />
 				</div>

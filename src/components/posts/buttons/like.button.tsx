@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 
 import { axios } from "@/lib/axios";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/context/auth-context";
 import type { PostData, PostPage } from "@/types/post";
 import { Icon } from "@/components/ui/icon";
 import { NumberAnimation } from "@/components/number-animation";
@@ -14,10 +15,10 @@ interface LikeButtonProps extends React.ComponentProps<typeof motion.button> {
 	isLiked: boolean;
 	likes: number;
 	postId: string;
-	userId: string;
 }
 
-export function LikeButton({ postId, isLiked, likes, userId, className, ...props }: LikeButtonProps) {
+export function LikeButton({ postId, isLiked, likes, className, ...props }: LikeButtonProps) {
+	const { user } = useAuth();
 	const queryClient = useQueryClient();
 	const queryKey: QueryKey = [`post`, postId];
 
@@ -37,7 +38,7 @@ export function LikeButton({ postId, isLiked, likes, userId, className, ...props
 			return prevState;
 		},
 		onSuccess(_data, _variables, postData) {
-			queryClient.setQueryData<InfiniteData<PostPage, string | null>>([`posts`, `like`, userId], (oldData) => {
+			queryClient.setQueryData<InfiniteData<PostPage, string | null>>([`posts`, `like`, user.id], (oldData) => {
 				const firstPage = oldData?.pages[0];
 				if (!oldData || !firstPage) return oldData;
 

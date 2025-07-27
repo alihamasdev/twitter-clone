@@ -1,7 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
-import { useRouter } from "next/navigation";
+import React, { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "motion/react";
 import { useForm } from "react-hook-form";
@@ -9,49 +8,39 @@ import { useForm } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import { postSchema, type PostSchema } from "@/lib/validation";
 import { useAuth } from "@/context/auth-context";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField } from "@/components/ui/form";
-import { type IconId } from "@/components/ui/icon";
 import { Textarea } from "@/components/ui/textarea";
-import { Avatar } from "@/components/user";
 
 import { useSubmitPostMutation } from "./mutation";
-import { ProgressTracker } from "./progress-tracker";
 
-const formButtons = ["image", "emoji", "gif", "poll", "schedule"] satisfies IconId[];
+interface PostFormProps {
+	children?: React.ReactNode;
+	placeholder?: string;
+	parentId?: string | null;
+	handleClose?: () => void;
+}
 
-export function PostForm({ isDialog, className, ...props }: React.ComponentProps<"div"> & { isDialog?: boolean }) {
-	const router = useRouter();
+export function PostForm({ handleClose, placeholder = "What's happening?", parentId = null, children }: PostFormProps) {
+	const { user } = useAuth();
 	const { mutate } = useSubmitPostMutation();
 	const [isPending, startTransition] = useTransition();
-
-	const {
-		user: { avatarUrl, username }
-	} = useAuth();
 
 	const form = useForm<PostSchema>({
 		mode: "onSubmit",
 		resolver: zodResolver(postSchema),
-		defaultValues: { content: "" }
+		defaultValues: { content: "", parentId }
 	});
-
-	const tweetLength = form.watch("content").length;
-
-	const handleCloseDialog = () => {
-		if (isDialog) {
-			// eslint-disable-next-line @typescript-eslint/no-unused-expressions
-			history.length > 1 ? router.back() : router.push("/home");
-		}
-	};
 
 	const onSubmit = ({ content }: PostSchema) => {
 		startTransition(async () => {
 			mutate(
-				{ content },
+				{ content, parentId },
 				{
 					onSuccess: () => {
-						form.reset({ content: "" });
-						handleCloseDialog();
+						form.reset({ content: "", parentId: null });
+						handleClose?.();
 					}
 				}
 			);
@@ -59,7 +48,7 @@ export function PostForm({ isDialog, className, ...props }: React.ComponentProps
 	};
 
 	return (
-		<div className={cn("flex w-full items-start gap-x-3", className)} {...props}>
+		<div className="w-full">
 			<AnimatePresence>
 				{isPending && (
 					<motion.div
@@ -70,41 +59,36 @@ export function PostForm({ isDialog, className, ...props }: React.ComponentProps
 					/>
 				)}
 			</AnimatePresence>
+			{children}
 			<div className={cn("relative w-full", { "pointer-events-none opacity-50": isPending })} aria-disabled={isPending}>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="flex w-full items-start gap-x-3">
-						<Avatar src={avatarUrl} href={username} />
+						<Avatar>
+							<AvatarImage src={user.avatarUrl} />
+						</Avatar>
 						<div className="flex w-full flex-col overflow-x-hidden">
 							<FormField
 								name="content"
 								control={form.control}
-								render={({ field }) => (
+								render={({ field: { disabled, ...field } }) => (
 									<FormControl>
 										<Textarea
-											disabled={isPending}
-											placeholder="What's happening?"
-											className="max-h-100 w-full border-none p-0 pb-3 text-xl font-medium focus:ring-0"
+											disabled={isPending || disabled}
+											placeholder={placeholder}
+											className="mt-1 max-h-100 w-full border-none p-0 pb-3 text-xl font-medium focus:ring-0"
 											{...field}
 										/>
 									</FormControl>
 								)}
 							/>
-							<div className="flex w-full items-center justify-between border-t pt-3">
-								<div className="flex">
-									{formButtons.map((id) => (
-										<Button key={id} variant="accent-ghost" size="icon" icon={id} disabled />
-									))}
-								</div>
-								<div className="flex items-center gap-x-3">
-									<AnimatePresence>{tweetLength && <ProgressTracker inputLength={tweetLength} />}</AnimatePresence>
-									<Button
-										type="submit"
-										className="transition-all duration-200"
-										disabled={isPending || !form.formState.isValid}
-									>
-										Post
-									</Button>
-								</div>
+							<div className="flex items-center justify-end">
+								<Button
+									type="submit"
+									className="transition-all duration-200"
+									disabled={isPending || !form.formState.isValid}
+								>
+									Post
+								</Button>
 							</div>
 						</div>
 					</form>

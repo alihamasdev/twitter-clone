@@ -49,12 +49,16 @@ model Post {
   content   String
   userId    String   @map("user_id") @db.Uuid
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentId  String?  @map("parent_id") @db.Uuid
+
+  parent   Post?  @relation("post_comments", fields: [parentId], references: [id], onDelete: Cascade)
+  comments Post[] @relation("post_comments")
 
   likes     Like[]
   bookmarks Bookmark[]
   reposts   Repost[]
 
-  @@index([id, createdAt, userId])
+  @@index([id, createdAt, parentId, userId])
   @@map("posts")
 }
 

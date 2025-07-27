@@ -13,8 +13,7 @@ import {
 	DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import { Icon } from "@/components/ui/icon";
-
-import { DeletePostDialog } from "../dialogs/delete-post.dialog";
+import { DeletePostDialog } from "@/components/dialogs/delete-post.dialog";
 
 interface PostOptionsProps extends React.ComponentProps<typeof DropdownMenuTrigger> {
 	postId: string;
