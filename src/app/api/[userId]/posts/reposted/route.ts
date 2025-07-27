@@ -16,7 +16,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 		const postPayload = await prisma.repost.findMany({
 			take: PAGE_SIZE + 1,
 			orderBy: { createdAt: "desc" },
-			where: { userId },
+			where: { userId, post: { parentId: { equals: null } } },
 			cursor: cursor ? { id: Number(cursor) } : undefined,
 			select: {
 				id: true,

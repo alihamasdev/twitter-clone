@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
 		const postPayload = (await prisma.post.findMany({
 			take: PAGE_SIZE + 1,
 			orderBy: { createdAt: "desc" },
+			where: { parentId: { equals: null } },
 			cursor: cursor ? { id: cursor } : undefined,
 			include: getPostDataInclude(loginUserId)
 		})) satisfies PostPayload[];
