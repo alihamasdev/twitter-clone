@@ -51,8 +51,8 @@ model Post {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   parentId  String?  @map("parent_id") @db.Uuid
 
-  parent   Post?  @relation("post_comments", fields: [parentId], references: [id], onDelete: Cascade)
-  comments Post[] @relation("post_comments")
+  parent  Post?  @relation("post_replies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies Post[] @relation("post_replies")
 
   likes     Like[]
   bookmarks Bookmark[]

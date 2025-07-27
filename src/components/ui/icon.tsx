@@ -32,7 +32,7 @@ const icons = [
 	"retweet-solid",
 	"like",
 	"like-solid",
-	"comment",
+	"reply",
 	"analytics",
 	"share",
 	"post",

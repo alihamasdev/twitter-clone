@@ -4,8 +4,8 @@ import { getFullDate } from "@/lib/date";
 import { usePost } from "@/hooks/use-post";
 import { type PostData } from "@/types/post";
 import { BookmarkButton } from "@/components/posts/buttons/bookmark.button";
-import { CommentButton } from "@/components/posts/buttons/comment-button";
 import { LikeButton } from "@/components/posts/buttons/like.button";
+import { ReplyButton } from "@/components/posts/buttons/reply-button";
 import { RepostButton } from "@/components/posts/buttons/repost.button";
 import { ShareButton } from "@/components/posts/buttons/share.button";
 import { PostOptions } from "@/components/posts/post-options";
@@ -34,7 +34,7 @@ export function Post({ postData }: { postData: PostData }) {
 				<p className="text-muted-foreground">{getFullDate(data.createdAt)}</p>
 			</article>
 			<div className="flex w-full items-center justify-between border-y px-4 py-2">
-				<CommentButton postData={data} />
+				<ReplyButton postData={data} />
 				<RepostButton isRepost={data.isReposted} reposts={data.reposts} postId={data.id} />
 				<LikeButton isLiked={data.isLiked} likes={data.likes} postId={data.id} />
 				<BookmarkButton isBookmarked={data.isBookmarked} postId={data.id} />

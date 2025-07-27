@@ -20,7 +20,7 @@ export const postDataCounts = {
 	select: {
 		likes: true,
 		reposts: true,
-		comments: true
+		replies: true
 	}
 } satisfies Prisma.PostInclude["_count"];
 

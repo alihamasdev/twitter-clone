@@ -10,8 +10,8 @@ import { TextParser } from "@/components/text-parser";
 import { Avatar, Name, Username } from "@/components/user";
 
 import { BookmarkButton } from "./buttons/bookmark.button";
-import { CommentButton } from "./buttons/comment-button";
 import { LikeButton } from "./buttons/like.button";
+import { ReplyButton } from "./buttons/reply-button";
 import { RepostButton } from "./buttons/repost.button";
 import { ShareButton } from "./buttons/share.button";
 import { PostOptions } from "./post-options";
@@ -47,7 +47,7 @@ export function Post({ post, ...props }: PostProps) {
 				</div>
 				<TextParser className="mt-1">{data.content}</TextParser>
 				<div className="mt-1.5 flex w-full items-center justify-between">
-					<CommentButton postData={data} />
+					<ReplyButton postData={data} />
 					<RepostButton isRepost={data.isReposted} reposts={data.reposts} postId={data.id} />
 					<LikeButton isLiked={data.isLiked} likes={data.likes} postId={data.id} />
 					<BookmarkButton isBookmarked={data.isBookmarked} postId={data.id} />

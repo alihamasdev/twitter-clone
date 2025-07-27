@@ -25,7 +25,7 @@ export function useSubmitPostMutation() {
 				isBookmarked: false,
 				isLiked: false,
 				isReposted: false,
-				comments: 0,
+				replies: 0,
 				likes: 0,
 				reposts: 0
 			} satisfies PostData;
@@ -61,7 +61,7 @@ export function useSubmitPostMutation() {
 				);
 			} else {
 				queryClient.setQueryData<PostData>([`post`, newPost.parentId], (oldData) =>
-					oldData ? { ...oldData, comments: oldData.comments + 1 } : oldData
+					oldData ? { ...oldData, replies: oldData.replies + 1 } : oldData
 				);
 			}
 
