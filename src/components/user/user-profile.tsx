@@ -135,9 +135,10 @@ export function UserProfile({ userId }: { userId: string }) {
 					</div>
 				</div>
 			</section>
-			<div className="grid grid-cols-3 border-b">
+			<div className="grid grid-cols-4 border-b">
 				<LinkTabs href={`/${data.username}`}>Posts</LinkTabs>
 				<LinkTabs href={`/${data.username}/reposts`}>Reposts</LinkTabs>
+				<LinkTabs href={`/${data.username}/replies`}>Replies</LinkTabs>
 				<LinkTabs href={`/${data.username}/likes`}>Likes</LinkTabs>
 			</div>
 		</Fragment>
