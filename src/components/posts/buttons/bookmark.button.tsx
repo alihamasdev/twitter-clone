@@ -1,12 +1,13 @@
 "use client";
 
-import { useMutation, useQueryClient, type InfiniteData, type QueryKey } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { toast } from "react-hot-toast";
 
 import { axios } from "@/lib/axios";
+import { optimisticPostListUpdate, optimiticUpdate } from "@/lib/tanstack/optimistic-update";
 import { cn } from "@/lib/utils";
-import { PostPage, type PostData } from "@/types/post";
+import { type PostData } from "@/types/post";
 import { Icon } from "@/components/ui/icon";
 
 interface BookmarkButtonProps extends React.ComponentProps<typeof motion.button> {
@@ -16,7 +17,6 @@ interface BookmarkButtonProps extends React.ComponentProps<typeof motion.button>
 
 export function BookmarkButton({ isBookmarked, postId, className, ...props }: BookmarkButtonProps) {
 	const queryClient = useQueryClient();
-	const queryKey: QueryKey = [`post`, postId];
 
 	const { mutate } = useMutation({
 		mutationFn: () =>
@@ -24,41 +24,30 @@ export function BookmarkButton({ isBookmarked, postId, className, ...props }: Bo
 				? axios.delete(`/api/actions/post/${postId}/bookmark`)
 				: axios.post(`/api/actions/post/${postId}/bookmark`),
 		onMutate: async () => {
-			await queryClient.cancelQueries({ queryKey });
-
-			const prevState = queryClient.getQueryData<PostData>(queryKey);
-
-			queryClient.setQueryData<PostData>(queryKey, (oldData) =>
-				oldData ? { ...oldData, isBookmarked: oldData.isBookmarked ? false : true } : undefined
+			const [prevPost, newPostData] = await optimiticUpdate<PostData>([`post`, postId], (oldData) =>
+				oldData ? { ...oldData, isBookmarked: !oldData.isBookmarked } : undefined
 			);
 
-			return prevState;
-		},
-		onSuccess: (_data, _variables, postData) => {
-			queryClient.setQueryData<InfiniteData<PostPage, string | null>>([`posts`, `bookmarks`], (oldData) => {
-				const firstPage = oldData?.pages[0];
-				if (!oldData || !firstPage) return oldData;
+			const [prevBookmarkPosts] = await optimisticPostListUpdate([`bookmarks`], (pages) =>
+				isBookmarked
+					? pages.map((page) => ({ ...page, posts: page.posts.filter(({ id }) => id !== newPostData!.id) }))
+					: [{ posts: [newPostData!, ...pages[0].posts], nextCursor: pages[0].nextCursor }, ...pages.slice(1)]
+			);
 
-				return {
-					pageParams: oldData.pageParams,
-					pages: [
-						{
-							posts: isBookmarked
-								? [postData, ...firstPage.posts]
-								: firstPage.posts.filter((post) => post.id !== postData.id),
-							nextCursor: firstPage.nextCursor
-						},
-						...oldData.pages.slice(1)
-					]
-				};
-			});
+			return { prevPost, prevBookmarkPosts };
 		},
 		onError(error, _variables, context) {
 			console.log(error);
-			queryClient.setQueryData(queryKey, context);
 			toast.error(`Something went wrong, try again`);
+			queryClient.setQueryData([`post`, postId], context?.prevPost);
+			queryClient.setQueryData([`bookmarks`], context?.prevBookmarkPosts);
 		},
-		onSettled: () => queryClient.invalidateQueries({ queryKey })
+		onSuccess: () => {
+			toast.success(isBookmarked ? "Added to your Bookmarks" : "Removed from your Bookmarks");
+		},
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: [`post`, postId] });
+		}
 	});
 
 	return (

@@ -1,13 +1,14 @@
 "use client";
 
-import { useMutation, useQueryClient, type InfiniteData, type QueryKey } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { motion } from "motion/react";
 import { toast } from "react-hot-toast";
 
 import { axios } from "@/lib/axios";
+import { optimisticPostListUpdate, optimiticUpdate } from "@/lib/tanstack/optimistic-update";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/auth-context";
-import type { PostData, PostPage } from "@/types/post";
+import { type PostData } from "@/types/post";
 import { Icon } from "@/components/ui/icon";
 import { NumberAnimation } from "@/components/number-animation";
 
@@ -20,49 +21,34 @@ interface LikeButtonProps extends React.ComponentProps<typeof motion.button> {
 export function LikeButton({ postId, isLiked, likes, className, ...props }: LikeButtonProps) {
 	const { user } = useAuth();
 	const queryClient = useQueryClient();
-	const queryKey: QueryKey = [`post`, postId];
 
 	const { mutate } = useMutation({
 		mutationFn: () =>
 			isLiked ? axios.delete(`/api/actions/post/${postId}/like`) : axios.post(`/api/actions/post/${postId}/like`),
 		onMutate: async () => {
-			await queryClient.cancelQueries({ queryKey });
-
-			const prevState = queryClient.getQueryData<PostData>(queryKey);
-
-			queryClient.setQueryData<PostData>(queryKey, (oldData) =>
+			const [prevPost, newPostData] = await optimiticUpdate<PostData>([`post`, postId], (oldData) =>
 				oldData
-					? { ...oldData, isLiked: oldData.isLiked ? false : true, likes: oldData.likes + (oldData.isLiked ? -1 : 1) }
+					? { ...oldData, isLiked: !oldData.isLiked, likes: oldData.likes + (oldData.isLiked ? -1 : 1) }
 					: undefined
 			);
 
-			return prevState;
-		},
-		onSuccess(_data, _variables, postData) {
-			queryClient.setQueryData<InfiniteData<PostPage, string | null>>([`posts`, `like`, user.id], (oldData) => {
-				const firstPage = oldData?.pages[0];
-				if (!oldData || !firstPage) return oldData;
+			const [prevLikePosts] = await optimisticPostListUpdate([`likes`, user.id], (pages) =>
+				isLiked
+					? pages.map((page) => ({ ...page, posts: page.posts.filter(({ id }) => id !== newPostData!.id) }))
+					: [{ posts: [newPostData!, ...pages[0].posts], nextCursor: pages[0].nextCursor }, ...pages.slice(1)]
+			);
 
-				return {
-					pageParams: oldData.pageParams,
-					pages: [
-						{
-							posts: isLiked
-								? [postData, ...firstPage.posts]
-								: firstPage.posts.filter((post) => post.id !== postData.id),
-							nextCursor: firstPage.nextCursor
-						},
-						...oldData.pages.slice(1)
-					]
-				};
-			});
+			return { prevPost, prevLikePosts };
 		},
 		onError(error, _variables, context) {
 			console.log(error);
-			queryClient.setQueryData(queryKey, context);
 			toast.error(`Something went wrong, try again`);
+			queryClient.setQueryData([`post`, postId], context?.prevPost);
+			queryClient.setQueryData([`likes`, user.id], context?.prevLikePosts);
 		},
-		onSettled: () => queryClient.invalidateQueries({ queryKey })
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: [`post`, postId] });
+		}
 	});
 
 	return (

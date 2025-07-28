@@ -1,8 +1,12 @@
 "use client";
 
-import { useDeletePostMutation } from "@/hooks/use-post";
+import { usePathname, useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+
+import { axios } from "@/lib/axios";
+import { optimisticPostListUpdate } from "@/lib/tanstack/optimistic-update";
 import { useAuth } from "@/context/auth-context";
-import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogClose,
@@ -18,8 +22,39 @@ interface DeletePostDialogProps extends React.ComponentProps<typeof Dialog> {
 }
 
 export function DeletePostDialog({ postId, ...props }: DeletePostDialogProps) {
+	const path = usePathname();
+	const router = useRouter();
 	const { user } = useAuth();
-	const { mutate } = useDeletePostMutation(postId, user.id);
+	const queryClient = useQueryClient();
+
+	const { mutate } = useMutation({
+		mutationFn: () => axios.delete(`/api/actions/post/${postId}/delete`),
+		onMutate: async () => {
+			await queryClient.cancelQueries({ queryKey: [`post`, postId] });
+
+			await optimisticPostListUpdate([`feed`], (pages) =>
+				pages.map((page) => ({ ...page, posts: page.posts.filter(({ id }) => id !== postId) }))
+			);
+
+			await optimisticPostListUpdate([`posts`, user.id], (pages) =>
+				pages.map((page) => ({ ...page, posts: page.posts.filter(({ id }) => id !== postId) }))
+			);
+		},
+		onSuccess: () => {
+			toast.success("Your post has been deleted");
+
+			queryClient.invalidateQueries({ queryKey: [`posts-count`, user.id] });
+			queryClient.removeQueries({ queryKey: [`post`, postId] });
+
+			if (path.includes("/status")) {
+				router.push(`/home`);
+			}
+		},
+		onError: (error) => {
+			console.error(error);
+			toast.error("Something went wrong while deleting post");
+		}
+	});
 
 	return (
 		<Dialog {...props}>
@@ -32,9 +67,9 @@ export function DeletePostDialog({ postId, ...props }: DeletePostDialogProps) {
 					you, and from search results.
 				</DialogDescription>
 				<DialogFooter>
-					<Button variant="destructive" size="xl" onClick={() => mutate()}>
+					<DialogClose variant="destructive" size="xl" onClick={() => mutate()}>
 						Delete
-					</Button>
+					</DialogClose>
 					<DialogClose variant="outline" size="xl">
 						Cancel
 					</DialogClose>
