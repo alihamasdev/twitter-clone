@@ -7,11 +7,11 @@ export async function POST(_request: NextRequest, { params }: { params: Promise<
 	try {
 		const { userId } = await params;
 
-		const loggedInUser = await validateUser();
+		const { sub: loginUserId } = await validateUser();
 
 		await prisma.follow.upsert({
-			where: { followerId_followingId: { followingId: loggedInUser.sub, followerId: userId } },
-			create: { followingId: loggedInUser.sub, followerId: userId },
+			where: { followerId_followingId: { followingId: loginUserId, followerId: userId } },
+			create: { followingId: loginUserId, followerId: userId },
 			update: {}
 		});
 
@@ -26,9 +26,9 @@ export async function DELETE(_request: NextRequest, { params }: { params: Promis
 	try {
 		const { userId } = await params;
 
-		const loggedInUser = await validateUser();
+		const { sub: loginUserId } = await validateUser();
 
-		await prisma.follow.deleteMany({ where: { followerId: userId, followingId: loggedInUser.sub } });
+		await prisma.follow.deleteMany({ where: { followerId: userId, followingId: loginUserId } });
 
 		return NextResponse.json({ success: true });
 	} catch (error) {

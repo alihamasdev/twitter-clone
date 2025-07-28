@@ -7,7 +7,7 @@ import { PostsCount } from "@/types/post";
 
 export function usePostsCount(userId: string, initialState: PostsCount) {
 	return useQuery({
-		queryKey: [`posts`, `count`, userId],
+		queryKey: [`posts-count`, userId],
 		queryFn: () => axios.get<PostsCount>(`/api/${userId}/posts/count`).then((res) => res.data),
 		initialData: initialState,
 		staleTime: Infinity

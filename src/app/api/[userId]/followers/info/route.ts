@@ -8,11 +8,11 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 	try {
 		const { userId } = await params;
 
-		const loggedInUser = await validateUser();
+		const { sub: loginUserId } = await validateUser();
 
 		const user = await prisma.user.findUnique({
 			where: { id: userId },
-			select: getFollowersInfo(loggedInUser.sub)
+			select: getFollowersInfo(loginUserId)
 		});
 
 		if (!user) {

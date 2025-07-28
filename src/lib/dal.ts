@@ -11,10 +11,10 @@ import type { UserData, UserDataWithFollowInfo } from "@/types/user";
 
 /** Gets currently loggedIn user from database for global state `AuthContext` */
 export const getLoginUserData = cache(async (): Promise<UserData | null> => {
-	const loggedInUser = await validateUser();
+	const { sub: loginUserId } = await validateUser();
 
 	const data = await prisma.user.findUnique({
-		where: { id: loggedInUser.sub },
+		where: { id: loginUserId },
 		select: userDataSelect
 	});
 
@@ -22,12 +22,12 @@ export const getLoginUserData = cache(async (): Promise<UserData | null> => {
 });
 
 export const getUsersList = cache(async (limit = 4) => {
-	const loggedInUser = await validateUser();
+	const { sub: loginUserId } = await validateUser();
 
 	const data = await prisma.user.findMany({
 		take: limit,
-		where: { NOT: { id: loggedInUser.sub } },
-		select: getUserDataWithFollowesInfo(loggedInUser.sub)
+		where: { NOT: { id: loginUserId } },
+		select: getUserDataWithFollowesInfo(loginUserId)
 	});
 
 	const dataList: UserDataWithFollowInfo[] = data.map(({ _count, followers, ...data }) => {

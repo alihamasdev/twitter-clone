@@ -24,7 +24,7 @@ export function RepostButton({ postId, isRepost, reposts, className, ...props }:
 
 	const { mutate } = useMutation({
 		mutationFn: () =>
-			isRepost ? axios.delete(`/api/posts/${postId}/repost`) : axios.post(`/api/posts/${postId}/repost`),
+			isRepost ? axios.delete(`/api/actions/post/${postId}/repost`) : axios.post(`/api/actions/post/${postId}/repost`),
 		onMutate: async () => {
 			await queryClient.cancelQueries({ queryKey });
 

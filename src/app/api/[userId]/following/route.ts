@@ -10,14 +10,14 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 		const { userId } = await params;
 		const cursor = request.nextUrl.searchParams.get("cursor") || undefined;
 
-		const loggedInUser = await validateUser();
+		const { sub: loginUserId } = await validateUser();
 
 		const usersPayload = await prisma.follow.findMany({
 			where: { followingId: userId },
 			orderBy: { createdAt: "desc" },
 			take: PAGE_SIZE + 1,
 			cursor: cursor ? { id: Number(cursor) } : undefined,
-			select: { id: true, follower: { select: getUserDataWithFollowesInfo(loggedInUser.sub) } }
+			select: { id: true, follower: { select: getUserDataWithFollowesInfo(loginUserId) } }
 		});
 
 		const users: UserDataWithFollowInfo[] = usersPayload.map(({ follower: { _count, followers, ...user } }) => ({

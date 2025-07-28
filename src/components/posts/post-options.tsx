@@ -23,7 +23,7 @@ interface PostOptionsProps extends React.ComponentProps<typeof DropdownMenuTrigg
 export function PostOptions({ user, postId, className, ...props }: PostOptionsProps) {
 	const { user: loginUser } = useAuth();
 	const isCurrentUsersPost = user.id === loginUser.id;
-	const followMutation = useFollowerMutation(user.id, user.isFollowedByUser);
+	const { mutate } = useFollowerMutation(user.id, user.isFollowedByUser);
 	const { data } = useFollowerInfo(user.id, { followers: user.followers, isFollowedByUser: user.isFollowedByUser });
 
 	const [open, setOpen] = useState(false);
@@ -49,7 +49,7 @@ export function PostOptions({ user, postId, className, ...props }: PostOptionsPr
 						<DropdownMenuItemIcon
 							icon={data.isFollowedByUser ? "unfollow" : "follow"}
 							variant={data.isFollowedByUser ? "destructive" : "default"}
-							onClick={() => followMutation()}
+							onClick={() => mutate()}
 						>
 							{data.isFollowedByUser ? `Unfollow @${user.username}` : `Follow @${user.username}`}
 						</DropdownMenuItemIcon>

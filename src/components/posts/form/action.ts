@@ -10,13 +10,13 @@ export async function createPost(data: PostSchema) {
 		throw new Error("Invalid post data");
 	}
 
-	const loggedInUser = await validateUser();
+	const { sub: loginUserId } = await validateUser();
 
 	return await prisma.post.create({
 		data: {
 			content: data.content,
 			parentId: data.parentId,
-			userId: loggedInUser.sub
+			userId: loginUserId
 		}
 	});
 }

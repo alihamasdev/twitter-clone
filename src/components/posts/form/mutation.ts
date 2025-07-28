@@ -66,7 +66,7 @@ export function useSubmitPostMutation() {
 			}
 
 			// Update user profile posts count
-			queryClient.setQueryData<PostsCount>([`posts`, `count`, user.id], (oldData) => ({
+			queryClient.setQueryData<PostsCount>([`posts-count`, user.id], (oldData) => ({
 				posts: (oldData?.posts || 0) + 1
 			}));
 
@@ -79,7 +79,7 @@ export function useSubmitPostMutation() {
 		onSettled(data) {
 			queryClient.invalidateQueries({ queryKey: [`post`, data?.id] });
 			queryClient.invalidateQueries({ queryKey: [`post`, data?.parentId] });
-			queryClient.invalidateQueries({ queryKey: [`posts`, `count`, user.id] });
+			queryClient.invalidateQueries({ queryKey: [`posts-count`, user.id] });
 		}
 	});
 

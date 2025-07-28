@@ -16,7 +16,7 @@ interface FollowButtonProps extends ButtonProps {
 export function FollowButton({ initialState, userId, size = "sm", className, ...props }: FollowButtonProps) {
 	const { user } = useAuth();
 	const { data } = useFollowerInfo(userId, initialState);
-	const mutate = useFollowerMutation(userId, data.isFollowedByUser);
+	const { mutate } = useFollowerMutation(userId, data.isFollowedByUser);
 
 	if (userId === user.id) {
 		return <EditProfileButton />;

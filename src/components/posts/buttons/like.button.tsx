@@ -23,7 +23,8 @@ export function LikeButton({ postId, isLiked, likes, className, ...props }: Like
 	const queryKey: QueryKey = [`post`, postId];
 
 	const { mutate } = useMutation({
-		mutationFn: () => (isLiked ? axios.delete(`/api/posts/${postId}/like`) : axios.post(`/api/posts/${postId}/like`)),
+		mutationFn: () =>
+			isLiked ? axios.delete(`/api/actions/post/${postId}/like`) : axios.post(`/api/actions/post/${postId}/like`),
 		onMutate: async () => {
 			await queryClient.cancelQueries({ queryKey });
 

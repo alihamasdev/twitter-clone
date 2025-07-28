@@ -7,11 +7,11 @@ export async function POST(_request: NextRequest, { params }: { params: Promise<
 	try {
 		const { postId } = await params;
 
-		const loggedInUser = await validateUser();
+		const { sub: loginUserId } = await validateUser();
 
 		await prisma.repost.upsert({
-			where: { postId_userId: { postId, userId: loggedInUser.sub } },
-			create: { postId, userId: loggedInUser.sub },
+			where: { postId_userId: { postId, userId: loginUserId } },
+			create: { postId, userId: loginUserId },
 			update: {}
 		});
 
@@ -26,11 +26,9 @@ export async function DELETE(_request: NextRequest, { params }: { params: Promis
 	try {
 		const { postId } = await params;
 
-		const loggedInUser = await validateUser();
+		const { sub: loginUserId } = await validateUser();
 
-		await prisma.repost.delete({
-			where: { postId_userId: { postId, userId: loggedInUser.sub } }
-		});
+		await prisma.repost.delete({ where: { postId_userId: { postId, userId: loginUserId } } });
 
 		return NextResponse.json({ message: "Request accepted" });
 	} catch (error) {

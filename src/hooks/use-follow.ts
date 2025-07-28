@@ -22,8 +22,11 @@ export function useFollowerMutation(userId: string, isFollowing: boolean) {
 	const followQueryKey: QueryKey = [`follower-info`, userId];
 	const followingQueryKey: QueryKey = [`following-count`, user.id];
 
-	const { mutate } = useMutation({
-		mutationFn: () => (isFollowing ? axios.delete(`/api/${userId}/follow`) : axios.post(`/api/${userId}/follow`)),
+	return useMutation({
+		mutationFn: () =>
+			isFollowing
+				? axios.delete(`/api/actions/user/${userId}/follow`)
+				: axios.post(`/api/actions/user/${userId}/follow`),
 		onMutate: async () => {
 			await queryClient.cancelQueries({ queryKey: followQueryKey });
 
@@ -52,8 +55,6 @@ export function useFollowerMutation(userId: string, isFollowing: boolean) {
 			queryClient.invalidateQueries({ queryKey: [`following`, user.id] });
 		}
 	});
-
-	return mutate;
 }
 
 export function useFollowingInfo(userId: string, initialState: FollowingInfo) {

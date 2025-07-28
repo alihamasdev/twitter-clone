@@ -40,7 +40,7 @@ export function useDeletePostMutation(postId: string, userId: string) {
 
 	const feedQueryKey: QueryKey = [`posts`, `feed`];
 	const profileQueryKey: QueryKey = [`posts`, userId];
-	const postsCountQueryKey: QueryKey = [`posts`, `count`, userId];
+	const postsCountQueryKey: QueryKey = [`posts-count`, userId];
 
 	return useMutation({
 		mutationFn: () => axios.delete(`/api/posts/${postId}`),

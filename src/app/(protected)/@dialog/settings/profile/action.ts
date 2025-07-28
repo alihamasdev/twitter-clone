@@ -16,18 +16,18 @@ export async function updateProfile(
 		const { success, data, error } = profileSchema.safeParse(values);
 		if (!success) return { error: error.message, data: null };
 
-		const loggedInUser = await validateUser();
+		const { sub: loginUserId } = await validateUser();
 
 		const { avatar, banner, ...staticData } = data;
 		const supabase = await createClient();
 
 		const [avatarUrl, bannerUrl] = await Promise.all([
-			uploadFile(supabase, `${loggedInUser.sub}/avatar.png`, avatar),
-			uploadFile(supabase, `${loggedInUser.sub}/banner.png`, banner)
+			uploadFile(supabase, `${loginUserId}/avatar.png`, avatar),
+			uploadFile(supabase, `${loginUserId}/banner.png`, banner)
 		]);
 
 		const updatedData = await prisma.user.update({
-			where: { id: loggedInUser.sub },
+			where: { id: loginUserId },
 			data: { avatarUrl: avatarUrl ? `${supabaseStorageUrl}${avatarUrl}` : undefined, bannerUrl, ...staticData }
 		});
 

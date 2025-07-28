@@ -20,7 +20,9 @@ export function BookmarkButton({ isBookmarked, postId, className, ...props }: Bo
 
 	const { mutate } = useMutation({
 		mutationFn: () =>
-			isBookmarked ? axios.delete(`/api/posts/${postId}/bookmark`) : axios.post(`/api/posts/${postId}/bookmark`),
+			isBookmarked
+				? axios.delete(`/api/actions/post/${postId}/bookmark`)
+				: axios.post(`/api/actions/post/${postId}/bookmark`),
 		onMutate: async () => {
 			await queryClient.cancelQueries({ queryKey });
 
