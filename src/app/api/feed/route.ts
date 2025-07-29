@@ -15,18 +15,18 @@ export async function GET(request: NextRequest) {
 		const postPayload = (await prisma.post.findMany({
 			take: PAGE_SIZE + 1,
 			orderBy: { createdAt: "desc" },
-			where: { parentId: { equals: null } },
+			where: { parentId: null },
 			cursor: cursor ? { id: cursor } : undefined,
 			include: getPostDataInclude(loginUserId)
 		})) satisfies PostPayload[];
 
-		const posts = postPayload.map(({ bookmarks, likes, user, reposts, _count, ...post }) => ({
+		const posts = postPayload.map(({ bookmarks, likes, reposts, _count, user, ...post }) => ({
 			...post,
 			..._count,
 			user: formatUserData(user),
-			isBookmarked: !!bookmarks.length,
 			isLiked: !!likes.length,
-			isReposted: !!reposts.length
+			isReposted: !!reposts.length,
+			isBookmarked: !!bookmarks.length
 		})) satisfies PostData[];
 
 		const data: PostPage = {

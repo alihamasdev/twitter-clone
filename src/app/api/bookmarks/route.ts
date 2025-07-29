@@ -3,7 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { PAGE_SIZE } from "@/utils/contants";
-import { getPostLikeInfo, getPostRepostInfo, postDataCounts, type PostData, type PostPage } from "@/types/post";
+import {
+	getPostLikeInfo,
+	getPostRepostInfo,
+	postDataCounts,
+	postParentInfo,
+	type PostData,
+	type PostPage
+} from "@/types/post";
 import { formatUserData, getUserDataWithFollowesInfo } from "@/types/user";
 
 export async function GET(request: NextRequest) {
@@ -15,7 +22,7 @@ export async function GET(request: NextRequest) {
 		const postPayload = await prisma.bookmark.findMany({
 			take: PAGE_SIZE + 1,
 			orderBy: { createdAt: "desc" },
-			where: { userId: loginUserId, post: { parentId: { equals: null } } },
+			where: { userId: loginUserId },
 			cursor: cursor ? { id: Number(cursor) } : undefined,
 			select: {
 				id: true,
@@ -23,6 +30,7 @@ export async function GET(request: NextRequest) {
 				post: {
 					include: {
 						_count: postDataCounts,
+						parent: postParentInfo,
 						likes: getPostLikeInfo(loginUserId),
 						reposts: getPostRepostInfo(loginUserId)
 					}

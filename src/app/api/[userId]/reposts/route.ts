@@ -3,7 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { validateUser } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { PAGE_SIZE } from "@/utils/contants";
-import { getPostBookmarkInfo, getPostLikeInfo, postDataCounts, type PostData, type PostPage } from "@/types/post";
+import {
+	getPostBookmarkInfo,
+	getPostLikeInfo,
+	postDataCounts,
+	postParentInfo,
+	type PostData,
+	type PostPage
+} from "@/types/post";
 import { formatUserData, getUserDataWithFollowesInfo } from "@/types/user";
 
 export async function GET(request: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
@@ -16,7 +23,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 		const postPayload = await prisma.repost.findMany({
 			take: PAGE_SIZE + 1,
 			orderBy: { createdAt: "desc" },
-			where: { userId, post: { parentId: { equals: null } } },
+			where: { userId },
 			cursor: cursor ? { id: Number(cursor) } : undefined,
 			select: {
 				id: true,
@@ -24,6 +31,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 				post: {
 					include: {
 						_count: postDataCounts,
+						parent: postParentInfo,
 						likes: getPostLikeInfo(loginUserId),
 						bookmarks: getPostBookmarkInfo(loginUserId)
 					}
