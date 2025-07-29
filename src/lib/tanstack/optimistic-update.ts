@@ -3,7 +3,7 @@ import type { InfiniteData, QueryKey } from "@tanstack/react-query";
 import { getQueryClient } from "@/lib/tanstack/get-query-client";
 import { type PostPage } from "@/types/post";
 
-export async function optimiticUpdate<T>(queryKey: QueryKey, updator: (oldData: T | undefined) => T | undefined) {
+export async function optimisticUpdate<T>(queryKey: QueryKey, updator: (oldData: T | undefined) => T | undefined) {
 	const queryClient = getQueryClient();
 
 	await queryClient.cancelQueries({ queryKey });

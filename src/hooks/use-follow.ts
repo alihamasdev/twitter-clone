@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient, type QueryKey } from "@tanstack/
 import { toast } from "react-hot-toast";
 
 import { axios } from "@/lib/axios";
-import { optimiticUpdate } from "@/lib/tanstack/optimistic-update";
+import { optimisticUpdate } from "@/lib/tanstack/optimistic-update";
 import { useAuth } from "@/context/auth-context";
 import type { FollowerInfo, FollowingInfo } from "@/types/user";
 
@@ -38,12 +38,12 @@ export function useFollowerMutation(userId: string, isFollowing: boolean) {
 				? axios.delete(`/api/actions/user/${userId}/follow`)
 				: axios.post(`/api/actions/user/${userId}/follow`),
 		onMutate: async () => {
-			const [previousFollowers] = await optimiticUpdate<FollowerInfo>(followQueryKey, (oldData) => ({
+			const [previousFollowers] = await optimisticUpdate<FollowerInfo>(followQueryKey, (oldData) => ({
 				followers: (oldData?.followers || 0) + (oldData?.isFollowedByUser ? -1 : 1),
 				isFollowedByUser: !oldData?.isFollowedByUser
 			}));
 
-			const [previousFollowing] = await optimiticUpdate<FollowingInfo>(followingQueryKey, (oldData) => ({
+			const [previousFollowing] = await optimisticUpdate<FollowingInfo>(followingQueryKey, (oldData) => ({
 				following: (oldData?.following || 0) + (previousFollowers?.isFollowedByUser ? -1 : 1)
 			}));
 

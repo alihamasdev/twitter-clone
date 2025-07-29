@@ -5,8 +5,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 import { axios } from "@/lib/axios";
-import { optimisticPostListUpdate } from "@/lib/tanstack/optimistic-update";
+import { optimisticPostListUpdate, optimisticUpdate } from "@/lib/tanstack/optimistic-update";
 import { useAuth } from "@/context/auth-context";
+import { type PostsCount } from "@/types/post";
 import {
 	Dialog,
 	DialogClose,
@@ -32,27 +33,49 @@ export function DeletePostDialog({ postId, ...props }: DeletePostDialogProps) {
 		onMutate: async () => {
 			await queryClient.cancelQueries({ queryKey: [`post`, postId] });
 
-			await optimisticPostListUpdate([`feed`], (pages) =>
-				pages.map((page) => ({ ...page, posts: page.posts.filter(({ id }) => id !== postId) }))
+			const prevFeedPosts = await optimisticPostListUpdate([`feed`], (pages) =>
+				pages.map((page) => ({
+					...page,
+					posts: page.posts.filter(({ id, parentId }) => id !== postId && parentId !== postId)
+				}))
 			);
 
-			await optimisticPostListUpdate([`posts`, user.id], (pages) =>
-				pages.map((page) => ({ ...page, posts: page.posts.filter(({ id }) => id !== postId) }))
+			const prevUserPosts = await optimisticPostListUpdate([`posts`, user.id], (pages) =>
+				pages.map((page) => ({
+					...page,
+					posts: page.posts.filter(({ id, parentId }) => id !== postId && parentId !== postId)
+				}))
 			);
+
+			const prevUserReplies = await optimisticPostListUpdate([`replies`, user.id], (pages) =>
+				pages.map((page) => ({
+					...page,
+					posts: page.posts.filter(({ id, parentId }) => id !== postId && parentId !== postId)
+				}))
+			);
+
+			const prevPostsCount = await optimisticUpdate<PostsCount>([`posts-count`, user.id], (oldData) => ({
+				posts: (oldData?.posts || 0) - 1
+			}));
+
+			return { prevFeedPosts, prevUserPosts, prevUserReplies, prevPostsCount };
+		},
+		onError: (error, _variables, context) => {
+			console.error(error);
+			toast.error("Something went wrong while deleting post");
+			queryClient.setQueryData([`feed`], context?.prevFeedPosts);
+			queryClient.setQueryData([`posts`, user.id], context?.prevUserPosts);
+			queryClient.setQueryData([`replies`, user.id], context?.prevUserReplies);
+			queryClient.setQueryData([`posts-count`, user.id], context?.prevPostsCount);
 		},
 		onSuccess: () => {
 			toast.success("Your post has been deleted");
 
-			queryClient.invalidateQueries({ queryKey: [`posts-count`, user.id] });
 			queryClient.removeQueries({ queryKey: [`post`, postId] });
 
 			if (path.includes("/status")) {
 				router.push(`/home`);
 			}
-		},
-		onError: (error) => {
-			console.error(error);
-			toast.error("Something went wrong while deleting post");
 		}
 	});
 

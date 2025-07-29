@@ -3,9 +3,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
-import { optimisticPostListUpdate } from "@/lib/tanstack/optimistic-update";
+import { optimisticPostListUpdate, optimisticUpdate } from "@/lib/tanstack/optimistic-update";
 import { useAuth } from "@/context/auth-context";
-import { type PostData } from "@/types/post";
+import { type PostData, type PostsCount } from "@/types/post";
 
 import { createPost } from "./action";
 
@@ -15,35 +15,36 @@ export function useSubmitPostMutation() {
 
 	const mutation = useMutation({
 		mutationFn: createPost,
-		onSuccess: async (data) => {
-			const newPost = {
-				...data,
-				parent: null,
-				user: { ...user, isFollowedByUser: false, followers: 0 },
-				isBookmarked: false,
-				isLiked: false,
-				isReposted: false,
-				replies: 0,
-				likes: 0,
-				reposts: 0
-			} satisfies PostData;
-
+		onSuccess: async (newPost) => {
 			await optimisticPostListUpdate([`feed`], (pages, firstPage) => {
 				return [{ ...firstPage, posts: [newPost, ...firstPage.posts] }, ...pages.slice(1)];
 			});
 
-			await optimisticPostListUpdate([`posts`, user.id], (pages, firstPage) => {
-				return [{ ...firstPage, posts: [newPost, ...firstPage.posts] }, ...pages.slice(1)];
-			});
+			if (!newPost.parentId) {
+				await optimisticPostListUpdate([`posts`, user.id], (pages, firstPage) => {
+					return [{ ...firstPage, posts: [newPost, ...firstPage.posts] }, ...pages.slice(1)];
+				});
+			} else {
+				await optimisticPostListUpdate([`replies`, user.id], (pages, firstPage) => {
+					return [{ ...firstPage, posts: [newPost, ...firstPage.posts] }, ...pages.slice(1)];
+				});
+			}
 
-			toast.success("You post has been created");
+			await optimisticUpdate<PostData>([`post`, newPost.id], (oldData) =>
+				oldData ? { ...oldData, replies: oldData.replies + 1 } : oldData
+			);
+
+			await optimisticUpdate<PostsCount>([`posts-count`, user.id], (oldData) => ({
+				posts: (oldData?.posts || 0) + 1
+			}));
+
+			toast.success(`You ${newPost.parentId ? "reply" : "post"} has been sent`);
+
+			queryClient.invalidateQueries({ queryKey: [`post`, newPost.id] });
 		},
-		onError(error) {
+		onError(error, { parentId }) {
 			console.error(error);
-			toast.error("Something went wrong while creating post");
-		},
-		onSettled(data) {
-			queryClient.invalidateQueries({ queryKey: [`post`, data?.id] });
+			toast.error(`Somethingg went wrong while seding your ${parentId ? "reply" : "post"}`);
 		}
 	});
 

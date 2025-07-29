@@ -5,7 +5,7 @@ import { motion } from "motion/react";
 import { toast } from "react-hot-toast";
 
 import { axios } from "@/lib/axios";
-import { optimisticPostListUpdate, optimiticUpdate } from "@/lib/tanstack/optimistic-update";
+import { optimisticPostListUpdate, optimisticUpdate } from "@/lib/tanstack/optimistic-update";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/auth-context";
 import { type PostData } from "@/types/post";
@@ -26,7 +26,7 @@ export function LikeButton({ postId, isLiked, likes, className, ...props }: Like
 		mutationFn: () =>
 			isLiked ? axios.delete(`/api/actions/post/${postId}/like`) : axios.post(`/api/actions/post/${postId}/like`),
 		onMutate: async () => {
-			const [prevPost, newPostData] = await optimiticUpdate<PostData>([`post`, postId], (oldData) =>
+			const [prevPost, newPostData] = await optimisticUpdate<PostData>([`post`, postId], (oldData) =>
 				oldData
 					? { ...oldData, isLiked: !oldData.isLiked, likes: oldData.likes + (oldData.isLiked ? -1 : 1) }
 					: undefined
