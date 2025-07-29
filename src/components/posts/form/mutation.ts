@@ -16,24 +16,33 @@ export function useSubmitPostMutation() {
 	const mutation = useMutation({
 		mutationFn: createPost,
 		onSuccess: async (newPost) => {
+			// Adding post to feeed
 			await optimisticPostListUpdate([`feed`], (pages, firstPage) => {
 				return [{ ...firstPage, posts: [newPost, ...firstPage.posts] }, ...pages.slice(1)];
 			});
 
 			if (!newPost.parentId) {
+				// Adding post to user profile posts
 				await optimisticPostListUpdate([`posts`, user.id], (pages, firstPage) => {
 					return [{ ...firstPage, posts: [newPost, ...firstPage.posts] }, ...pages.slice(1)];
 				});
 			} else {
+				// Adding post to user profile replies
 				await optimisticPostListUpdate([`replies`, user.id], (pages, firstPage) => {
+					return [{ ...firstPage, posts: [newPost, ...firstPage.posts] }, ...pages.slice(1)];
+				});
+				// Addingg post to parent-post replies
+				await optimisticPostListUpdate([`replies`, newPost.parentId], (pages, firstPage) => {
 					return [{ ...firstPage, posts: [newPost, ...firstPage.posts] }, ...pages.slice(1)];
 				});
 			}
 
-			await optimisticUpdate<PostData>([`post`, newPost.id], (oldData) =>
+			// Updating parent-post replies count
+			await optimisticUpdate<PostData>([`post`, newPost.parentId], (oldData) =>
 				oldData ? { ...oldData, replies: oldData.replies + 1 } : oldData
 			);
 
+			// Updating user posts count
 			await optimisticUpdate<PostsCount>([`posts-count`, user.id], (oldData) => ({
 				posts: (oldData?.posts || 0) + 1
 			}));

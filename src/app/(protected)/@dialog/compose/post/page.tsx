@@ -53,12 +53,12 @@ export default function ComposePostPage() {
 
 function ParentPost({ data: { user, content, createdAt } }: { data: PostData }) {
 	return (
-		<article className="flex w-full items-start gap-x-3">
+		<article className="grid w-full grid-cols-[40px_1fr] gap-x-3">
 			<div className="flex basis-10 flex-col items-center">
 				<Avatar>
 					<AvatarImage src={user.avatarUrl} />
 				</Avatar>
-				<div className="bg-muted my-1 h-full border-x" />
+				<div className="my-1.5 h-full border-x" />
 			</div>
 			<div className="w-full">
 				<div className="flex items-center gap-x-1">

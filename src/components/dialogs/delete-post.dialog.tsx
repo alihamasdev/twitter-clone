@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { axios } from "@/lib/axios";
 import { optimisticPostListUpdate, optimisticUpdate } from "@/lib/tanstack/optimistic-update";
 import { useAuth } from "@/context/auth-context";
-import { type PostsCount } from "@/types/post";
+import type { PostData, PostsCount } from "@/types/post";
 import {
 	Dialog,
 	DialogClose,
@@ -20,9 +20,10 @@ import {
 
 interface DeletePostDialogProps extends React.ComponentProps<typeof Dialog> {
 	postId: string;
+	parentId: string | null;
 }
 
-export function DeletePostDialog({ postId, ...props }: DeletePostDialogProps) {
+export function DeletePostDialog({ postId, parentId, ...props }: DeletePostDialogProps) {
 	const path = usePathname();
 	const router = useRouter();
 	const { user } = useAuth();
@@ -32,50 +33,65 @@ export function DeletePostDialog({ postId, ...props }: DeletePostDialogProps) {
 		mutationFn: () => axios.delete(`/api/actions/post/${postId}/delete`),
 		onMutate: async () => {
 			await queryClient.cancelQueries({ queryKey: [`post`, postId] });
-
-			const prevFeedPosts = await optimisticPostListUpdate([`feed`], (pages) =>
+		},
+		onSuccess: async () => {
+			// Removing post from feed
+			await optimisticPostListUpdate([`feed`], (pages) =>
 				pages.map((page) => ({
 					...page,
 					posts: page.posts.filter(({ id, parentId }) => id !== postId && parentId !== postId)
 				}))
 			);
 
-			const prevUserPosts = await optimisticPostListUpdate([`posts`, user.id], (pages) =>
-				pages.map((page) => ({
-					...page,
-					posts: page.posts.filter(({ id, parentId }) => id !== postId && parentId !== postId)
-				}))
-			);
-
-			const prevUserReplies = await optimisticPostListUpdate([`replies`, user.id], (pages) =>
-				pages.map((page) => ({
-					...page,
-					posts: page.posts.filter(({ id, parentId }) => id !== postId && parentId !== postId)
-				}))
-			);
-
-			const prevPostsCount = await optimisticUpdate<PostsCount>([`posts-count`, user.id], (oldData) => ({
+			// Updating user posts count
+			await optimisticUpdate<PostsCount>([`posts-count`, user.id], (oldData) => ({
 				posts: (oldData?.posts || 0) - 1
 			}));
 
-			return { prevFeedPosts, prevUserPosts, prevUserReplies, prevPostsCount };
-		},
-		onError: (error, _variables, context) => {
-			console.error(error);
-			toast.error("Something went wrong while deleting post");
-			queryClient.setQueryData([`feed`], context?.prevFeedPosts);
-			queryClient.setQueryData([`posts`, user.id], context?.prevUserPosts);
-			queryClient.setQueryData([`replies`, user.id], context?.prevUserReplies);
-			queryClient.setQueryData([`posts-count`, user.id], context?.prevPostsCount);
-		},
-		onSuccess: () => {
+			// Updating Post replies count
+			await optimisticUpdate<PostData>([`post`, parentId], (oldData) =>
+				oldData ? { ...oldData, replies: oldData.replies - 1 } : oldData
+			);
+
+			if (parentId) {
+				// Removing post from user posts
+				await optimisticPostListUpdate([`posts`, user.id], (pages) =>
+					pages.map((page) => ({
+						...page,
+						posts: page.posts.filter(({ id, parentId }) => id !== postId && parentId !== postId)
+					}))
+				);
+
+				// Removing post from parent-post replies
+				await optimisticPostListUpdate([`replies`, parentId], (pages) =>
+					pages.map((page) => ({
+						...page,
+						posts: page.posts.filter(({ id, parentId }) => id !== postId && parentId !== postId)
+					}))
+				);
+
+				// Removing post replies
+				queryClient.removeQueries({ queryKey: [`replies`, postId] });
+			} else {
+				await optimisticPostListUpdate([`replies`, user.id], (pages) =>
+					pages.map((page) => ({
+						...page,
+						posts: page.posts.filter(({ id, parentId }) => id !== postId && parentId !== postId)
+					}))
+				);
+			}
+
 			toast.success("Your post has been deleted");
 
 			queryClient.removeQueries({ queryKey: [`post`, postId] });
 
-			if (path.includes("/status")) {
+			if (!parentId && path.includes("/status")) {
 				router.push(`/home`);
 			}
+		},
+		onError: (error) => {
+			console.error(error);
+			toast.error("Something went wrong while deleting post");
 		}
 	});
 

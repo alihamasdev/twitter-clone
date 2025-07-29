@@ -27,7 +27,7 @@ export function PagePost({ postId, postData }: { postId: string; postData: PostD
 						<Name href={data.user.username}>{data.user.name}</Name>
 						<Username href={data.user.username}>{data.user.username}</Username>
 					</div>
-					<PostOptions className="static ml-auto" user={data.user} postId={postId} />
+					<PostOptions className="static ml-auto" user={data.user} postId={postId} parentId={data.parentId} />
 				</div>
 				<TextParser className="text-lg font-medium">{data.content}</TextParser>
 				<p className="text-muted-foreground">{getFullDate(data.createdAt)}</p>

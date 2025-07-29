@@ -17,10 +17,11 @@ import { DeletePostDialog } from "@/components/dialogs/delete-post.dialog";
 
 interface PostOptionsProps extends React.ComponentProps<typeof DropdownMenuTrigger> {
 	postId: string;
+	parentId: string | null;
 	user: UserDataWithFollowInfo;
 }
 
-export function PostOptions({ user, postId, className, ...props }: PostOptionsProps) {
+export function PostOptions({ user, postId, parentId, className, ...props }: PostOptionsProps) {
 	const { user: loginUser } = useAuth();
 	const isCurrentUsersPost = user.id === loginUser.id;
 	const { mutate } = useFollowerMutation(user.id, user.isFollowedByUser);
@@ -56,7 +57,7 @@ export function PostOptions({ user, postId, className, ...props }: PostOptionsPr
 					)}
 				</DropdownMenuContent>
 			</DropdownMenu>
-			<DeletePostDialog postId={postId} open={open} onOpenChange={setOpen} />
+			<DeletePostDialog postId={postId} parentId={parentId} open={open} onOpenChange={setOpen} />
 		</>
 	);
 }

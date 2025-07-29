@@ -51,7 +51,7 @@ export function Post({ postId, postData, hasReplyPost, className, ...props }: Po
 					<Username href={data.user.username}>{data.user.username}</Username>
 					<span className="text-muted-foreground">·</span>
 					<span className="text-muted-foreground cursor-default">{getTweetDate(data.createdAt)}</span>
-					<PostOptions user={data.user} postId={data.id} />
+					<PostOptions user={data.user} postId={data.id} parentId={data.parentId} />
 				</div>
 				{data.parent && (
 					<p className="text-muted-foreground text-base">
