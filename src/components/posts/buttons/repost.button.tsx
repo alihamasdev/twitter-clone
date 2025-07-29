@@ -8,7 +8,7 @@ import { axios } from "@/lib/axios";
 import { optimisticPostListUpdate, optimisticUpdate } from "@/lib/tanstack/optimistic-update";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/auth-context";
-import { type PostData } from "@/types/post";
+import { type PostData, type PostsCount } from "@/types/post";
 import { Icon } from "@/components/ui/icon";
 import { NumberAnimation } from "@/components/number-animation";
 
@@ -28,7 +28,7 @@ export function RepostButton({ postId, isRepost, reposts, className, ...props }:
 		onMutate: async () => {
 			const [prevPost, newPostData] = await optimisticUpdate<PostData>([`post`, postId], (oldData) =>
 				oldData
-					? { ...oldData, isReposted: !oldData.isReposted, reposts: oldData.reposts + (oldData.isReposted ? -1 : 1) }
+					? { ...oldData, isReposted: !oldData.isReposted, reposts: oldData.reposts + (isRepost ? -1 : 1) }
 					: undefined
 			);
 
@@ -38,16 +38,22 @@ export function RepostButton({ postId, isRepost, reposts, className, ...props }:
 					: [{ posts: [newPostData!, ...pages[0].posts], nextCursor: pages[0].nextCursor }, ...pages.slice(1)]
 			);
 
-			return { prevPost, prevLikePosts };
+			const [prevPostsCount] = await optimisticUpdate<PostsCount>([`posts-count`, user.id], (oldData) => ({
+				posts: (oldData?.posts || 0) + (isRepost ? -1 : 1)
+			}));
+
+			return { prevPost, prevLikePosts, prevPostsCount };
 		},
 		onError(error, _variables, context) {
 			console.log(error);
 			toast.error(`Something went wrong, try again`);
 			queryClient.setQueryData([`post`, postId], context?.prevPost);
 			queryClient.setQueryData([`reposts`, user.id], context?.prevLikePosts);
+			queryClient.setQueryData([`posts-count`, user.id], context?.prevPostsCount);
 		},
 		onSettled: () => {
 			queryClient.invalidateQueries({ queryKey: [`post`, postId] });
+			queryClient.invalidateQueries({ queryKey: [`posts-count`, user.id] });
 		}
 	});
 

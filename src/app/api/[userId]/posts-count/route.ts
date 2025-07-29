@@ -7,7 +7,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 		const { userId } = await params;
 
 		const posts = await prisma.post.count({
-			where: { userId }
+			where: { userId, reposts: { every: { userId } } }
 		});
 
 		return NextResponse.json({ posts });

@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { motion, type HTMLMotionProps } from "motion/react";
 
 import { getTweetDate } from "@/lib/date";
 import { cn } from "@/lib/utils";
@@ -18,7 +17,7 @@ import { RepostButton } from "./buttons/repost.button";
 import { ShareButton } from "./buttons/share.button";
 import { PostOptions } from "./post-options";
 
-interface PostProps extends HTMLMotionProps<"article"> {
+interface PostProps extends React.ComponentProps<"article"> {
 	postId: string;
 	postData: PostData;
 	hasReplyPost?: boolean;
@@ -29,7 +28,7 @@ export function Post({ postId, postData, hasReplyPost, className, ...props }: Po
 	const { data } = usePost(postId, postData);
 
 	return (
-		<motion.article
+		<article
 			className={cn(
 				"hover:bg-muted/50 relative grid grid-cols-[40px_1fr] gap-x-3 border-b px-4 pt-3 pb-3 transition-colors",
 				className
@@ -70,6 +69,6 @@ export function Post({ postId, postData, hasReplyPost, className, ...props }: Po
 					<ShareButton tweetUrl={`/${data.user.username}/status/${data.id}`} />
 				</div>
 			</div>
-		</motion.article>
+		</article>
 	);
 }

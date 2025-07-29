@@ -54,8 +54,8 @@ export function DeletePostDialog({ postId, parentId, ...props }: DeletePostDialo
 			);
 
 			if (parentId) {
-				// Removing post from user posts
-				await optimisticPostListUpdate([`posts`, user.id], (pages) =>
+				// Removing post from user replies
+				await optimisticPostListUpdate([`replies`, user.id], (pages) =>
 					pages.map((page) => ({
 						...page,
 						posts: page.posts.filter(({ id, parentId }) => id !== postId && parentId !== postId)
@@ -73,7 +73,8 @@ export function DeletePostDialog({ postId, parentId, ...props }: DeletePostDialo
 				// Removing post replies
 				queryClient.removeQueries({ queryKey: [`replies`, postId] });
 			} else {
-				await optimisticPostListUpdate([`replies`, user.id], (pages) =>
+				// remove post from user posts
+				await optimisticPostListUpdate([`posts`, user.id], (pages) =>
 					pages.map((page) => ({
 						...page,
 						posts: page.posts.filter(({ id, parentId }) => id !== postId && parentId !== postId)

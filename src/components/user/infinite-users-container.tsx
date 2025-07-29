@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { useInfiniteQuery, type UndefinedInitialDataInfiniteOptions } from "@tanstack/react-query";
-import { AnimatePresence } from "motion/react";
 import { useInView } from "react-intersection-observer";
 
 import { axios } from "@/lib/axios";
@@ -56,16 +55,14 @@ export function InfiniteUsersContainer({
 
 	return (
 		<section className="w-full overflow-hidden pb-50">
-			<AnimatePresence mode="wait">
-				{users.map(({ followers, isFollowedByUser, ...user }, index) => (
-					<UserCard
-						key={user.id}
-						user={user}
-						follow={{ followers, isFollowedByUser }}
-						ref={index === users.length - 2 ? ref : undefined}
-					/>
-				))}
-			</AnimatePresence>
+			{users.map(({ followers, isFollowedByUser, ...user }, index) => (
+				<UserCard
+					key={user.id}
+					user={user}
+					follow={{ followers, isFollowedByUser }}
+					ref={index === users.length - 2 ? ref : undefined}
+				/>
+			))}
 			{hasNextPage && <Spinner className="my-10" />}
 		</section>
 	);

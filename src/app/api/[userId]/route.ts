@@ -13,7 +13,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 		const user = await prisma.user.findUnique({
 			where: { id: userId },
 			include: {
-				_count: { select: { posts: true, followers: true, following: true } },
+				_count: { select: { posts: true, followers: true, following: true, reposts: true } },
 				followers: { where: { followingId: loginUserId }, select: { id: true } }
 			}
 		});
@@ -26,7 +26,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 
 		const profile = {
 			...profileUser,
-			posts: _count.posts,
+			posts: _count.posts + _count.reposts,
 			followers: _count.followers,
 			following: _count.following,
 			isFollowedByUser: !!followers.length
