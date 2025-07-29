@@ -5,6 +5,7 @@ import { getUserDataWithFollowesInfo, type UserDataWithFollowInfo } from "@/type
 export function getPostDataInclude(loggedInUserId: string) {
 	return {
 		_count: postDataCounts,
+		parent: postParentInfo,
 		likes: getPostLikeInfo(loggedInUserId),
 		reposts: getPostRepostInfo(loggedInUserId),
 		bookmarks: getPostBookmarkInfo(loggedInUserId),
@@ -49,6 +50,16 @@ export function getPostBookmarkInfo(loggedInUserId: string) {
 	} satisfies Prisma.Post$bookmarksArgs;
 }
 
+export const postParentInfo = {
+	select: {
+		user: {
+			select: {
+				username: true
+			}
+		}
+	}
+};
+
 export interface PostsCount {
 	posts: number;
 }
@@ -58,6 +69,7 @@ export interface PostData extends Post, PostDataCounts {
 	isReposted: boolean;
 	isBookmarked: boolean;
 	user: UserDataWithFollowInfo;
+	parent: { user: { username: string } } | null;
 }
 
 export interface PostPage {

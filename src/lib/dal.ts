@@ -77,3 +77,26 @@ export const getPostById = cache(async (postId: string): Promise<PostData> => {
 		isBookmarked: !!bookmarks.length
 	};
 });
+
+type ParentPostByIdReturn = Promise<{ post: PostData; parentPosts: PostData[] }>;
+
+export const getParentPostsById = cache(async (postId: string): ParentPostByIdReturn => {
+	const post = await getPostById(postId);
+
+	if (!post.parentId) {
+		return { post, parentPosts: [] };
+	}
+
+	const parentPosts = [];
+	let currentPostId: string | null = postId;
+
+	while (currentPostId) {
+		const parentPost = await getPostById(currentPostId);
+		if (!parentPost) break;
+
+		parentPosts.push(parentPost);
+		currentPostId = parentPost.parentId;
+	}
+
+	return { post, parentPosts: parentPosts.reverse() };
+});

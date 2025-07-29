@@ -18,6 +18,7 @@ export function useSubmitPostMutation() {
 		onSuccess: async (data) => {
 			const newPost = {
 				...data,
+				parent: null,
 				user: { ...user, isFollowedByUser: false, followers: 0 },
 				isBookmarked: false,
 				isLiked: false,

@@ -15,12 +15,16 @@ interface InfinitePostsContainerProps
 	extends Omit<UndefinedInitialDataInfiniteOptions<PostPage>, "initialPageParam" | "getNextPageParam" | "queryFn"> {
 	apiRouteUrl: string;
 	children: React.ReactNode;
+	loadingChild?: React.ReactNode;
+	errorChild?: React.ReactNode;
 }
 
 export function InfinitePostsContainer({
 	children,
 	apiRouteUrl,
 	staleTime = 15 * 60 * 1000,
+	loadingChild = <Spinner />,
+	errorChild = <Error />,
 	...options
 }: InfinitePostsContainerProps) {
 	const { ref, inView } = useInView({ threshold: 0 });
@@ -40,13 +44,9 @@ export function InfinitePostsContainer({
 		}
 	}, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-	if (status === "pending") {
-		return <Spinner />;
-	}
+	if (status === "pending") return loadingChild;
 
-	if (status === "error") {
-		return <Error />;
-	}
+	if (status === "error") return errorChild;
 
 	const posts = data.pages.flatMap((page) => page.posts) || [];
 
@@ -58,7 +58,12 @@ export function InfinitePostsContainer({
 		<section className="w-full overflow-hidden pb-50">
 			<AnimatePresence mode="wait">
 				{posts.map((postData, globalIndex) => (
-					<Post key={postData.id} post={postData} ref={globalIndex === posts.length - 2 ? ref : undefined} />
+					<Post
+						key={postData.id}
+						postId={postData.id}
+						postData={postData}
+						ref={globalIndex === posts.length - 2 ? ref : undefined}
+					/>
 				))}
 			</AnimatePresence>
 			{hasNextPage && <Spinner className="my-10" />}
