@@ -1,7 +1,9 @@
 import { Fragment } from "react";
 
 import { getUserByUsername } from "@/lib/dal";
-import { UserProfile } from "@/components/user/user-profile";
+import { LinkTabs } from "@/components/ui/link-tabs";
+
+import { UserProfile } from "./user-profile";
 
 interface ProfileLayoutProps {
 	children: React.ReactNode;
@@ -17,6 +19,12 @@ export default async function ProfileLayout({ children, image, params }: Profile
 		<Fragment>
 			{image}
 			<UserProfile userId={userId} />
+			<div className="grid grid-cols-4 border-b">
+				<LinkTabs href={`/${username}`}>Posts</LinkTabs>
+				<LinkTabs href={`/${username}/reposts`}>Reposts</LinkTabs>
+				<LinkTabs href={`/${username}/replies`}>Replies</LinkTabs>
+				<LinkTabs href={`/${username}/likes`}>Likes</LinkTabs>
+			</div>
 			{children}
 		</Fragment>
 	);

@@ -7,14 +7,11 @@ import { format } from "date-fns";
 import { useProfile } from "@/hooks/use-profile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Icon, type IconId } from "@/components/ui/icon";
-import { LinkTabs } from "@/components/ui/link-tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BackButton, Header, HeaderDescription, HeaderTitle } from "@/components/layout/header";
 import { Link } from "@/components/link";
 import { TextParser } from "@/components/text-parser";
-import { FollowButton } from "@/components/user";
-
-import { FollowersCount, FollowingCount, PostsCount } from "./counts";
+import { FollowButton, FollowersCount, FollowingCount, PostsCount } from "@/components/user";
 
 type ProfileMeta = {
 	icon: IconId;
@@ -135,12 +132,6 @@ export function UserProfile({ userId }: { userId: string }) {
 					</div>
 				</div>
 			</section>
-			<div className="grid grid-cols-4 border-b">
-				<LinkTabs href={`/${data.username}`}>Posts</LinkTabs>
-				<LinkTabs href={`/${data.username}/reposts`}>Reposts</LinkTabs>
-				<LinkTabs href={`/${data.username}/replies`}>Replies</LinkTabs>
-				<LinkTabs href={`/${data.username}/likes`}>Likes</LinkTabs>
-			</div>
 		</Fragment>
 	);
 }
