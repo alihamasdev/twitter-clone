@@ -22,8 +22,8 @@ export async function updateProfile(
 		const supabase = await createClient();
 
 		const [avatarUrl, bannerUrl] = await Promise.all([
-			uploadFile(supabase, `${loginUserId}/avatar.png`, avatar),
-			uploadFile(supabase, `${loginUserId}/banner.png`, banner)
+			uploadFile(supabase, `${loginUserId}/avatar.webp`, avatar),
+			uploadFile(supabase, `${loginUserId}/banner.webp`, banner)
 		]);
 
 		const updatedData = await prisma.user.update({

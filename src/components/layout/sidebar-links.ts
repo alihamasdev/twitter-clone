@@ -5,7 +5,6 @@ export interface SidebarLinks {
 	url: string;
 	icon: IconId;
 	activeIcon: IconId;
-	disabled?: boolean;
 }
 
 export function getSidebarLinks(username: string) {
@@ -15,41 +14,6 @@ export function getSidebarLinks(username: string) {
 			url: "/home",
 			icon: "home",
 			activeIcon: "home-solid"
-		},
-		{
-			name: "Explore",
-			url: "/explore",
-			icon: "search",
-			activeIcon: "search-solid",
-			disabled: true
-		},
-		{
-			name: "Notifications",
-			url: "/notifications",
-			icon: "notifications",
-			activeIcon: "notifications-solid",
-			disabled: true
-		},
-		{
-			name: "Messages",
-			url: "/messages",
-			icon: "messages",
-			activeIcon: "messages-solid",
-			disabled: true
-		},
-		{
-			name: "Communities",
-			url: "/communities",
-			icon: "communities",
-			activeIcon: "communities-solid",
-			disabled: true
-		},
-		{
-			name: "Premium",
-			url: "/premium",
-			icon: "twitter",
-			activeIcon: "twitter",
-			disabled: true
 		},
 		{
 			name: "Bookmarks",

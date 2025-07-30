@@ -4,6 +4,7 @@ import { PostFormProvider } from "@/context/post-form-context";
 import { Button } from "@/components/ui/button";
 import { Search } from "@/components/layout/search";
 import { Sidebar } from "@/components/layout/sidebar";
+import { Link } from "@/components/link";
 import { SuggestedUsers } from "@/components/user/suggested-users";
 
 export default function ProtectedLayout({ children, dialog }: React.PropsWithChildren<{ dialog: React.ReactNode }>) {
@@ -28,10 +29,14 @@ export default function ProtectedLayout({ children, dialog }: React.PropsWithChi
 								Explore the codebase behind Twitter and contribute to its development.
 							</p>
 							<a href="https://github.com/alihamasdev/twitter-clone" target="_blank" rel="noopener noreferrer">
-								<Button variant="accent">Repository</Button>
+								<Button aria-label="project repository">Repository</Button>
 							</a>
 						</section>
 						<SuggestedUsers />
+						<div className="*:hover:text-accent text-muted-foreground flex flex-wrap justify-center gap-x-3 text-sm *:hover:underline">
+							<Link href={`/terms-and-conditions`}>Terms and Conditions</Link>
+							<Link href={`/privacy-policy`}>Privacy Policy</Link>
+						</div>
 						<p className="text-muted-foreground text-center text-sm">
 							&#169; {new Date().getFullYear()} Ali Hamas, Inc.
 						</p>

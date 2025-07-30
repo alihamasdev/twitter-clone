@@ -54,6 +54,7 @@ export function BookmarkButton({ isBookmarked, postId, className, ...props }: Bo
 		<motion.button
 			whileTap={{ scale: 0.9 }}
 			onClick={() => mutate()}
+			aria-label="bookmark post"
 			className={cn("flex-center hover:bg-blue/10 group size-8 cursor-pointer rounded-full", className)}
 			{...props}
 		>

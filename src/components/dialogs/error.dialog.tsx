@@ -18,7 +18,7 @@ export function ErrorDialog() {
 			<AlertDialogContent className="w-80 space-y-4 p-8">
 				<AlertDialogTitle className="">Error</AlertDialogTitle>
 				<AlertDialogDescription>Oops, something went wrong. Please try again later</AlertDialogDescription>
-				<Button onClick={() => router.push("/auth")} size="lg">
+				<Button aria-label="return to home" onClick={() => router.push("/auth")} size="lg">
 					Ok
 				</Button>
 			</AlertDialogContent>

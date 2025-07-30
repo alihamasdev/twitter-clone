@@ -33,6 +33,7 @@ export function PostOptions({ user, postId, parentId, className, ...props }: Pos
 		<>
 			<DropdownMenu>
 				<DropdownMenuTrigger
+					aria-label="post options"
 					className={cn(
 						"flex-center group hover:bg-blue/10 absolute top-2 right-3 size-7 cursor-pointer rounded-full",
 						className

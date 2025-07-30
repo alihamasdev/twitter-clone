@@ -104,8 +104,14 @@ export default function EditProfilePage() {
 								<DialogTitle>Edit Profile</DialogTitle>
 								<DialogDescription />
 							</div>
-							<Button type="submit" size="sm" className="min-w-16" disabled={isLoading || !form.formState.isValid}>
-								{isLoading ? "Save" : <Spinner className="border-muted-foreground/50 mt-0 size-4 border-3" />}
+							<Button
+								size="sm"
+								type="submit"
+								className="min-w-16"
+								aria-label="save profile changes"
+								disabled={isLoading || !form.formState.isValid}
+							>
+								{!isLoading ? "Save" : <Spinner className="border-muted-foreground/50 mt-0 size-4 border-3" />}
 							</Button>
 						</DialogHeader>
 						<div className="relative w-full">

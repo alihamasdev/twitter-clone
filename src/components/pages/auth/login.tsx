@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
+import { Link } from "@/components/link";
 
 import { OAuthButtons } from "./o-auth-buttons";
 
@@ -17,6 +18,10 @@ export function Login() {
 					<Button size="lg" variant="accent" className="w-full" disabled>
 						Sign up with email
 					</Button>
+					<p className="text-muted-foreground [&_a]:text-accent text-sm [&_a]:hover:underline">
+						By signing up, you agree to the <Link href={`/terms-and-conditions`}>Terms and Conditions</Link> and{" "}
+						<Link href={`/privacy-policy`}>Privacy Policy</Link>
+					</p>
 					<h3 className="!mt-12 text-base font-bold sm:text-lg">Already have an account?</h3>
 					<Button size="lg" variant="outline" className="w-full" disabled>
 						Log in

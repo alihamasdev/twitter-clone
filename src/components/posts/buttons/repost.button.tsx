@@ -38,9 +38,9 @@ export function RepostButton({ postId, isRepost, reposts, className, ...props }:
 					: [{ posts: [newPostData!, ...pages[0].posts], nextCursor: pages[0].nextCursor }, ...pages.slice(1)]
 			);
 
-			const [prevPostsCount] = await optimisticUpdate<PostsCount>([`posts-count`, user.id], (oldData) => ({
-				posts: (oldData?.posts || 0) + (isRepost ? -1 : 1)
-			}));
+			const [prevPostsCount] = await optimisticUpdate<PostsCount>([`posts-count`, user.id], (oldData) =>
+				oldData ? { posts: oldData.posts + (isRepost ? -1 : 1) } : oldData
+			);
 
 			return { prevPost, prevLikePosts, prevPostsCount };
 		},
@@ -61,6 +61,7 @@ export function RepostButton({ postId, isRepost, reposts, className, ...props }:
 		<motion.button
 			onClick={() => mutate()}
 			whileTap={{ scale: 0.9 }}
+			aria-label="repost post"
 			className={cn("group flex cursor-pointer items-center", className)}
 			{...props}
 		>

@@ -16,7 +16,10 @@ interface ShareButtonProps {
 export function ShareButton({ tweetUrl }: ShareButtonProps) {
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger className="flex-center hover:bg-blue/10 group size-8 cursor-pointer rounded-full">
+			<DropdownMenuTrigger
+				aria-label="share post"
+				className="flex-center hover:bg-blue/10 group size-8 cursor-pointer rounded-full"
+			>
 				<Icon id="share" className="fill-muted-foreground group-hover:fill-blue size-4.5" />
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">

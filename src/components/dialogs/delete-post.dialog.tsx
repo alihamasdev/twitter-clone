@@ -44,9 +44,9 @@ export function DeletePostDialog({ postId, parentId, ...props }: DeletePostDialo
 			);
 
 			// Updating user posts count
-			await optimisticUpdate<PostsCount>([`posts-count`, user.id], (oldData) => ({
-				posts: (oldData?.posts || 0) - 1
-			}));
+			await optimisticUpdate<PostsCount>([`posts-count`, user.id], (oldData) =>
+				oldData ? { posts: oldData.posts - 1 } : oldData
+			);
 
 			// Updating Post replies count
 			await optimisticUpdate<PostData>([`post`, parentId], (oldData) =>

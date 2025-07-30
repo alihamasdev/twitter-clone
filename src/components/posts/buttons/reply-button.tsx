@@ -23,7 +23,12 @@ export function ReplyButton({ postData, className, ...props }: ReplyButtonProps)
 	};
 
 	return (
-		<motion.button onClick={handleClick} className={cn("group flex cursor-pointer items-center", className)} {...props}>
+		<motion.button
+			onClick={handleClick}
+			aria-label="reply to post"
+			className={cn("group flex cursor-pointer items-center", className)}
+			{...props}
+		>
 			<div className="group-hover:bg-blue/10 flex-center size-8 rounded-full">
 				<Icon id="reply" className="fill-muted-foreground group-hover:fill-blue size-4.5" />
 			</div>

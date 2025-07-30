@@ -36,6 +36,7 @@ export function UploadAvatar({ defaultValue, disabled }: UploadAvatarProps) {
 						icon="upload"
 						disabled={disabled}
 						onClick={openFileDialog}
+						aria-label="upload new avatar"
 						className="bg-background hover:bg-background/80 absolute-center"
 					/>
 				</Avatar>
@@ -97,6 +98,7 @@ export function UploadBanner({ defaultValue, disabled }: UploadBannerProps) {
 					icon="upload"
 					disabled={disabled}
 					onClick={openFileDialog}
+					aria-label="upload new banner"
 					className="bg-background hover:bg-background/80 absolute-center"
 				/>
 

@@ -2,11 +2,13 @@ import { type Metadata } from "next";
 import { Toaster } from "react-hot-toast";
 
 import { QueryProviders } from "@/lib/tanstack/query-provider";
-import { baseUrl } from "@/utils/contants";
+import { baseUrl, supabaseProjectId } from "@/utils/contants";
 import { ThemeProvider } from "@/context/theme-context";
 import { chirp } from "@/app/fonts/chirp";
 
 import "@/styles/theme.css";
+
+import { preconnect } from "react-dom";
 
 export const metadata: Metadata = {
 	metadataBase: new URL(baseUrl),
@@ -18,11 +20,16 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+	preconnect("https://lh3.googleusercontent.com", { crossOrigin: "anonymous" });
+	preconnect("https://avatars.githubusercontent.com", { crossOrigin: "anonymous" });
+	preconnect(`https://${supabaseProjectId}.supabase.co/storage/v1/object/public/`, { crossOrigin: "anonymous" });
+
 	return (
 		<html lang="en">
 			<head>
 				<meta property="og:site_name" content="Twitter Clone | Ali Hamas" />
 				<meta property="og:url" content="https://twitter-alihamas.vercel.app" />
+				<meta name="description" content={metadata.description!} />
 			</head>
 			<body style={chirp.style}>
 				<ThemeProvider>

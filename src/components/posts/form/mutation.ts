@@ -43,9 +43,9 @@ export function useSubmitPostMutation() {
 			);
 
 			// Updating user posts count
-			await optimisticUpdate<PostsCount>([`posts-count`, user.id], (oldData) => ({
-				posts: (oldData?.posts || 0) + 1
-			}));
+			await optimisticUpdate<PostsCount>([`posts-count`, user.id], (oldData) =>
+				oldData ? { posts: oldData.posts + 1 } : oldData
+			);
 
 			toast.success(`You ${newPost.parentId ? "reply" : "post"} has been sent`);
 

@@ -28,17 +28,21 @@ export function Sidebar() {
 	return (
 		<Fragment>
 			<nav className="flex flex-col items-center xl:w-full">
-				<Link href="/home" className="hover:bg-muted flex-center rounded-full p-3 transition-colors xl:self-start">
+				<Link
+					href="/home"
+					aria-label="Go to Home"
+					className="hover:bg-muted flex-center rounded-full p-3 transition-colors xl:self-start"
+				>
 					<Icon id="twitter" className="size-6.5 xl:size-8" />
 				</Link>
-				{sidebarLinks.map(({ url, name, icon, activeIcon, disabled }) => {
+				{sidebarLinks.map(({ url, name, icon, activeIcon }) => {
 					const isActive = path.startsWith(url);
 					return (
 						<Link
 							key={name}
 							href={url}
-							onClick={(e) => disabled && e.preventDefault()}
-							className={cn("group/nav outline-none md:w-fit xl:w-full", disabled && "cursor-not-allowed opacity-90")}
+							aria-label={`Go to ${name} page`}
+							className="group/nav outline-none md:w-fit xl:w-full"
 						>
 							<div className="group-hover/nav:bg-muted inline-flex items-center rounded-full p-3 transition-colors">
 								<Icon id={isActive ? activeIcon : icon} className="size-6.5" />
@@ -48,7 +52,10 @@ export function Sidebar() {
 					);
 				})}
 				<DropdownMenu>
-					<DropdownMenuTrigger className="group/nav flex cursor-pointer justify-start outline-none md:w-fit xl:w-full">
+					<DropdownMenuTrigger
+						aria-label="more options"
+						className="group/nav flex cursor-pointer justify-start outline-none md:w-fit xl:w-full"
+					>
 						<div className="group-hover/nav:bg-muted inline-flex items-center rounded-full p-3 transition-colors">
 							<Icon id="ellipsis-circle" className="size-6.5" />
 							<p className="hidden px-4 text-xl font-medium xl:block">More</p>
@@ -69,6 +76,7 @@ export function Sidebar() {
 
 			<Button
 				size={null}
+				aria-label="create new post"
 				onClick={() => router.push("/compose/post")}
 				className="my-5 min-h-13 min-w-13 text-lg xl:w-full xl:px-6"
 			>
@@ -78,7 +86,12 @@ export function Sidebar() {
 
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<Button size={null} variant="ghost" className="mt-auto p-3 xl:w-full xl:justify-start">
+					<Button
+						size={null}
+						variant="ghost"
+						aria-label="account options"
+						className="mt-auto p-3 xl:w-full xl:justify-start"
+					>
 						<Avatar>
 							<AvatarImage src={user.avatarUrl} />
 							<AvatarFallback />

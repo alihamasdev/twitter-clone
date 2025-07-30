@@ -55,6 +55,7 @@ export function LikeButton({ postId, isLiked, likes, className, ...props }: Like
 		<motion.button
 			onClick={() => mutate()}
 			whileTap={{ scale: 0.9 }}
+			aria-label="like post"
 			className={cn("group flex cursor-pointer items-center", className)}
 			{...props}
 		>

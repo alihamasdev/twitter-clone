@@ -25,9 +25,10 @@ export function FollowButton({ initialState, userId, size = "sm", className, ...
 	return (
 		<Button
 			size={size}
-			onClick={() => mutate()}
-			variant={data.isFollowedByUser ? "outline" : "default"}
 			data-size={size}
+			onClick={() => mutate()}
+			aria-label={`${data.isFollowedByUser ? "unfollow" : "follow"} user`}
+			variant={data.isFollowedByUser ? "outline" : "default"}
 			className={cn(
 				data.isFollowedByUser &&
 					"group/follow hover:border-destructive/70 hover:text-destructive hover:bg-destructive/10 min-w-26 transition-all data-[size=sm]:min-w-23.5",
@@ -48,7 +49,7 @@ export function EditProfileButton() {
 	const router = useRouter();
 
 	return (
-		<Button variant="outline" onClick={() => router.push(`/settings/profile`)}>
+		<Button variant="outline" aria-label="edit profile" onClick={() => router.push(`/settings/profile`)}>
 			Edit Profile
 		</Button>
 	);

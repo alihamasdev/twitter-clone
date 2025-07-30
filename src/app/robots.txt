@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Allow: /profile/*
+Allow: /post/*
+Disallow: /login
+Disallow: /signup
+Disallow: /settings
+Disallow: /api/*
+Disallow: /auth/*
+Disallow: /search
+
+Sitemap: https://twitter-alihamas.vercel.app/sitemap.xml

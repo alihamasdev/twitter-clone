@@ -124,7 +124,7 @@ export function CropDialog({
 			if (!croppedBlob) throw new Error("Failed to generate cropped image blob.");
 
 			const newFinalUrl = URL.createObjectURL(croppedBlob);
-			const croppedFile = new File([croppedBlob], `${name}.png`, {
+			const croppedFile = new File([croppedBlob], `${name}.webp`, {
 				type: croppedBlob.type,
 				lastModified: Date.now()
 			});
@@ -151,7 +151,7 @@ export function CropDialog({
 						<AlertDialogTitle>Edit media</AlertDialogTitle>
 						<AlertDialogDescription />
 					</div>
-					<Button size="sm" onClick={handleApply} disabled={!previewUrl}>
+					<Button size="sm" aria-label="save crop changes" onClick={handleApply} disabled={!previewUrl}>
 						Apply
 					</Button>
 				</AlertDialogHeader>

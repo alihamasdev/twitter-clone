@@ -23,7 +23,10 @@ function AvatarImage({ className, loading = "lazy", ...props }: React.ComponentP
 		<AvatarPrimitive.Image
 			data-slot="avatar-image"
 			loading={loading}
+			width={40}
+			height={40}
 			className={cn("aspect-square size-full transition-[opacity] duration-300 hover:opacity-80", className)}
+			alt="avatar"
 			{...props}
 		/>
 	);

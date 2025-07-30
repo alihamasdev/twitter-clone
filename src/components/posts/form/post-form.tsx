@@ -84,8 +84,10 @@ export function PostForm({ handleClose, placeholder = "What's happening?", paren
 							<div className="flex items-center justify-end">
 								<Button
 									type="submit"
+									aria-label="create new post"
 									className="transition-all duration-200"
 									disabled={isPending || !form.formState.isValid}
+									aria-disabled={isPending || !form.formState.isValid}
 								>
 									Post
 								</Button>

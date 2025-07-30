@@ -22,6 +22,7 @@ export function BackButton({
 			size={size}
 			icon={icon}
 			variant={variant}
+			aria-label="back button"
 			onClick={() => (pushUrl ? router.push(pushUrl) : router.back())}
 			{...props}
 		/>
