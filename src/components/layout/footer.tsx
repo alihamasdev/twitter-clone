@@ -16,7 +16,7 @@ export function MobileFooter() {
 
 	const sidebarLinks = getSidebarLinks(user.username);
 
-	// if (!isMobile) return;
+	if (!isMobile) return;
 
 	return (
 		<footer className="bg-background/75 sticky bottom-0 z-10 mt-auto flex items-center justify-evenly border-t py-2 backdrop-blur-md">
