@@ -1,5 +1,3 @@
-"use server";
-
 import { cache } from "react";
 import { notFound } from "next/navigation";
 
@@ -13,15 +11,13 @@ import type { UserData, UserDataWithFollowInfo } from "@/types/user";
 export const getLoginUserData = cache(async (): Promise<UserData | null> => {
 	const { sub: loginUserId } = await validateUser();
 
-	const data = await prisma.user.findUnique({
+	return await prisma.user.findUnique({
 		where: { id: loginUserId },
 		select: userDataSelect
 	});
-
-	return data;
 });
 
-export const getUsersList = cache(async (limit = 4) => {
+export const getUsersList = cache(async (limit = 4): Promise<UserDataWithFollowInfo[]> => {
 	const { sub: loginUserId } = await validateUser();
 
 	const data = await prisma.user.findMany({
@@ -30,15 +26,7 @@ export const getUsersList = cache(async (limit = 4) => {
 		select: getUserDataWithFollowesInfo(loginUserId)
 	});
 
-	const dataList: UserDataWithFollowInfo[] = data.map(({ _count, followers, ...data }) => {
-		return {
-			...data,
-			followers: _count.followers,
-			isFollowedByUser: !!followers.length
-		};
-	});
-
-	return dataList;
+	return data.map(({ _count, followers, ...user }) => formatUserData({ _count, followers, ...user }));
 });
 
 export const getUserByUsername = cache(async (username: string) => {
@@ -47,9 +35,7 @@ export const getUserByUsername = cache(async (username: string) => {
 		select: { id: true, name: true }
 	});
 
-	if (!user) {
-		return notFound();
-	}
+	if (!user) return notFound();
 
 	return { userId: user.id, name: user.name };
 });
@@ -62,9 +48,7 @@ export const getPostById = cache(async (postId: string): Promise<PostData> => {
 		include: getPostDataInclude(loginUserId)
 	})) satisfies PostPayload | null;
 
-	if (!postPayload) {
-		return notFound();
-	}
+	if (!postPayload) return notFound();
 
 	const { user, _count, bookmarks, likes, reposts, ...post } = postPayload;
 
@@ -99,4 +83,15 @@ export const getParentPostsById = cache(async (postId: string): ParentPostByIdRe
 	}
 
 	return { post, parentPosts: parentPosts.reverse() };
+});
+
+export const searchUsers = cache(async (query: string | undefined) => {
+	if (!query) return [];
+
+	return await prisma.user.findMany({
+		where: {
+			OR: [{ name: { mode: "insensitive", contains: query } }, { username: { mode: "insensitive", contains: query } }]
+		},
+		select: userDataSelect
+	});
 });

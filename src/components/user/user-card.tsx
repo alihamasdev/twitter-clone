@@ -8,7 +8,7 @@ import { Avatar, FollowButton, Name, Username } from "@/components/user";
 
 interface UserCardProps extends React.ComponentProps<"div"> {
 	user: UserData;
-	follow: FollowerInfo;
+	follow?: FollowerInfo;
 }
 
 export function UserCard({ user, follow, className, ...props }: UserCardProps) {
@@ -30,7 +30,7 @@ export function UserCard({ user, follow, className, ...props }: UserCardProps) {
 					<Name href={user.username}>{user.name}</Name>
 					<Username href={user.username}>{user.username}</Username>
 				</div>
-				<FollowButton userId={user.id} initialState={follow} />
+				{follow && <FollowButton userId={user.id} initialState={follow} />}
 			</div>
 		</div>
 	);
