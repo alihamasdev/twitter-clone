@@ -16,6 +16,12 @@ export function getSidebarLinks(username: string) {
 			activeIcon: "home-solid"
 		},
 		{
+			name: "Notifications",
+			url: "/notifications",
+			icon: "notifications",
+			activeIcon: "notifications-solid"
+		},
+		{
 			name: "Bookmarks",
 			url: "/bookmarks",
 			icon: "bookmarks",
