@@ -25,8 +25,6 @@ model User {
   likes     Like[]
   bookmarks Bookmark[]
   reposts   Repost[]
-
-  @@index([id, username, createdAt])
   @@map("users")
 }
 
@@ -39,7 +37,6 @@ model Follow {
   following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId])
-  @@index([id, followerId, followingId, createdAt])
   @@map("follow")
 }
 
@@ -58,7 +55,6 @@ model Post {
   bookmarks Bookmark[]
   reposts   Repost[]
 
-  @@index([id, createdAt, parentId, userId])
   @@map("posts")
 }
 
@@ -71,7 +67,6 @@ model Like {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([postId, userId])
-  @@index([id, createdAt, postId, userId])
   @@map("likes")
 }
 
@@ -84,7 +79,6 @@ model Bookmark {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([postId, userId])
-  @@index([id, createdAt, postId, userId])
   @@map("bookmarks")
 }
 
@@ -97,6 +91,5 @@ model Repost {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([postId, userId])
-  @@index([id, createdAt, postId, userId])
   @@map("reposts")
 }
